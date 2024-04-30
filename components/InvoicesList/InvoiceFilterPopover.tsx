@@ -1,14 +1,11 @@
 "use client";
 import { settingsAppState } from "@/atoms/settingsAppAtom";
-// import FilterCheckbox from "@/layout/Input/FilterCheckbox";
 import * as Popover from "@radix-ui/react-popover";
 import clsx from "clsx";
 import { useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { useRecoilValue } from "recoil";
-import CheckboxFilters, {
-  FilterCheckbox,
-} from "@/components/InvoicesList/CheckboxFilters";
+import { FilterCheckbox } from "@/components/InvoicesList/CheckboxFilters";
 export default function InvoiceFilterPopover() {
   const settingsState = useRecoilValue(settingsAppState);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -29,7 +26,7 @@ export default function InvoiceFilterPopover() {
           className={clsx(
             "z-50 rounded-lg px-5 w-[192px] h-[128px] flex items-center shadow-[0_10px_38px_-10px_hsla(206,22%,7%,.35),0_10px_20px_-15px_hsla(206,22%,7%,.2)] will-change-[transform,opacity] data-[state=open]:data-[side=top]:animate-slideDownAndFade data-[state=open]:data-[side=right]:animate-slideLeftAndFade data-[state=open]:data-[side=bottom]:animate-slideUpAndFade data-[state=open]:data-[side=left]:animate-slideRightAndFade",
             {
-              "bg-04": settingsState.isDarkMode,
+              "bg-04 dark": settingsState.isDarkMode,
               "bg-white": !settingsState.isDarkMode,
             }
           )}
@@ -39,11 +36,6 @@ export default function InvoiceFilterPopover() {
             <FilterCheckbox label="draft" />
             <FilterCheckbox label="paid" />
             <FilterCheckbox label="pending" />
-            {/* <h2>Checboxk Filters</h2>
-            <CheckboxFilters /> */}
-            {/* <FilterCheckbox label={"draft"} />
-            <FilterCheckbox label={"pending"} />
-            <FilterCheckbox label={"paid"} /> */}
           </div>
         </Popover.Content>
       </Popover.Portal>

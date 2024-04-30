@@ -1,4 +1,4 @@
-import { UserSingleInvoiceSchema } from "@/schemas";
+import { InvoiceSchema } from "@/schemas";
 import { atom } from "recoil";
 import { z } from "zod";
 export type FilterType = "draft" | "paid" | "pending";
@@ -11,7 +11,7 @@ export type SettingsAppState = {
     isActive: boolean;
   }[];
   filtersArray: string[];
-  userInvoices: z.infer<typeof UserSingleInvoiceSchema>[];
+  userInvoices: z.infer<typeof InvoiceSchema>[];
 };
 
 const defaultSettingsAppState: SettingsAppState = {

@@ -2,7 +2,8 @@ import { z } from "zod";
 
 const EMPTY_MESSAGE = "Can't be empty!";
 
-export const InvoiceSchema = z.object({
+export const PreviewInvoiceSchema = z.object({
+  // Was InvoiceSchema
   id: z.string().length(6),
   paymentDue: z.string(),
   clientName: z.string(),
@@ -16,7 +17,8 @@ export const CheckboxSchema = z.object({
   }),
 });
 
-export const UserSingleInvoiceSchema = z.object({
+export const InvoiceSchema = z.object({
+  // Was UserSingleInvoiceSchema
   id: z.string().length(6).optional(),
   paymentDue: z.string().optional(),
   clientName: z.string().min(3, EMPTY_MESSAGE),

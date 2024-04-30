@@ -1,5 +1,6 @@
 "use client";
 import { settingsAppState } from "@/atoms/settingsAppAtom";
+import InvoiceForm from "@/components/InvoiceForm/InvoiceForm";
 // import { ProfileForm } from "@/components/InvoicesList/CheckboxFilters";
 import InvoicesList from "@/components/InvoicesList/InvoicesList";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ export default function Home() {
       )}
     >
       <InvoicesList />
+      <InvoiceForm />
     </main>
   );
 }
