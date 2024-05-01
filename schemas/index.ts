@@ -27,7 +27,8 @@ export const InvoiceSchema = z.object({
   createdAt: z.date().or(z.string()),
   description: z.string().min(2, EMPTY_MESSAGE),
   paymentTerms: z.string(),
-  clientEmail: z.string().email().nullish(),
+  clientEmail: z.string().email(),
+  // clientEmail: z.string().email().nullish(),
   senderAddress: z.object({
     street: z.string().min(2, EMPTY_MESSAGE),
     city: z.string().min(2, EMPTY_MESSAGE),
