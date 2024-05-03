@@ -11,24 +11,17 @@ export const PreviewInvoiceSchema = z.object({
   total: z.number(),
 });
 
-export const CheckboxSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
-});
-
 export const InvoiceSchema = z.object({
   // Was UserSingleInvoiceSchema
-  id: z.string().length(6).optional(),
-  paymentDue: z.string().optional(),
+  id: z.string().optional(),
+  paymentDue: z.date().optional(),
   clientName: z.string().min(3, EMPTY_MESSAGE),
   status: z.enum(["draft", "paid", "pending"]).optional(),
   total: z.number().optional(),
-  createdAt: z.date().or(z.string()),
+  createdAt: z.date(),
   description: z.string().min(2, EMPTY_MESSAGE),
-  paymentTerms: z.string(),
+  paymentTerms: z.coerce.string(),
   clientEmail: z.string().email(),
-  // clientEmail: z.string().email().nullish(),
   senderAddress: z.object({
     street: z.string().min(2, EMPTY_MESSAGE),
     city: z.string().min(2, EMPTY_MESSAGE),

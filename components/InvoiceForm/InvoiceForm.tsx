@@ -27,7 +27,12 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { z } from "zod";
 import { InvoiceSchema } from "@/schemas";
-import { cn } from "@/lib/utils";
+import {
+  cn,
+  createInvoicePaymentDue,
+  generateUserId,
+  updateItemsTotalValue,
+} from "@/lib/utils";
 import { useRecoilState } from "recoil";
 import { settingsAppState } from "@/atoms/settingsAppAtom";
 import { Calendar } from "../ui/calendar";
@@ -36,12 +41,12 @@ export default function InvoiceForm() {
   const form = useForm<z.infer<typeof InvoiceSchema>>({
     resolver: zodResolver(InvoiceSchema),
     defaultValues: {
-      id: "",
-      paymentDue: "",
+      id: undefined,
+      paymentDue: undefined,
       clientName: "",
       status: "pending",
       total: 0,
-      createdAt: "",
+      createdAt: new Date(),
       description: "",
       paymentTerms: "30",
       clientEmail: "",
@@ -64,8 +69,24 @@ export default function InvoiceForm() {
     control: form.control,
     name: "items",
   });
+  // function onSubmit(values: z.infer<typeof InvoiceSchema>) {
   function onSubmit(values: z.infer<typeof InvoiceSchema>) {
-    console.log(values);
+    const updatedData: z.infer<typeof InvoiceSchema> = {
+      ...values,
+      paymentTerms: values.paymentTerms,
+      status: "pending", // TODO
+      id: generateUserId(),
+      paymentDue: createInvoicePaymentDue(
+        values.createdAt,
+        values.paymentTerms
+      ),
+      ...updateItemsTotalValue(values),
+    };
+    InvoiceSchema.safeParse(updatedData);
+    setSettingsState((prev) => ({
+      ...prev,
+      userInvoices: [...prev.userInvoices, updatedData],
+    }));
   }
   return (
     <Form {...form}>
@@ -89,10 +110,26 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Input
                       placeholder="Street Address"
-                      className={cn({
-                        "border-09":
-                          form.formState.errors.senderAddress?.street,
-                      })}
+                      error={form.formState.errors.senderAddress?.street}
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="id"
+              render={({ field }) => (
+                <FormItem className="col-span-2 sm:col-span-3">
+                  <div className="flex justify-between">
+                    <FormLabel>Street Address</FormLabel>
+                    <FormMessage />
+                  </div>
+                  <FormControl>
+                    <Input
+                      placeholder="Street Address"
+                      error={form.formState.errors.senderAddress?.street}
                       {...field}
                     />
                   </FormControl>
@@ -111,9 +148,7 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Input
                       placeholder="City"
-                      className={cn({
-                        "border-09": form.formState.errors.senderAddress?.city,
-                      })}
+                      error={form.formState.errors.senderAddress?.city}
                       {...field}
                     />
                   </FormControl>
@@ -132,10 +167,7 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Input
                       placeholder="Country"
-                      className={cn({
-                        "border-09":
-                          form.formState.errors.senderAddress?.country,
-                      })}
+                      error={form.formState.errors.senderAddress?.country}
                       {...field}
                     />
                   </FormControl>
@@ -154,10 +186,7 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Input
                       placeholder="Post Code"
-                      className={cn({
-                        "border-09":
-                          form.formState.errors.senderAddress?.postCode,
-                      })}
+                      error={form.formState.errors.senderAddress?.postCode}
                       {...field}
                     />
                   </FormControl>
@@ -178,9 +207,7 @@ export default function InvoiceForm() {
                 <FormControl>
                   <Input
                     placeholder="Client`s Name"
-                    className={cn({
-                      "border-09": form.formState.errors.clientName,
-                    })}
+                    error={form.formState.errors.clientName}
                     {...field}
                   />
                 </FormControl>
@@ -199,9 +226,7 @@ export default function InvoiceForm() {
                 <FormControl>
                   <Input
                     placeholder="Client`s Email"
-                    className={cn({
-                      "border-09": form.formState.errors.clientEmail,
-                    })}
+                    error={form.formState.errors.clientEmail}
                     {...field}
                   />
                 </FormControl>
@@ -221,10 +246,7 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Input
                       placeholder="Street Address"
-                      className={cn({
-                        "border-09":
-                          form.formState.errors.clientAddress?.street,
-                      })}
+                      error={form.formState.errors.clientAddress?.street}
                       {...field}
                     />
                   </FormControl>
@@ -243,9 +265,7 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Input
                       placeholder="City"
-                      className={cn({
-                        "border-09": form.formState.errors.clientAddress?.city,
-                      })}
+                      error={form.formState.errors.clientAddress?.city}
                       {...field}
                     />
                   </FormControl>
@@ -264,10 +284,7 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Input
                       placeholder="Country"
-                      className={cn({
-                        "border-09":
-                          form.formState.errors.clientAddress?.country,
-                      })}
+                      error={form.formState.errors.clientAddress?.country}
                       {...field}
                     />
                   </FormControl>
@@ -286,10 +303,7 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Input
                       placeholder="Post Code"
-                      className={cn({
-                        "border-09":
-                          form.formState.errors.clientAddress?.postCode,
-                      })}
+                      error={form.formState.errors.clientAddress?.postCode}
                       {...field}
                     />
                   </FormControl>
@@ -389,9 +403,7 @@ export default function InvoiceForm() {
                 <FormControl>
                   <Input
                     placeholder="Description"
-                    className={cn({
-                      "border-09": form.formState.errors.description,
-                    })}
+                    error={form.formState.errors.description}
                     {...field}
                   />
                 </FormControl>
@@ -419,16 +431,12 @@ export default function InvoiceForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex justify-between">
-                      <FormLabel>Item Name</FormLabel>
-                      <FormMessage />
+                      <FormLabel className="sm:hidden">Item Name</FormLabel>
                     </div>
                     <FormControl>
                       <Input
                         placeholder="Item Name"
-                        className={cn({
-                          "border-09":
-                            form.formState.errors.items?.[index]?.name,
-                        })}
+                        error={form.formState.errors.items?.[index]?.name}
                         {...field}
                       />
                     </FormControl>
@@ -441,16 +449,13 @@ export default function InvoiceForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex justify-between">
-                      <FormLabel>Qty.</FormLabel>
-                      <FormMessage />
+                      <FormLabel className="sm:hidden">Qty.</FormLabel>
                     </div>
                     <FormControl>
                       <Input
+                        type="number"
                         placeholder="Qty."
-                        className={cn({
-                          "border-09":
-                            form.formState.errors.items?.[index]?.quantity,
-                        })}
+                        error={form.formState.errors.items?.[index]?.quantity}
                         {...field}
                       />
                     </FormControl>
@@ -463,16 +468,13 @@ export default function InvoiceForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex justify-between">
-                      <FormLabel>Price</FormLabel>
-                      <FormMessage />
+                      <FormLabel className="sm:hidden">Price</FormLabel>
                     </div>
                     <FormControl>
                       <Input
+                        type="number"
                         placeholder="Price"
-                        className={cn({
-                          "border-09":
-                            form.formState.errors.items?.[index]?.price,
-                        })}
+                        error={form.formState.errors.items?.[index]?.price}
                         {...field}
                       />
                     </FormControl>
@@ -480,16 +482,16 @@ export default function InvoiceForm() {
                 )}
               />
               <div className="flex flex-col mb-3 sm:mb-0">
-                <p className="text-headingS py-3 px-3 border-[1px] border-transparent rounded focus:border-01 w-full text-06">
-                  {/* {(
-                    watch(`items.${index}.price`) *
-                    watch(`items.${index}.quantity`)
-                  ).toFixed(2)} */}
+                <p className="text-headingS py-3 px-3 border-[1px] truncate border-transparent rounded focus:border-01 w-full text-06">
+                  {(
+                    form.watch(`items.${index}.price`) *
+                    form.watch(`items.${index}.quantity`)
+                  ).toFixed(2)}
                 </p>
               </div>
               <MdDelete
                 onClick={() => remove(index)}
-                className="text-[1.5rem] col-start-4 sm:col-start-5 cursor-pointer text-06 hover:text-09"
+                className="text-[1.5rem] col-start-4 sm:col-start-5 mt-4 cursor-pointer text-06 hover:text-09"
               />
             </li>
           ))}
