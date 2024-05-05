@@ -1,8 +1,8 @@
 import { settingsAppState } from "@/atoms/settingsAppAtom";
 import { Checkbox } from "@/components/ui/checkbox";
+import { StatusInvoiceType } from "@/schemas";
 import { useRecoilState } from "recoil";
-type FilterType = "draft" | "pending" | "paid";
-export function FilterCheckbox({ label }: { label: FilterType }) {
+export function FilterCheckbox({ label }: { label: StatusInvoiceType }) {
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const toggleCheckbox = () => {
     if (settingsState.filtersArray.find((item) => item === label)) {

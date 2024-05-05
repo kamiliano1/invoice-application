@@ -1,7 +1,7 @@
+import { invoiceData } from "@/data/data";
 import { InvoiceSchema } from "@/schemas";
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 import { z } from "zod";
-export type FilterType = "draft" | "paid" | "pending";
 
 export type SettingsAppState = {
   isDarkMode: boolean;
@@ -32,8 +32,29 @@ const defaultSettingsAppState: SettingsAppState = {
     },
   ],
   filtersArray: ["paid", "pending", "draft"],
-  userInvoices: [],
+  userInvoices: invoiceData,
 };
+
+export const userInvoicesState = selector({
+  key: "userInvoicesSelector",
+  get: ({ get }) => {
+    const settingsState = get(settingsAppState);
+    const filteredUserInvoices = settingsState.userInvoices.filter((item) =>
+      settingsState.filtersArray.includes(item.status)
+    );
+    const totalInvoicesCount = filteredUserInvoices.length;
+    const userInvoices = settingsState.userInvoices;
+    return { totalInvoicesCount, filteredUserInvoices, userInvoices };
+  },
+});
+export const darkModeState = selector({
+  key: "darkModeSelector",
+  get: ({ get }) => {
+    const settingsState = get(settingsAppState);
+    const isDarkMode = settingsState.isDarkMode;
+    return isDarkMode;
+  },
+});
 
 export const settingsAppState = atom<SettingsAppState>({
   key: "settingsAppState",

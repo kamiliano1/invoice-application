@@ -1,9 +1,10 @@
 "use client";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import StatusInvoice from "@/components/InvoicesList/StatusInvoice";
-import { InvoiceItemType } from "@/data/data";
 import Link from "next/link";
 import { dateToString } from "@/lib/utils";
+import StatusInvoice from "@/components/ui/StatusInvoice";
+import { z } from "zod";
+import { PreviewInvoiceSchema } from "@/schemas";
 
 export default function InvoiceItem({
   id,
@@ -11,7 +12,7 @@ export default function InvoiceItem({
   paymentDue,
   status,
   total,
-}: InvoiceItemType) {
+}: z.infer<typeof PreviewInvoiceSchema>) {
   return (
     <Link
       href={`${id}/preview`}

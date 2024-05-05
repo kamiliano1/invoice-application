@@ -1,11 +1,13 @@
 import { z } from "zod";
 
-const EMPTY_MESSAGE = "Can't be empty!";
+const EMPTY_MESSAGE = "can't be empty!";
+
+export type StatusInvoiceType = "draft" | "pending" | "paid";
 
 export const PreviewInvoiceSchema = z.object({
   // Was InvoiceSchema
   id: z.string().length(6),
-  paymentDue: z.string(),
+  paymentDue: z.date(),
   clientName: z.string(),
   status: z.enum(["draft", "paid", "pending"]),
   total: z.number(),
@@ -16,7 +18,7 @@ export const InvoiceSchema = z.object({
   id: z.string().optional(),
   paymentDue: z.date().optional(),
   clientName: z.string().min(3, EMPTY_MESSAGE),
-  status: z.enum(["draft", "paid", "pending"]).optional(),
+  status: z.enum(["draft", "paid", "pending"]),
   total: z.number().optional(),
   createdAt: z.date(),
   description: z.string().min(2, EMPTY_MESSAGE),

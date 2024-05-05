@@ -1,15 +1,15 @@
 "use client";
 import { IoMdMoon } from "react-icons/io";
 import { IoSunnySharp } from "react-icons/io5";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import navLogo from "@/public/assets/logo.svg";
 import navAvatar from "@/public/assets/image-avatar.jpg";
 import Image from "next/image";
-import { settingsAppState } from "@/atoms/settingsAppAtom";
+import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
 import Link from "next/link";
 export default function Navbar() {
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-
+  const isDarkMode = useRecoilValue(darkModeState);
   const toggleDarkMode = () => {
     document.body.dataset.theme = "dark";
     setSettingsState((prev) => ({
@@ -35,7 +35,7 @@ export default function Navbar() {
         lg:h-[51.5px] absolute bg-02 bottom-0 rounded-br-[20px] rounded-tl-[20px]"
         ></span>
       </div>
-      {settingsState.isDarkMode ? (
+      {isDarkMode ? (
         <IoMdMoon
           onClick={toggleLightMode}
           className="text-headingM text-07 ml-auto lg:ml-0 cursor-pointer lg:mt-auto"
