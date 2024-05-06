@@ -86,14 +86,13 @@ export default function InvoiceForm({
     name: "items",
   });
   const closeFormInput = () => {
-    form.reset();
-    form.reset({ items: [] });
     router.back();
   };
+
   function onSubmit(values: z.infer<typeof InvoiceSchema>) {
     const updatedData: z.infer<typeof InvoiceSchema> = {
       ...values,
-      paymentTerms: values.paymentTerms,
+      // paymentTerms: values.paymentTerms,
       status: activeInvoiceStatus,
       id: generateUserId(),
       paymentDue: createInvoicePaymentDue(
@@ -104,11 +103,32 @@ export default function InvoiceForm({
     };
     const validatedData = InvoiceSchema.safeParse(updatedData);
     if (validatedData.success) {
-      setSettingsState((prev) => ({
-        ...prev,
-        userInvoices: [...prev.userInvoices, validatedData.data],
-      }));
+      if (invoiceData) {
+        setSettingsState((prev) => {
+          const updatedInvoice = prev.userInvoices.map((item) =>
+            item.id === invoiceData.id
+              ? {
+                  ...item,
+                  ...values,
+                  ...updateItemsTotalValue(values),
+                  paymentDue: createInvoicePaymentDue(
+                    values.createdAt,
+                    values.paymentTerms
+                  ),
+                }
+              : item
+          );
+
+          return { ...prev, userInvoices: updatedInvoice };
+        });
+      } else {
+        setSettingsState((prev) => ({
+          ...prev,
+          userInvoices: [...prev.userInvoices, validatedData.data],
+        }));
+      }
     }
+    closeFormInput();
   }
   return (
     <Form {...form}>

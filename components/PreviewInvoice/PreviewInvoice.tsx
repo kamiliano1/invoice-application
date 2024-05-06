@@ -5,6 +5,7 @@ import StatusInvoice from "@/components/ui/StatusInvoice";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
+import DeleteModal from "./DeleteModal";
 export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   const { userInvoices } = useRecoilValue(userInvoicesState);
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
     clientEmail,
     items,
     total,
-  } = activeInvoice;
+  } = activeInvoice || {};
   const editActivatedInvoice = () => {
     router.push("?invoiceEdit=true");
   };
@@ -36,7 +37,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
       return { ...prev, userInvoices: updatedInvoices };
     });
   };
-  if (activeInvoice.senderAddress)
+  if (activeInvoice)
     return (
       <>
         <div className="p-6 sm:p-12 lg:px-0 lg:w-[730px] max-w-[730px] mx-auto">
@@ -49,7 +50,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
               <Button variant="light" onClick={editActivatedInvoice}>
                 Edit
               </Button>
-              {/* <DeleteModal id={id!} /> */}
+              <DeleteModal id={id!} />
               <Button variant="violet" onClick={switchToPaid}>
                 Mark as Paid
               </Button>
@@ -85,7 +86,6 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
                     Invoice Date
                   </p>
                   <p className="font-bold text-headingS dark:text-white text-08">
-                    {/* {dateToString(createdAt)} */}
                     {createdAt.toDateString()}
                   </p>
                 </div>
@@ -94,7 +94,6 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
                     Payment Due
                   </p>
                   <p className="font-bold text-headingS text-08 dark:text-white">
-                    {/* {dateToString(paymentDue!)} */}
                     {paymentDue?.toDateString()}
                   </p>
                 </div>
@@ -135,7 +134,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
           >
             Edit
           </Button>
-          {/* <DeleteModal id={id!} /> */}
+          <DeleteModal id={id!} />
           <Button
             variant="violet"
             className="w-full px-4"
