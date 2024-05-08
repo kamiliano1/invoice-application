@@ -32,9 +32,8 @@ export default function DeleteModal({ id }: { id: string }) {
     <Dialog onOpenChange={setIsModalOpen} open={isModalOpen} modal={true}>
       <Button
         onClick={() => setIsModalOpen(true)}
-        className="w-[60%] sm:w-auto"
-        variant="red"
-      >
+        className="px-4 w-[60%] sm:w-auto"
+        variant="red">
         Delete
       </Button>
       <DialogPortal>
@@ -46,14 +45,12 @@ export default function DeleteModal({ id }: { id: string }) {
               "bg-03": isDarkMode,
               "bg-white": !isDarkMode,
             }
-          )}
-        >
+          )}>
           <DialogTitle
             className={clsx("text-headingM mb-4", {
               "text-white": isDarkMode,
               "text-08": !isDarkMode,
-            })}
-          >
+            })}>
             Confirm Deletion
           </DialogTitle>
           <DialogDescription className="text-06 leading-[22px] mb-6">

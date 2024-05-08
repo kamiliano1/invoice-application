@@ -40,7 +40,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   if (activeInvoice)
     return (
       <>
-        <div className="p-6 sm:p-12 lg:px-0 lg:w-[730px] max-w-[730px] mx-auto">
+        <div className="">
           <div className="p-6 flex items-center justify-between sm:justify-normal rounded-lg bg-white dark:bg-03">
             <p className="text-body sm:mr-4 text-[#858BB2] dark:text-05">
               Status
@@ -126,20 +126,15 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
             <PreviewSummary items={items} total={total!} />
           </div>
         </div>
-        <div className="p-6 flex items-center justify-between sm:justify-normal sm:hidden ml-auto gap-3 bg-white dark:bg-03">
+        <div className="p-6 flex items-center justify-between sm:justify-normal sm:hidden gap-3 bg-white dark:bg-03">
           <Button
             variant="light"
-            className="w-full"
-            onClick={editActivatedInvoice}
-          >
+            className="px-7 w-[30%]"
+            onClick={editActivatedInvoice}>
             Edit
           </Button>
           <DeleteModal id={id!} />
-          <Button
-            variant="violet"
-            className="w-full px-4"
-            onClick={switchToPaid}
-          >
+          <Button variant="violet" className="w-full " onClick={switchToPaid}>
             Mark as Paid
           </Button>
         </div>
