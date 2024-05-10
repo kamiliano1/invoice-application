@@ -559,7 +559,7 @@ export default function InvoiceForm({
               <>
                 {" "}
                 <Button
-                  variant="dark"
+                  variant={isDarkMode ? "lightDarkMode" : "light"}
                   type="button"
                   className="sm:ml-auto"
                   onClick={closeFormInput}
@@ -584,7 +584,7 @@ export default function InvoiceForm({
                   Discard
                 </Button>
                 <Button
-                  variant="dark"
+                  variant={isDarkMode ? "darkDarkMode" : "dark"}
                   onClick={() => setActiveInvoiceStatus("draft")}
                   className="w-[100%] sm:w-auto"
                 >

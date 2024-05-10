@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const dateToString = (paymentDue: string | Date) => {
+export const dateToString = (paymentDue: Date) => {
   return new Date(paymentDue).toLocaleString("en-GB", {
     day: "2-digit",
     month: "short",

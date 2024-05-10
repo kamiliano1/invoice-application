@@ -23,16 +23,17 @@ export default function PreviewPage({
 
   if (windowWidth < 640) {
     return (
-      // <main className={cn({ dark: isDarkMode })}>
       <main
         className={cn(
           "min-h-[calc(100dvh_-72px)] sm:min-h-[calc(100dvh_-_80px)] lg:h-[100vh] lg:px-0 flex flex-col bg-11 dark:bg-12",
           { dark: isDarkMode }
-        )}>
-        <div className="p-6">
+        )}
+      >
+        <div className="">
           <Link
-            className="flex items-center text-headingS font-bold lg:px-0 lg:w-[730px] max-w-[730px] text-08 dark:text-white"
-            href={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}>
+            className="flex items-center text-headingS font-bold lg:px-0 lg:w-[730px] max-w-[730px] text-08 dark:text-white mb-8 mt-2"
+            href={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}
+          >
             <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go
             back
           </Link>
@@ -50,11 +51,13 @@ export default function PreviewPage({
       className={cn(
         "min-h-[calc(100dvh_-72px)] sm:min-h-[calc(100dvh_-_80px)] lg:h-[100vh] lg:px-0 flex flex-col bg-11 dark:bg-12",
         { dark: isDarkMode }
-      )}>
+      )}
+    >
       <div className="p-12 lg:px-0 lg:w-[730px] max-w-[730px] mx-auto">
         <Link
           className="flex items-center text-headingS font-bold  text-08 dark:text-white"
-          href={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}>
+          href={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}
+        >
           <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go back
         </Link>
         <InvoiceForm invoiceData={activeInvoice} />

@@ -22,8 +22,8 @@ type PreviewSummaryType = {
 export default function PreviewSummary({ items, total }: PreviewSummaryType) {
   const windowWidth = useWindowWith();
   return (
-    <div className="rounded-lg sm:row-start-4 sm:col-start-1 sm:col-span-4 bg-[#F9FEFB] dark:bg-04">
-      <table className=" w-full">
+    <div className=" sm:row-start-4 sm:col-start-1 sm:col-span-4 rounded-lg bg-[#F9FEFB] dark:bg-04">
+      <table className="w-full">
         <thead className="hidden sm:table-row-group">
           <tr>
             <th className="text-body text-07 dark:text-05 py-3 text-start p-6 sm:px-8">
@@ -48,16 +48,18 @@ export default function PreviewSummary({ items, total }: PreviewSummaryType) {
             <PreviewSummaryItem key={item.name} items={item} />
           ))}
         </tbody>
-        <tfoot className="items-center rounded-b-lg bg-[#373B53] dark:bg-08">
+        <tfoot className="items-center rounded-b-lg bg-[#373B53] dark:bg-08 ">
           <tr className="">
             <th
               colSpan={windowWidth > 640 ? 2 : 1}
-              className="text-start text-body text-white p-6  pr-0 sm:px-8">
+              className="text-start text-body text-white p-6 pr-0 sm:px-8 rounded-bl-lg"
+            >
               Amount Due
             </th>
             <th
               colSpan={windowWidth > 640 ? 2 : 1}
-              className="text-white text-end text-headingM p-6 pl-0 sm:px-8">
+              className="text-white text-end text-headingM p-6 pl-0 sm:px-8 rounded-br-lg"
+            >
               £ {total.toFixed(2)}
             </th>
           </tr>
@@ -71,7 +73,7 @@ function PreviewSummaryItem({ items }: PreviewSummaryItemType) {
   const { name, quantity, price, total } = items;
   return (
     <>
-      <tr className="first:rounded-t-lg bg-[#F9FEFB] dark:bg-04">
+      <tr className="first:rounded-t-lg ">
         <td className="font-bold text-headingS text-08 dark:text-white pl-6 pt-3 sm:px-8 sm:pt-0 ">
           {" "}
           {name}
@@ -91,7 +93,8 @@ function PreviewSummaryItem({ items }: PreviewSummaryItemType) {
 
         <td
           rowSpan={2}
-          className="font-bold text-headingS text-07 dark:text-06 text-end pr-6 pl-0 sm:hidden">
+          className="font-bold text-headingS text-07 dark:text-06 text-end pr-6 pl-0 sm:hidden"
+        >
           £ {total.toFixed(2)}
         </td>
       </tr>

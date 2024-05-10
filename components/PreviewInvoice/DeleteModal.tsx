@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function DeleteModal({ id }: { id: string }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,37 +33,45 @@ export default function DeleteModal({ id }: { id: string }) {
     <Dialog onOpenChange={setIsModalOpen} open={isModalOpen} modal={true}>
       <Button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 w-[60%] sm:w-auto"
-        variant="red">
+        className="px-4 w-[51%] sm:w-auto"
+        variant="red"
+      >
         Delete
       </Button>
       <DialogPortal>
-        <DialogOverlay className="bg-12/60 data-[state=open]:animate-overlayShow fixed inset-0 z-[600]" />
+        <DialogOverlay className="bg-12/40 data-[state=open]:animate-overlayShow fixed inset-0 z-[600]" />
         <DialogContent
           className={clsx(
-            "data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[87vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] rounded-lg p-8 z-[700] border-none",
+            "data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[87vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] rounded-lg p-8 z-[700] border-none gap-5",
             {
               "bg-03": isDarkMode,
               "bg-white": !isDarkMode,
             }
-          )}>
+          )}
+        >
           <DialogTitle
-            className={clsx("text-headingM mb-4", {
+            className={clsx({
               "text-white": isDarkMode,
               "text-08": !isDarkMode,
-            })}>
+            })}
+          >
             Confirm Deletion
           </DialogTitle>
-          <DialogDescription className="text-06 leading-[22px] mb-6">
+          <DialogDescription className="text-06 leading-[22px]">
             Are you sure you want to delete invoice {id}? This action cannot be
             undone.
           </DialogDescription>
           <div className="flex gap-3 justify-end">
             <DialogClose asChild>
-              <Button variant="light">Cancel</Button>
+              <Button
+                className="px-[1.375rem]"
+                variant={isDarkMode ? "lightDarkMode" : "light"}
+              >
+                Cancel
+              </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button variant="red" onClick={deleteInvoice}>
+              <Button variant="red" className="px-5" onClick={deleteInvoice}>
                 Delete
               </Button>
             </DialogClose>

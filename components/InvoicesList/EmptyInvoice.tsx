@@ -9,7 +9,7 @@ export default function EmptyInvoice() {
       <h2 className="mb-5 text-headingM font-bold text-08 dark:text-white">
         There is nothing here
       </h2>
-      <p className="text-body text-center text-06 dark:text-05">
+      <p className="text-body text-center text-06 mx-auto dark:text-05 w-[176px] lg:w-full">
         Create an invoice by clicking the New button and get started
       </p>
     </div>

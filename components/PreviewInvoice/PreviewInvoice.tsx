@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
 import DeleteModal from "./DeleteModal";
+import { dateToString } from "@/lib/utils";
 export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   const { userInvoices } = useRecoilValue(userInvoicesState);
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   if (activeInvoice)
     return (
       <>
-        <div className="">
+        <div className="p-6">
           <div className="p-6 flex items-center justify-between sm:justify-normal rounded-lg bg-white dark:bg-03">
             <p className="text-body sm:mr-4 text-[#858BB2] dark:text-05">
               Status
@@ -86,7 +87,8 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
                     Invoice Date
                   </p>
                   <p className="font-bold text-headingS dark:text-white text-08">
-                    {createdAt.toDateString()}
+                    {dateToString(createdAt)}
+                    {/* {createdAt.toDateString()} */}
                   </p>
                 </div>
                 <div>
@@ -94,7 +96,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
                     Payment Due
                   </p>
                   <p className="font-bold text-headingS text-08 dark:text-white">
-                    {paymentDue?.toDateString()}
+                    {paymentDue ? dateToString(paymentDue) : ""}
                   </p>
                 </div>
               </div>
@@ -129,17 +131,18 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
         <div className="p-6 flex items-center justify-between sm:justify-normal sm:hidden gap-3 bg-white dark:bg-03">
           <Button
             variant="light"
-            className="px-7 w-[30%]"
-            onClick={editActivatedInvoice}>
+            className="px-7 w-[23%]"
+            onClick={editActivatedInvoice}
+          >
             Edit
           </Button>
           <DeleteModal id={id!} />
-          <Button variant="violet" className="w-full " onClick={switchToPaid}>
+          <Button variant="violet" className="w-full" onClick={switchToPaid}>
             Mark as Paid
           </Button>
         </div>
       </>
     );
 
-  return <h2>Someting went wrong</h2>;
+  return <h2>Something went wrong</h2>;
 }
