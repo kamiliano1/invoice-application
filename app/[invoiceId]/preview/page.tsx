@@ -21,31 +21,6 @@ export default function PreviewPage({
   const windowWidth = useWindowWith();
   const activeInvoice = userInvoices.filter((item) => item.id === invoiceId)[0];
 
-  if (windowWidth < 640) {
-    return (
-      <main
-        className={cn(
-          "min-h-[calc(100dvh_-72px)] sm:min-h-[calc(100dvh_-_80px)] lg:h-[100vh] lg:px-0 flex flex-col bg-11 dark:bg-12",
-          { dark: isDarkMode }
-        )}
-      >
-        <div className="">
-          <Link
-            className="flex items-center text-headingS font-bold lg:px-0 lg:w-[730px] max-w-[730px] text-08 dark:text-white mb-8 mt-2"
-            href={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}
-          >
-            <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go
-            back
-          </Link>
-          {isInvoiceEdit ? (
-            <InvoiceForm invoiceData={activeInvoice} />
-          ) : (
-            <PreviewInvoice invoiceId={invoiceId} />
-          )}
-        </div>
-      </main>
-    );
-  }
   return (
     <main
       className={cn(
@@ -53,15 +28,27 @@ export default function PreviewPage({
         { dark: isDarkMode }
       )}
     >
-      <div className="p-12 lg:px-0 lg:w-[730px] max-w-[730px] mx-auto">
+      <div className="max-w-[778px] mx-auto w-full">
         <Link
-          className="flex items-center text-headingS font-bold  text-08 dark:text-white"
+          className="flex items-center text-headingS font-bold text-08 dark:text-white pt-6 px-6 sm:px-10 sm:pt-14"
           href={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}
         >
           <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go back
         </Link>
-        <InvoiceForm invoiceData={activeInvoice} />
-        <PreviewInvoice invoiceId={invoiceId} />
+        {windowWidth < 640 ? (
+          <>
+            {isInvoiceEdit ? (
+              <InvoiceForm invoiceData={activeInvoice} />
+            ) : (
+              <PreviewInvoice invoiceId={invoiceId} />
+            )}
+          </>
+        ) : (
+          <>
+            <InvoiceForm invoiceData={activeInvoice} />
+            <PreviewInvoice invoiceId={invoiceId} />
+          </>
+        )}
       </div>
     </main>
   );

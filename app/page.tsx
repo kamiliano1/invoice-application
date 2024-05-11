@@ -11,19 +11,6 @@ export default function HomePage() {
   const isDarkMode = useRecoilValue(darkModeState);
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
-  if (windowWidth < 640)
-    return (
-      <main
-        className={cn(
-          "flex flex-col items-start min-h-[calc(100dvh_-72px)] sm:min-h-[calc(100dvh_-_80px)] lg:min-h-[100vh] bg-11 dark:bg-12",
-          {
-            dark: isDarkMode,
-          }
-        )}
-      >
-        {isInvoiceEdit ? <InvoiceForm /> : <InvoicesList />}
-      </main>
-    );
   return (
     <main
       className={cn(
@@ -33,8 +20,14 @@ export default function HomePage() {
         }
       )}
     >
-      <InvoicesList />
-      <InvoiceForm />
+      {windowWidth < 640 ? (
+        <>{isInvoiceEdit ? <InvoiceForm /> : <InvoicesList />}</>
+      ) : (
+        <>
+          <InvoicesList />
+          <InvoiceForm />
+        </>
+      )}
     </main>
   );
 }

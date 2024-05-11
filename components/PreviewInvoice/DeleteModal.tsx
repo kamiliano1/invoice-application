@@ -15,7 +15,13 @@ import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-export default function DeleteModal({ id }: { id: string }) {
+export default function DeleteModal({
+  id,
+  className,
+}: {
+  id: string;
+  className?: string;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isDarkMode = useRecoilValue(darkModeState);
   const router = useRouter();
@@ -33,7 +39,7 @@ export default function DeleteModal({ id }: { id: string }) {
     <Dialog onOpenChange={setIsModalOpen} open={isModalOpen} modal={true}>
       <Button
         onClick={() => setIsModalOpen(true)}
-        className="px-4 w-[51%] sm:w-auto"
+        className={cn(className)}
         variant="red"
       >
         Delete

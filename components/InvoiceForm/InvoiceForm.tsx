@@ -6,7 +6,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { MdDelete } from "react-icons/md";
 import {
   Select,
   SelectContent,
@@ -19,12 +18,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { MdDelete } from "react-icons/md";
+import { Calendar } from "@/components/ui/calendar";
 import { CiCalendar } from "react-icons/ci";
 import { format } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { z } from "zod";
 import { InvoiceSchema } from "@/schemas";
 import {
@@ -35,10 +36,11 @@ import {
 } from "@/lib/utils";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { settingsAppState } from "@/atoms/settingsAppAtom";
-import { Calendar } from "../ui/calendar";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
+import Link from "next/link";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 export default function InvoiceForm({
   invoiceData,
 }: {
@@ -132,9 +134,15 @@ export default function InvoiceForm({
   }
   return (
     <Form {...form}>
+      <Link
+        className="flex items-center text-headingS font-bold text-08 dark:text-white py-10 sm:px-10 sm:pt-14"
+        href="../"
+      >
+        <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go back
+      </Link>
       <div
         className={cn(
-          "duration-500 w-full sm:absolute sm:top-0 sm:-translate-x-full grid sm:grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-full ",
+          "duration-500 w-full sm:absolute sm:top-0 sm:-translate-x-full grid sm:grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-full",
           {
             "sm:translate-x-0": isInvoiceEdit,
           }
@@ -443,95 +451,110 @@ export default function InvoiceForm({
                 </FormItem>
               )}
             />
-            <h3 className="text-headingS text-[#777F98] mb-3">Item List</h3>
-            <div className="hidden list-none sm:grid gap-x-4 grid-cols-[minmax(0,_.5fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.3fr)] sm:grid-cols-[minmax(0,_1.6fr)_minmax(0,_.4fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.2fr)] items-center">
-              <p className="text-bodyVariant mb-2 text-07 dark:text-05">
-                Item name
-              </p>
-              <p className="text-bodyVariant mb-2 text-07 dark:text-05">Qty.</p>
-              <p className="text-bodyVariant mb-2 text-07 dark:text-05">
-                Price
-              </p>
-              <p className="text-bodyVariant mb-2 text-07 dark:text-05">
-                Total
-              </p>
-            </div>
-            {fields.map((item, index) => (
-              <li
-                key={item.id}
-                className="list-none grid gap-x-4 grid-cols-[minmax(0,_.5fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.3fr)] sm:grid-cols-[minmax(0,_1.6fr)_minmax(0,_.4fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.2fr)] items-center
+            <div>
+              <h3 className="text-headingS text-[#777F98] sm:mb-4">
+                Item List
+              </h3>
+              <div className="hidden list-none sm:grid gap-x-4 grid-cols-[minmax(0,_.5fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.3fr)] sm:grid-cols-[minmax(0,_1.6fr)_minmax(0,_.4fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.2fr)] items-center">
+                <p className="text-bodyVariant mb-2 text-07 dark:text-06">
+                  Item name
+                </p>
+                <p className="text-bodyVariant mb-2 text-07 dark:text-06">
+                  Qty.
+                </p>
+                <p className="text-bodyVariant mb-2 text-07 dark:text-06">
+                  Price
+                </p>
+                <p className="text-bodyVariant mb-2 text-07 dark:text-06">
+                  Total
+                </p>
+              </div>
+              {fields.map((item, index) => (
+                <li
+                  key={item.id}
+                  className="list-none grid gap-x-4 grid-cols-[minmax(0,_.5fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.3fr)] sm:grid-cols-[minmax(0,_1.6fr)_minmax(0,_.4fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.2fr)] items-center
             "
-              >
-                <FormField
-                  control={form.control}
-                  name={`items.${index}.name`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex justify-between">
-                        <FormLabel className="sm:hidden">Item Name</FormLabel>
-                      </div>
-                      <FormControl>
-                        <Input
-                          placeholder="Item Name"
-                          error={form.formState.errors.items?.[index]?.name}
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`items.${index}.quantity`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex justify-between">
-                        <FormLabel className="sm:hidden">Qty.</FormLabel>
-                      </div>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Qty."
-                          error={form.formState.errors.items?.[index]?.quantity}
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`items.${index}.price`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex justify-between">
-                        <FormLabel className="sm:hidden">Price</FormLabel>
-                      </div>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          placeholder="Price"
-                          error={form.formState.errors.items?.[index]?.price}
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <div className="flex flex-col mb-3 sm:mb-0">
-                  <p className="text-headingS py-3 px-3 border-[1px] truncate border-transparent rounded focus:border-01 w-full text-06">
-                    {(
-                      form.watch(`items.${index}.price`) *
-                      form.watch(`items.${index}.quantity`)
-                    ).toFixed(2)}
-                  </p>
-                </div>
-                <MdDelete
-                  onClick={() => remove(index)}
-                  className="text-[1.5rem] col-start-4 sm:col-start-5 mt-4 cursor-pointer text-06 hover:text-09"
-                />
-              </li>
-            ))}
+                >
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem className="col-span-4 sm:col-span-1 mb-4 sm:mb-0">
+                        <div className="flex justify-between">
+                          <FormLabel className="sm:hidden mt-6">
+                            Item Name
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <Input
+                            placeholder="Item Name"
+                            error={form.formState.errors.items?.[index]?.name}
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.quantity`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex justify-between">
+                          <FormLabel className="sm:hidden">Qty.</FormLabel>
+                        </div>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="Qty."
+                            error={
+                              form.formState.errors.items?.[index]?.quantity
+                            }
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`items.${index}.price`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex justify-between">
+                          <FormLabel className="sm:hidden">Price</FormLabel>
+                        </div>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="Price"
+                            error={form.formState.errors.items?.[index]?.price}
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex flex-col">
+                    <p className="text-bodyVariant text-07 dark:text-06 sm:hidden">
+                      Total
+                    </p>
+                    <p className="text-headingS py-3 px-3 border-[1px] truncate mt-2 border-transparent rounded focus:border-01 w-full text-06">
+                      {(
+                        form.watch(`items.${index}.price`) *
+                        form.watch(`items.${index}.quantity`)
+                      ).toFixed(2)}
+                    </p>
+                  </div>
+
+                  <MdDelete
+                    onClick={() => remove(index)}
+                    className="text-[1.5rem] col-start-4 sm:col-start-5 h-[49.33px] cursor-pointer text-06 hover:text-09 self-end"
+                  />
+                </li>
+              ))}
+            </div>
+
             <Button
               type="button"
               variant="light"
@@ -543,12 +566,12 @@ export default function InvoiceForm({
             </Button>
             <div>
               {Object.keys(form.formState.errors).length > 0 && (
-                <p className="text-09 text-[.625rem]">
+                <p className="text-09 text-[.625rem] mb-2">
                   - All fields must be added
                 </p>
               )}
               {form.formState.errors.items?.message && (
-                <p className="text-09 text-[.625rem]">
+                <p className="text-09 text-[.625rem] mb-2">
                   - An item must be added
                 </p>
               )}
@@ -576,7 +599,7 @@ export default function InvoiceForm({
             ) : (
               <>
                 <Button
-                  variant="light"
+                  variant={isDarkMode ? "lightDarkMode" : "light"}
                   type="button"
                   className="sm:mr-auto w-[50%] sm:w-auto"
                   onClick={closeFormInput}

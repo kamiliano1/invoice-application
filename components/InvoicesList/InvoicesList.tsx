@@ -31,8 +31,8 @@ export default function InvoicesList() {
     }
   }, [windowWidth, totalInvoicesCount]);
   return (
-    <div className="p-6 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
-      <div className="font-bold flex items-center text-08 dark:text-white my-4">
+    <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
+      <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
         <div className="mr-auto">
           <h1 className="text-headingM sm:text-headingL mb-1">Invoices</h1>
           <p className="text-body">{countInvoiceInfo}</p>

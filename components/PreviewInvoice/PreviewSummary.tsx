@@ -48,8 +48,8 @@ export default function PreviewSummary({ items, total }: PreviewSummaryType) {
             <PreviewSummaryItem key={item.name} items={item} />
           ))}
         </tbody>
-        <tfoot className="items-center rounded-b-lg bg-[#373B53] dark:bg-08 ">
-          <tr className="">
+        <tfoot className="items-center  bg-[#373B53] dark:bg-08 ">
+          <tr>
             <th
               colSpan={windowWidth > 640 ? 2 : 1}
               className="text-start text-body text-white p-6 pr-0 sm:px-8 rounded-bl-lg"

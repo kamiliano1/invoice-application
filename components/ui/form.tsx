@@ -95,7 +95,7 @@ const FormLabel = React.forwardRef<
     <Label
       ref={ref}
       className={cn(
-        " text-07 dark:text-05 text-bodyVariant",
+        " text-07 dark:text-06 text-bodyVariant",
         error && "text-09",
         className
       )}

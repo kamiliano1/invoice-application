@@ -1,14 +1,19 @@
-import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
+import {
+  darkModeState,
+  settingsAppState,
+  userInvoicesState,
+} from "@/atoms/settingsAppAtom";
 import { StatusInvoiceType } from "@/schemas";
 import { useRecoilState, useRecoilValue } from "recoil";
 import StatusInvoice from "@/components/ui/StatusInvoice";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
-import DeleteModal from "./DeleteModal";
+import DeleteModal from "@/components/PreviewInvoice/DeleteModal";
 import { dateToString } from "@/lib/utils";
 export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   const { userInvoices } = useRecoilValue(userInvoicesState);
+  const isDarkMode = useRecoilValue(darkModeState);
   const router = useRouter();
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const activeInvoice = userInvoices.filter((item) => item.id === invoiceId)[0];
@@ -41,18 +46,22 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   if (activeInvoice)
     return (
       <>
-        <div className="p-6">
+        <div className="p-6 sm:px-10">
           <div className="p-6 flex items-center justify-between sm:justify-normal rounded-lg bg-white dark:bg-03">
             <p className="text-body sm:mr-4 text-[#858BB2] dark:text-05">
               Status
             </p>
             <StatusInvoice status={status!} />
             <div className="justify-between hidden sm:flex sm:ml-auto gap-3">
-              <Button variant="light" onClick={editActivatedInvoice}>
+              <Button
+                variant={isDarkMode ? "lightDarkMode" : "light"}
+                className="px-6"
+                onClick={editActivatedInvoice}
+              >
                 Edit
               </Button>
-              <DeleteModal id={id!} />
-              <Button variant="violet" onClick={switchToPaid}>
+              <DeleteModal id={id!} className="px-6" />
+              <Button variant="violet" onClick={switchToPaid} className="px-5">
                 Mark as Paid
               </Button>
             </div>
@@ -88,7 +97,6 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
                   </p>
                   <p className="font-bold text-headingS dark:text-white text-08">
                     {dateToString(createdAt)}
-                    {/* {createdAt.toDateString()} */}
                   </p>
                 </div>
                 <div>
@@ -136,7 +144,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
           >
             Edit
           </Button>
-          <DeleteModal id={id!} />
+          <DeleteModal id={id!} className="px-4 w-[51%] sm:w-auto" />
           <Button variant="violet" className="w-full" onClick={switchToPaid}>
             Mark as Paid
           </Button>
