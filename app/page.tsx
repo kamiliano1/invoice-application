@@ -4,8 +4,10 @@ import InvoiceForm from "@/components/InvoiceForm/InvoiceForm";
 import InvoicesList from "@/components/InvoicesList/InvoicesList";
 import useWindowWith from "@/hooks/useWindowWidth";
 import { cn } from "@/lib/utils";
+import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useSearchParams } from "next/navigation";
 import { useRecoilValue } from "recoil";
+import Link from "next/link";
 export default function HomePage() {
   const windowWidth = useWindowWith();
   const isDarkMode = useRecoilValue(darkModeState);
@@ -21,7 +23,22 @@ export default function HomePage() {
       )}
     >
       {windowWidth < 640 ? (
-        <>{isInvoiceEdit ? <InvoiceForm /> : <InvoicesList />}</>
+        <>
+          {isInvoiceEdit ? (
+            <>
+              <Link
+                className="flex items-center text-headingS font-bold text-08 dark:text-white p-6 sm:px-10 sm:pt-14 sm:hidden"
+                href="../"
+              >
+                <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" />{" "}
+                Go back
+              </Link>
+              <InvoiceForm />
+            </>
+          ) : (
+            <InvoicesList />
+          )}
+        </>
       ) : (
         <>
           <InvoicesList />

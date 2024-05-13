@@ -24,32 +24,30 @@ export default function PreviewPage({
   return (
     <main
       className={cn(
-        "min-h-[calc(100dvh_-72px)] sm:min-h-[calc(100dvh_-_80px)] lg:h-[100vh] lg:px-0 flex flex-col bg-11 dark:bg-12",
+        "flex flex-col items-start min-h-[calc(100dvh_-72px)] sm:min-h-[calc(100dvh_-_80px)] lg:h-[100vh] lg:px-0 bg-11 dark:bg-12",
         { dark: isDarkMode }
       )}
     >
-      <div className="max-w-[778px] mx-auto w-full">
-        <Link
-          className="flex items-center text-headingS font-bold text-08 dark:text-white pt-6 px-6 sm:px-10 sm:pt-14"
-          href={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}
-        >
-          <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go back
-        </Link>
-        {windowWidth < 640 ? (
-          <>
-            {isInvoiceEdit ? (
-              <InvoiceForm invoiceData={activeInvoice} />
-            ) : (
-              <PreviewInvoice invoiceId={invoiceId} />
-            )}
-          </>
-        ) : (
-          <>
+      <Link
+        className="flex items-center text-headingS font-bold text-08 dark:text-white p-6 sm:px-10 sm:pt-14 sm:hidden"
+        href={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}
+      >
+        <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go back
+      </Link>
+      {windowWidth < 640 ? (
+        <>
+          {isInvoiceEdit ? (
             <InvoiceForm invoiceData={activeInvoice} />
+          ) : (
             <PreviewInvoice invoiceId={invoiceId} />
-          </>
-        )}
-      </div>
+          )}
+        </>
+      ) : (
+        <>
+          <InvoiceForm invoiceData={activeInvoice} />
+          <PreviewInvoice invoiceId={invoiceId} />
+        </>
+      )}
     </main>
   );
 }

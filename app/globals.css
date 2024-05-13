@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.html,
-body,
-:root {
-  @apply h-full bg-12;
-}
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -16,4 +10,24 @@ input::-webkit-inner-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+html,
+body,
+:root {
+  @apply h-full;
+}
+
+body[data-theme="light"] {
+  @apply bg-11;
+}
+
+body[data-theme="dark"] {
+  @apply bg-12;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @apply bg-12;
+  }
 }

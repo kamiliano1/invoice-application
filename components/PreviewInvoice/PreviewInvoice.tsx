@@ -45,7 +45,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   };
   if (activeInvoice)
     return (
-      <>
+      <div className="max-w-[778px] mx-auto w-full">
         <div className="p-6 sm:px-10">
           <div className="p-6 flex items-center justify-between sm:justify-normal rounded-lg bg-white dark:bg-03">
             <p className="text-body sm:mr-4 text-[#858BB2] dark:text-05">
@@ -149,7 +149,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
             Mark as Paid
           </Button>
         </div>
-      </>
+      </div>
     );
 
   return <h2>Something went wrong</h2>;

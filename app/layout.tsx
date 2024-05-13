@@ -23,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <RecoilProvider>
         <body
+          style={{ colorScheme: "dark" }}
           className={`${leagueSpartan.className} ${leagueSpartan.variable}`}
         >
           <Navbar />

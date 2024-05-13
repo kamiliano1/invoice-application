@@ -39,8 +39,6 @@ import { settingsAppState } from "@/atoms/settingsAppAtom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
-import Link from "next/link";
-import { MdKeyboardArrowLeft } from "react-icons/md";
 export default function InvoiceForm({
   invoiceData,
 }: {
@@ -88,13 +86,13 @@ export default function InvoiceForm({
     name: "items",
   });
   const closeFormInput = () => {
+    form.reset();
     router.back();
   };
 
   function onSubmit(values: z.infer<typeof InvoiceSchema>) {
     const updatedData: z.infer<typeof InvoiceSchema> = {
       ...values,
-      // paymentTerms: values.paymentTerms,
       status: activeInvoiceStatus,
       id: generateUserId(),
       paymentDue: createInvoicePaymentDue(
@@ -130,16 +128,10 @@ export default function InvoiceForm({
         }));
       }
     }
-    closeFormInput();
+    router.back();
   }
   return (
     <Form {...form}>
-      <Link
-        className="flex items-center text-headingS font-bold text-08 dark:text-white py-10 sm:px-10 sm:pt-14"
-        href="../"
-      >
-        <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go back
-      </Link>
       <div
         className={cn(
           "duration-500 w-full sm:absolute sm:top-0 sm:-translate-x-full grid sm:grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-full",
@@ -152,10 +144,18 @@ export default function InvoiceForm({
           onSubmit={form.handleSubmit(onSubmit)}
           className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white"
         >
-          <div className="px-4 sm:p-14 flex flex-col gap-5">
+          <div className="px-6 sm:p-14 flex flex-col gap-5">
             <h2 className="text-headingM text-08 dark:text-white">
-              New Invoice
+              {invoiceData ? (
+                <>
+                  Edit <span className="text-06">#</span>
+                  {invoiceData.id}
+                </>
+              ) : (
+                " New Invoice"
+              )}
             </h2>
+
             <p className="text-01 text-headingSVariant mb-3">Bill from</p>
             <div className="grid gap-5">
               <FormField
