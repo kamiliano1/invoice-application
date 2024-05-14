@@ -35,16 +35,20 @@ import {
   updateItemsTotalValue,
 } from "@/lib/utils";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { settingsAppState } from "@/atoms/settingsAppAtom";
+import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
+import BackButton from "@/components/ui/BackButton";
 export default function InvoiceForm({
   invoiceData,
+  invoiceId,
 }: {
   invoiceData?: z.infer<typeof InvoiceSchema>;
+  invoiceId?: string;
 }) {
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
+  const { userInvoices } = useRecoilValue(userInvoicesState);
   const isDarkMode = useRecoilValue(darkModeState);
   const [activeInvoiceStatus, setActiveInvoiceStatus] = useState<
     "paid" | "draft"
@@ -145,6 +149,12 @@ export default function InvoiceForm({
           className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white"
         >
           <div className="px-6 sm:p-14 flex flex-col gap-5">
+            <BackButton
+              className="py-6 sm:hidden"
+              backLink={
+                isInvoiceEdit && invoiceData ? `/${invoiceId}/preview` : "../"
+              }
+            />
             <h2 className="text-headingM text-08 dark:text-white">
               {invoiceData ? (
                 <>
@@ -152,7 +162,7 @@ export default function InvoiceForm({
                   {invoiceData.id}
                 </>
               ) : (
-                " New Invoice"
+                "New Invoice"
               )}
             </h2>
 

@@ -7,14 +7,17 @@ import { StatusInvoiceType } from "@/schemas";
 import { useRecoilState, useRecoilValue } from "recoil";
 import StatusInvoice from "@/components/ui/StatusInvoice";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
 import DeleteModal from "@/components/PreviewInvoice/DeleteModal";
 import { dateToString } from "@/lib/utils";
+import BackButton from "@/components/ui/BackButton";
 export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   const { userInvoices } = useRecoilValue(userInvoicesState);
   const isDarkMode = useRecoilValue(darkModeState);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const activeInvoice = userInvoices.filter((item) => item.id === invoiceId)[0];
   const {
@@ -46,6 +49,10 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   if (activeInvoice)
     return (
       <div className="max-w-[778px] mx-auto w-full">
+        <BackButton
+          className="pt-6 px-6"
+          backLink={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}
+        />
         <div className="p-6 sm:px-10">
           <div className="p-6 flex items-center justify-between sm:justify-normal rounded-lg bg-white dark:bg-03">
             <p className="text-body sm:mr-4 text-[#858BB2] dark:text-05">
