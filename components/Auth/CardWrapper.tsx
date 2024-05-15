@@ -17,7 +17,6 @@ type CardWrapperType = {
   children: React.ReactNode;
   headerLabel: string;
   headerDescription: string;
-  buttonLabel: string;
   redirectButtonLabel: string;
   redirectButtonDescription: string;
   redirectLink: string;
@@ -27,16 +26,19 @@ export default function CardWrapper({
   children,
   headerLabel,
   headerDescription,
-  buttonLabel,
   redirectButtonLabel,
   redirectButtonDescription,
   redirectLink,
 }: CardWrapperType) {
   const isDarkMode = useRecoilValue(darkModeState);
   return (
-    <div className="h-full flex justify-center items-center">
+    <div
+      className={clsx("h-full flex justify-center items-center", {
+        dark: isDarkMode,
+      })}
+    >
       <Card
-        className={clsx("max-w-[450px] w-[70vw] rounded-xl text-black ", {
+        className={clsx("max-w-[450px] w-[70vw] rounded-xl text-black", {
           "bg-03": isDarkMode,
           "bg-white": !isDarkMode,
         })}
@@ -57,9 +59,7 @@ export default function CardWrapper({
             {headerDescription}
           </CardDescription>
           {children}
-          <Button className="w-full" variant={"violet"}>
-            {buttonLabel}
-          </Button>
+
           <RedirectButton
             redirectButtonDescription={redirectButtonDescription}
             redirectButtonLabel={redirectButtonLabel}

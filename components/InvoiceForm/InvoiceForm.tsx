@@ -48,7 +48,6 @@ export default function InvoiceForm({
   invoiceId?: string;
 }) {
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const { userInvoices } = useRecoilValue(userInvoicesState);
   const isDarkMode = useRecoilValue(darkModeState);
   const [activeInvoiceStatus, setActiveInvoiceStatus] = useState<
     "paid" | "draft"
