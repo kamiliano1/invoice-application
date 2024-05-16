@@ -18,7 +18,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FormSuccess from "@/components/Auth/FormSuccess";
 import FormError from "./FormError";
+import { useState, useTransition } from "react";
+import { login } from "@/actions/login";
 export default function LoginForm() {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -26,7 +31,20 @@ export default function LoginForm() {
       password: "",
     },
   });
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {};
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+    setError("");
+    setSuccess("");
+    const validatedData = LoginSchema.safeParse(values);
+    if (!validatedData.success) setError("Invalid credentials");
+    startTransition(() => {
+      login(values)
+        .then((res) => {
+          setSuccess(res?.success);
+          setError(res?.error);
+        })
+        .catch(() => setError("Something went wrong"));
+    });
+  };
   return (
     <CardWrapper
       headerLabel="Login"
@@ -87,11 +105,11 @@ export default function LoginForm() {
               </FormItem>
             )}
           />
-          <Button className="w-full" variant={"violet"}>
+          <Button loading={isPending} className="w-full" variant={"violet"}>
             Login
           </Button>
-          <FormSuccess message="User created" />
-          <FormError message="Something went wrong" />
+          <FormSuccess message={success} />
+          <FormError message={error} />
         </form>
       </Form>
     </CardWrapper>

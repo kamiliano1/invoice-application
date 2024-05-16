@@ -36,19 +36,16 @@ export default function RegisterForm() {
     setError("");
     setSuccess("");
     const validatedData = RegisterSchema.safeParse(values);
-    if (validatedData.success) {
-      startTransition(() => {
-        register(values)
-          .then((res) => {
-            setError(res.error);
-            setSuccess(res.success);
-          })
-          .catch(() => setError("Something went wrong"));
-      });
-      // console.log(validatedData.data);
-      return;
-    }
-    setError("Something went wrong");
+    if (!validatedData.success) setError("Invalid credentials");
+    startTransition(() => {
+      register(values)
+        .then((res) => {
+          setError(res.error);
+          setSuccess(res.success);
+        })
+        .catch(() => setError("Something went wrong"));
+    });
+    return;
   };
   return (
     <CardWrapper
