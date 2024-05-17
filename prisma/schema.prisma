@@ -13,8 +13,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum InvoiceStatus {
+  draft
+  paid
+  pending
+}
+
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  email    String @unique
-  password String
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  email     String  @unique
+  password  String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId String  @db.ObjectId
+}
+
+model SenderAddress {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  street   String
+  city     String
+  postCode String
+  country  String
+  Invoice  Invoice[]
+}
+
+model ClientAddress {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  street   String
+  city     String
+  postCode String
+  country  String
+  Invoice  Invoice[]
+}
+
+model Items {
+  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  quantity Float
+  price    Int
+  total    Int
+  Invoice  Invoice[]
+}
+
+model Invoice {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String        @db.ObjectId
+  paymentDue    DateTime
+  clientName    String
+  status        InvoiceStatus @default(pending)
+  total         Int
+  createAt      DateTime
+  description   String
+  paymentTerms  String
+  clientEmail   String
+  senderAddress SenderAddress @relation(fields: [userId], references: [id])
+  clientAddress ClientAddress @relation(fields: [userId], references: [id])
+  items         Items         @relation(fields: [userId], references: [id])
+  User          User[]
 }

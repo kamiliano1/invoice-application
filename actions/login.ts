@@ -19,7 +19,7 @@ export async function login(values: z.infer<typeof LoginSchema>) {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/",
+      redirectTo: "/settings",
     });
   } catch (error) {
     if (error instanceof AuthError) {

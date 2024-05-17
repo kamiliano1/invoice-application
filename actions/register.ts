@@ -11,6 +11,8 @@ export async function register(values: z.infer<typeof RegisterSchema>) {
   const existingUser = await db.user.findUnique({ where: { email } });
   if (existingUser) return { error: "User already exist" };
   const hashedPassword = await bcrypt.hash(password, 10);
-  await db.user.create({ data: { email, password: hashedPassword } });
+  await db.user.create({
+    data: { email, password: hashedPassword, invoice: {} },
+  });
   return { success: "User Created!" };
 }
