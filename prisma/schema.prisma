@@ -20,53 +20,59 @@ enum InvoiceStatus {
 }
 
 model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  email     String  @unique
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   password  String
-  invoice   Invoice @relation(fields: [invoiceId], references: [id])
-  invoiceId String  @db.ObjectId
+  invoice   Invoice[]
+}
+
+model Invoice {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  invoiceId     String
+  invoiceDbId   String         @db.ObjectId
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  paymentDue    DateTime
+  clientName    String
+  status        InvoiceStatus  @default(pending)
+  total         Int
+  description   String
+  paymentTerms  String
+  clientEmail   String
+  user          User           @relation(fields: [invoiceDbId], references: [id], onDelete: Cascade)
+  senderAddress SenderAddress?
+  clientAddress ClientAddress?
+  items         Items[]
 }
 
 model SenderAddress {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
   street   String
   city     String
   postCode String
   country  String
-  Invoice  Invoice[]
+  uniqueId String  @unique @db.ObjectId
+  invoice  Invoice @relation(fields: [uniqueId], references: [id], onDelete: Cascade)
 }
 
 model ClientAddress {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
   street   String
   city     String
   postCode String
   country  String
-  Invoice  Invoice[]
+  uniqueId String  @unique @db.ObjectId
+  invoice  Invoice @relation(fields: [uniqueId], references: [id], onDelete: Cascade)
 }
 
 model Items {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
   name     String
   quantity Float
   price    Int
   total    Int
-  Invoice  Invoice[]
-}
-
-model Invoice {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String        @db.ObjectId
-  paymentDue    DateTime
-  clientName    String
-  status        InvoiceStatus @default(pending)
-  total         Int
-  createAt      DateTime
-  description   String
-  paymentTerms  String
-  clientEmail   String
-  senderAddress SenderAddress @relation(fields: [userId], references: [id])
-  clientAddress ClientAddress @relation(fields: [userId], references: [id])
-  items         Items         @relation(fields: [userId], references: [id])
-  User          User[]
+  itemId   String  @db.ObjectId
+  invoice  Invoice @relation(fields: [itemId], references: [id], onDelete: Cascade)
 }

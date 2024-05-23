@@ -17,7 +17,9 @@ export default function PreviewInvoiceWrapper({
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const windowWidth = useWindowWith();
-  const activeInvoice = userInvoices.filter((item) => item.id === invoiceId)[0];
+  const activeInvoice = userInvoices.filter(
+    (item) => item.invoiceId === invoiceId
+  )[0];
   return (
     <main
       className={cn("flex flex-col lg:px-0 bg-11 dark:bg-12", {
@@ -29,13 +31,13 @@ export default function PreviewInvoiceWrapper({
           {isInvoiceEdit ? (
             <InvoiceForm invoiceData={activeInvoice} invoiceId={invoiceId} />
           ) : (
-            <PreviewInvoice invoiceId={invoiceId} />
+            <PreviewInvoice activeInvoiceId={invoiceId} />
           )}
         </>
       ) : (
         <>
           <InvoiceForm invoiceData={activeInvoice} invoiceId={invoiceId} />
-          <PreviewInvoice invoiceId={invoiceId} />
+          <PreviewInvoice activeInvoiceId={invoiceId} />
         </>
       )}
     </main>

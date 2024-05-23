@@ -16,10 +16,10 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 export default function DeleteModal({
-  id,
+  invoiceId,
   className,
 }: {
-  id: string;
+  invoiceId: string;
   className?: string;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,7 +29,7 @@ export default function DeleteModal({
   const deleteInvoice = () => {
     setSettingsState((prev) => {
       const updatedInvoices = prev.userInvoices.filter(
-        (item) => item.id !== id
+        (item) => item.invoiceId !== invoiceId
       );
       return { ...prev, userInvoices: updatedInvoices };
     });
@@ -64,8 +64,8 @@ export default function DeleteModal({
             Confirm Deletion
           </DialogTitle>
           <DialogDescription className="text-06 leading-[22px]">
-            Are you sure you want to delete invoice {id}? This action cannot be
-            undone.
+            Are you sure you want to delete invoice {invoiceId}? This action
+            cannot be undone.
           </DialogDescription>
           <div className="flex gap-3 justify-end">
             <DialogClose asChild>

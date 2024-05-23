@@ -2,7 +2,6 @@ import { invoiceData } from "@/data/data";
 import { InvoiceSchema } from "@/schemas";
 import { atom, selector } from "recoil";
 import { z } from "zod";
-
 export type SettingsAppState = {
   isDarkMode: boolean;
   isLoaded: boolean;

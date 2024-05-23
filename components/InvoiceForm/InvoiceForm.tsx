@@ -37,9 +37,12 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
 import BackButton from "@/components/ui/BackButton";
+import createInvoice from "@/actions/createInvoice";
+import { useSession } from "next-auth/react";
+import useUserId from "@/hooks/useUserId";
 export default function InvoiceForm({
   invoiceData,
   invoiceId,
@@ -47,7 +50,9 @@ export default function InvoiceForm({
   invoiceData?: z.infer<typeof InvoiceSchema>;
   invoiceId?: string;
 }) {
+  const userId = useUserId();
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
+  const [isPending, startTransition] = useTransition();
   const isDarkMode = useRecoilValue(darkModeState);
   const [activeInvoiceStatus, setActiveInvoiceStatus] = useState<
     "paid" | "draft"
@@ -59,29 +64,66 @@ export default function InvoiceForm({
     resolver: zodResolver(InvoiceSchema),
     defaultValues: invoiceData
       ? invoiceData
-      : {
-          id: undefined,
-          paymentDue: undefined,
-          clientName: "",
-          status: "pending",
-          total: 0,
-          createdAt: new Date(),
-          description: "",
+      : // : {
+        //     invoiceId: undefined,
+        //     paymentDue: undefined,
+        //     clientName: "",
+        //     status: "pending",
+        //     total: 0,
+        //     createdAt: new Date(),
+        //     description: "",
+        //     paymentTerms: "30",
+        //     clientEmail: "",
+        //     senderAddress: {
+        //       street: "",
+        //       city: "",
+        //       postCode: "",
+        //       country: "",
+        //     },
+        //     clientAddress: {
+        //       street: "",
+        //       city: "",
+        //       postCode: "",
+        //       country: "",
+        //     },
+        //     items: [{ name: "", quantity: 0, price: 0, total: 0 }],
+        //   },
+        {
+          invoiceId: generateUserId(),
+          createdAt: new Date("2021-08-21"),
+          paymentDue: new Date("2021-09-20"),
+          description: "Graphic Design",
           paymentTerms: "30",
-          clientEmail: "",
+          clientName: "Alex Grim",
+          clientEmail: "alexgrim@mail.com",
+          status: "pending",
           senderAddress: {
-            street: "",
-            city: "",
-            postCode: "",
-            country: "",
+            street: "19 Union Terrace",
+            city: "London",
+            postCode: "E1 3EZ",
+            country: "United Kingdom",
           },
           clientAddress: {
-            street: "",
-            city: "",
-            postCode: "",
-            country: "",
+            street: "84 Church Way",
+            city: "Bradford",
+            postCode: "BD1 9PB",
+            country: "United Kingdom",
           },
-          items: [{ name: "", quantity: 0, price: 0, total: 0 }],
+          items: [
+            {
+              name: "Banner Design",
+              quantity: 1,
+              price: 156.0,
+              total: 156.0,
+            },
+            {
+              name: "Email Design",
+              quantity: 2,
+              price: 200.0,
+              total: 400.0,
+            },
+          ],
+          total: 556.0,
         },
   });
   const { fields, append, remove } = useFieldArray({
@@ -93,11 +135,11 @@ export default function InvoiceForm({
     router.back();
   };
 
-  function onSubmit(values: z.infer<typeof InvoiceSchema>) {
+  async function onSubmit(values: z.infer<typeof InvoiceSchema>) {
     const updatedData: z.infer<typeof InvoiceSchema> = {
       ...values,
       status: activeInvoiceStatus,
-      id: generateUserId(),
+      invoiceId: generateUserId(),
       paymentDue: createInvoicePaymentDue(
         values.createdAt,
         values.paymentTerms
@@ -106,10 +148,15 @@ export default function InvoiceForm({
     };
     const validatedData = InvoiceSchema.safeParse(updatedData);
     if (validatedData.success) {
+      startTransition(() => {
+        createInvoice(validatedData.data, userId || "").then((res) =>
+          console.log(res)
+        );
+      });
       if (invoiceData) {
         setSettingsState((prev) => {
           const updatedInvoice = prev.userInvoices.map((item) =>
-            item.id === invoiceData.id
+            item.invoiceId === invoiceData.invoiceId
               ? {
                   ...item,
                   ...values,
@@ -158,7 +205,7 @@ export default function InvoiceForm({
               {invoiceData ? (
                 <>
                   Edit <span className="text-06">#</span>
-                  {invoiceData.id}
+                  {invoiceData.invoiceId}
                 </>
               ) : (
                 "New Invoice"

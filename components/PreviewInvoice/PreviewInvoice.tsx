@@ -12,18 +12,24 @@ import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
 import DeleteModal from "@/components/PreviewInvoice/DeleteModal";
 import { dateToString } from "@/lib/utils";
 import BackButton from "@/components/ui/BackButton";
-export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
+export default function PreviewInvoice({
+  activeInvoiceId,
+}: {
+  activeInvoiceId: string;
+}) {
   const { userInvoices } = useRecoilValue(userInvoicesState);
   const isDarkMode = useRecoilValue(darkModeState);
   const router = useRouter();
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const activeInvoice = userInvoices.filter((item) => item.id === invoiceId)[0];
+  const activeInvoice = userInvoices.filter(
+    (item) => item.invoiceId === activeInvoiceId
+  )[0];
   const {
     status,
     description,
-    id,
+    invoiceId,
     senderAddress,
     createdAt,
     paymentDue,
@@ -39,7 +45,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
   const switchToPaid = () => {
     setSettingsState((prev) => {
       const updatedInvoices = prev.userInvoices.map((item) =>
-        item.id === invoiceId
+        item.invoiceId === activeInvoiceId
           ? { ...item, status: "paid" as StatusInvoiceType }
           : item
       );
@@ -51,7 +57,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
       <div className="max-w-[778px] mx-auto w-full">
         <BackButton
           className="pt-6 px-6"
-          backLink={isInvoiceEdit ? `/${invoiceId}/preview` : "../"}
+          backLink={isInvoiceEdit ? `/${activeInvoiceId}/preview` : "../"}
         />
         <div className="p-6 sm:px-10">
           <div className="p-6 flex items-center justify-between sm:justify-normal rounded-lg bg-white dark:bg-03">
@@ -67,7 +73,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
               >
                 Edit
               </Button>
-              <DeleteModal id={id!} className="px-6" />
+              <DeleteModal id={invoiceId!} className="px-6" />
               <Button variant="violet" onClick={switchToPaid} className="px-5">
                 Mark as Paid
               </Button>
@@ -77,7 +83,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
             <div className="sm:row-start-1 sm:col-start-1">
               <p className="text-headingS sm:mb-2 text-08 dark:text-white">
                 <span className="text-07">#</span>
-                {id}
+                {invoiceId}
               </p>
               <p className="text-body text-07 dark:text-05">{description}</p>
             </div>
@@ -151,7 +157,7 @@ export default function PreviewInvoice({ invoiceId }: { invoiceId: string }) {
           >
             Edit
           </Button>
-          <DeleteModal id={id!} className="px-4 w-[51%] sm:w-auto" />
+          <DeleteModal id={invoiceId!} className="px-4 w-[51%] sm:w-auto" />
           <Button variant="violet" className="w-full" onClick={switchToPaid}>
             Mark as Paid
           </Button>

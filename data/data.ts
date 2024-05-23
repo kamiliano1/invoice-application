@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const invoiceData: z.infer<typeof InvoiceSchema>[] = [
   {
-    id: "RT3080",
+    invoiceId: "RT3080",
     createdAt: new Date("2021-08-18"),
     paymentDue: new Date("2021-08-19"),
     description: "Re-branding",
@@ -34,7 +34,7 @@ export const invoiceData: z.infer<typeof InvoiceSchema>[] = [
     total: 1800.9,
   },
   {
-    id: "XM9141",
+    invoiceId: "XM9141",
     createdAt: new Date("2021-08-21"),
     paymentDue: new Date("2021-09-20"),
     description: "Graphic Design",
@@ -71,7 +71,7 @@ export const invoiceData: z.infer<typeof InvoiceSchema>[] = [
     total: 556.0,
   },
   {
-    id: "RG0314",
+    invoiceId: "RG0314",
     createdAt: new Date("2021-09-24"),
     paymentDue: new Date("2021-10-01"),
     description: "Website Redesign",
@@ -102,7 +102,7 @@ export const invoiceData: z.infer<typeof InvoiceSchema>[] = [
     total: 14002.33,
   },
   {
-    id: "RT2080",
+    invoiceId: "RT2080",
     createdAt: new Date("2021-10-11"),
     paymentDue: new Date("2021-10-12"),
     description: "Logo Concept",
@@ -133,7 +133,7 @@ export const invoiceData: z.infer<typeof InvoiceSchema>[] = [
     total: 102.04,
   },
   {
-    id: "AA1449",
+    invoiceId: "AA1449",
     createdAt: new Date("2021-10-7"),
     paymentDue: new Date("2021-10-14"),
     description: "Re-branding",
@@ -170,7 +170,7 @@ export const invoiceData: z.infer<typeof InvoiceSchema>[] = [
     total: 4032.33,
   },
   {
-    id: "TY9141",
+    invoiceId: "TY9141",
     createdAt: new Date("2021-10-01"),
     paymentDue: new Date("2021-10-31"),
     description: "Landing Page Design",
@@ -201,7 +201,7 @@ export const invoiceData: z.infer<typeof InvoiceSchema>[] = [
     total: 6155.91,
   },
   {
-    id: "FV2353",
+    invoiceId: "FV2353",
     createdAt: new Date("2021-11-05"),
     paymentDue: new Date("2021-11-12"),
     description: "Logo Re-design",
