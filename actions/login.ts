@@ -1,5 +1,4 @@
 "use server";
-
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
 import { LoginSchema } from "@/schemas";

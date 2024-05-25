@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import authConfig from "@/auth.config";
 import db from "@/lib/db";
-import { getUserById } from "./data/user";
+import { getUserById } from "@/data/user";
 
 export const {
   handlers: { GET, POST },
@@ -23,13 +23,19 @@ export const {
       if (session.user && token.sub) {
         session.user.id = token.sub;
       }
+      // if (session.user && token.invoices) {
+      //   session.user.invoices = token.invoices;
+      // }
 
       return session;
     },
     async jwt({ token }) {
       if (token.sub) {
         const user = await getUserById(token.sub);
+        if (!user) return token;
         token.id = user?.id;
+        // const invoices = await getUserInvoicesById(user?.id);
+        // token.invoices = invoices;
       }
       return token;
     },

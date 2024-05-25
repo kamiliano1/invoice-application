@@ -2,9 +2,11 @@
 import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
 import db from "@/lib/db";
+import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
 export default async function createInvoice(
   values: z.infer<typeof InvoiceSchema>,
-  id: string
+  id: string,
+  userInvoiceId?: string
 ) {
   const validatedData = InvoiceSchema.safeParse(values);
   if (!validatedData || !validatedData.success)
@@ -23,47 +25,176 @@ export default async function createInvoice(
     invoiceId,
   } = validatedData.data;
   try {
-    const invoice = await db.invoice.create({
-      data: {
-        invoiceDbId: id,
-        invoiceId: invoiceId as string,
-        clientEmail,
-        clientName,
-        description,
-        paymentTerms,
-        status,
-        paymentDue: paymentDue as Date,
-        total: total as number,
-      },
-    });
-    await db.clientAddress.create({
-      data: {
-        uniqueId: invoice.id,
-        street: clientAddress.street,
-        city: clientAddress.city,
-        postCode: clientAddress.postCode,
-        country: clientAddress.country,
-      },
-    });
-    await db.senderAddress.create({
-      data: {
-        uniqueId: invoice.id,
-        street: senderAddress.street,
-        city: senderAddress.city,
-        postCode: senderAddress.postCode,
-        country: senderAddress.country,
-      },
-    });
-    const dataWithItemId = items.map((item) => ({
-      ...item,
-      itemId: invoice.id,
-    }));
-    await db.items.createMany({
-      data: dataWithItemId,
+    // console.log(invoiceToEdit);
+
+    // const invoiceUpdate = await db.invoice.update({
+    //   where: {
+    //     id: invoiceToEdit ? invoiceToEdit.id : "",
+    //   },
+    //   data: {
+    //     clientEmail,
+    //     clientName,
+    //     description,
+    //     paymentTerms,
+    //     status,
+    //     paymentDue: paymentDue as Date,
+    //     total: total as number,
+    //   },
+    // });
+    // console.log(invoiceUpdate, "invoiceUpdate");
+
+    await db.$transaction(async (tx) => {
+      if (userInvoiceId) {
+        const invoiceToEdit = await getUserActiveInvoiceByInvoiceId(
+          userInvoiceId
+        );
+        console.log(invoiceToEdit?.id, "invoiceToEdit");
+
+        const invoice = await tx.invoice.update({
+          where: { id: invoiceToEdit?.id },
+          data: {
+            // invoiceDbId: id,
+            // invoiceId: invoiceId as string,
+            clientEmail,
+            clientName,
+            description,
+            paymentTerms,
+            status,
+            paymentDue: paymentDue as Date,
+            total: total as number,
+            clientAddress: {
+              update: {
+                street: clientAddress.street,
+                city: clientAddress.city,
+                postCode: clientAddress.postCode,
+                country: clientAddress.country,
+              },
+            },
+            senderAddress: {
+              update: {
+                street: senderAddress.street,
+                city: senderAddress.city,
+                postCode: senderAddress.postCode,
+                country: senderAddress.country,
+              },
+            },
+          },
+        });
+
+        const dataWithItemId = items.map((item) => ({
+          ...item,
+          itemId: invoice.id,
+        }));
+        await db.items.updateMany({
+          data: dataWithItemId,
+        });
+        return;
+      }
+      const invoice = await tx.invoice.create({
+        data: {
+          invoiceDbId: id,
+          invoiceId: invoiceId as string,
+          clientEmail,
+          clientName,
+          description,
+          paymentTerms,
+          status,
+          paymentDue: paymentDue as Date,
+          total: total as number,
+          clientAddress: {
+            create: {
+              street: clientAddress.street,
+              city: clientAddress.city,
+              postCode: clientAddress.postCode,
+              country: clientAddress.country,
+            },
+          },
+          senderAddress: {
+            create: {
+              street: senderAddress.street,
+              city: senderAddress.city,
+              postCode: senderAddress.postCode,
+              country: senderAddress.country,
+            },
+          },
+        },
+      });
+      const dataWithItemId = items.map((item) => ({
+        ...item,
+        itemId: invoice.id,
+      }));
+      await db.items.createMany({ data: dataWithItemId });
     });
   } catch (error) {
     console.log(error);
+
     return { error: "Something went wrong" };
   }
   return { success: "Invoice Created!" };
 }
+
+// const invoice = await tx.invoice.upsert({
+//   where: {
+//     id: invoiceToEdit?.id,
+//   },
+//   create: {
+//     invoiceDbId: id,
+//     invoiceId: invoiceId as string,
+//     clientEmail,
+//     clientName,
+//     description,
+//     paymentTerms,
+//     status,
+//     paymentDue: paymentDue as Date,
+//     total: total as number,
+//     clientAddress: {
+//       create: {
+//         street: clientAddress.street,
+//         city: clientAddress.city,
+//         postCode: clientAddress.postCode,
+//         country: clientAddress.country,
+//       },
+//     },
+//     senderAddress: {
+//       create: {
+//         street: senderAddress.street,
+//         city: senderAddress.city,
+//         postCode: senderAddress.postCode,
+//         country: senderAddress.country,
+//       },
+//     },
+//     // items: {
+//     //   createMany: dataWithItemId,
+//     // },
+//   },
+//   update: {
+//     invoiceDbId: id,
+//     invoiceId: invoiceId as string,
+//     clientEmail,
+//     clientName,
+//     description,
+//     paymentTerms,
+//     status,
+//     paymentDue: paymentDue as Date,
+//     total: total as number,
+//     clientAddress: {
+//       update: {
+//         street: clientAddress.street,
+//         city: clientAddress.city,
+//         postCode: clientAddress.postCode,
+//         country: clientAddress.country,
+//       },
+//     },
+//     senderAddress: {
+//       update: {
+//         street: senderAddress.street,
+//         city: senderAddress.city,
+//         postCode: senderAddress.postCode,
+//         country: senderAddress.country,
+//       },
+//     },
+//     // items: {
+//     //   updateMany: dataWithItemId,
+//     // },
+//   },
+// });

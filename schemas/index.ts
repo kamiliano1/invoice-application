@@ -45,6 +45,7 @@ export const InvoiceSchema = z.object({
     )
     .min(1, { message: "At least one item" }),
 });
+export const InvoicesSchema = z.array(InvoiceSchema);
 
 export const LoginSchema = z.object({
   email: z.string().email({ message: "Invalid Email" }),

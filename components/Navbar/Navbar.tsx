@@ -7,7 +7,6 @@ import navAvatar from "@/public/assets/image-avatar.jpg";
 import Image from "next/image";
 import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
 import Link from "next/link";
-import { register } from "@/actions/register";
 export default function Navbar() {
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const isDarkMode = useRecoilValue(darkModeState);
@@ -48,17 +47,6 @@ export default function Navbar() {
         />
       )}
       <span className="w-[1px] h-[72px] sm:h-20 bg-[#494E6E] mx-6 lg:h-[1px] lg:w-full lg:mt-8 lg:mb-6"></span>
-      <button
-        onClick={() =>
-          register({
-            email: "aaa@wp.pl",
-            password: "aaa@wp.pl",
-            confirmPassword: "aaa@wp.pl",
-          })
-        }
-      >
-        Create account
-      </button>
       <Link href="/login">
         <Image
           src={navAvatar}

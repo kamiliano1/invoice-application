@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { StatusInvoiceType } from "@/schemas";
 
 const uppercaseFirstLetter = (word: string) => {
+  if (!word) return undefined;
   return `${word[0].toUpperCase()}${word.slice(1)}`;
 };
 export default function StatusInvoice({

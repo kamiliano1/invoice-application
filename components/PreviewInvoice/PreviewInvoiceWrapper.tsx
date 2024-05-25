@@ -6,6 +6,10 @@ import { useRecoilValue } from "recoil";
 import { cn } from "@/lib/utils";
 import InvoiceForm from "@/components/InvoiceForm/InvoiceForm";
 import PreviewInvoice from "@/components/PreviewInvoice/PreviewInvoice";
+import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
+import { InvoiceSchema } from "@/schemas";
+import { useTransition, useState, useEffect } from "react";
+import { z } from "zod";
 export default function PreviewInvoiceWrapper({
   params,
 }: {
@@ -17,9 +21,26 @@ export default function PreviewInvoiceWrapper({
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const windowWidth = useWindowWith();
+
   const activeInvoice = userInvoices.filter(
     (item) => item.invoiceId === invoiceId
   )[0];
+  const [isPending, startTransition] = useTransition();
+  const [invoiceData, setInvoiceData] =
+    useState<z.infer<typeof InvoiceSchema>>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      startTransition(() => {
+        getUserActiveInvoiceByInvoiceId(invoiceId).then((res) => {
+          console.log(res);
+
+          setInvoiceData(res);
+        });
+      });
+    };
+    fetchData();
+  }, [invoiceId]);
   return (
     <main
       className={cn("flex flex-col lg:px-0 bg-11 dark:bg-12", {
@@ -29,14 +50,14 @@ export default function PreviewInvoiceWrapper({
       {windowWidth < 640 ? (
         <>
           {isInvoiceEdit ? (
-            <InvoiceForm invoiceData={activeInvoice} invoiceId={invoiceId} />
+            <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
           ) : (
             <PreviewInvoice activeInvoiceId={invoiceId} />
           )}
         </>
       ) : (
         <>
-          <InvoiceForm invoiceData={activeInvoice} invoiceId={invoiceId} />
+          <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
           <PreviewInvoice activeInvoiceId={invoiceId} />
         </>
       )}

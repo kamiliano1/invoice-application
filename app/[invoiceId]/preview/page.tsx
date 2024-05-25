@@ -7,7 +7,7 @@ export default function PreviewPage({
   params: { invoiceId: string };
 }) {
   return (
-    <Suspense fallback={<h2>Loading</h2>}>
+    <Suspense>
       <PreviewInvoiceWrapper params={params} />
     </Suspense>
   );

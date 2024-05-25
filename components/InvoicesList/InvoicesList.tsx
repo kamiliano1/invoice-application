@@ -6,17 +6,20 @@ import { Button } from "@/components/ui/button";
 import InvoiceItem from "@/components/InvoicesList/InvoiceItem";
 import InvoiceFilterPopover from "@/components/InvoicesList/InvoiceFilterPopover";
 import EmptyInvoice from "./EmptyInvoice";
-import { useEffect, useState } from "react";
-import fetchUserInvoices from "@/actions/fetchUserInvoices";
-import { Invoice } from "@prisma/client";
-import useUserId from "@/hooks/useUserId";
+import { useEffect, useState, useTransition } from "react";
+import useCurrentUser from "@/hooks/useCurrentUser";
 import { z } from "zod";
-import { InvoiceSchema } from "@/schemas";
+import { InvoiceSchema, InvoicesSchema } from "@/schemas";
+// import useUserInvoices from "@/hooks/useUserInvoices";
+import { useSession } from "next-auth/react";
+import { getUserInvoicesById } from "@/data/invoices";
 
 export default function InvoicesList() {
-  const userId = useUserId();
+  const [isPending, startTransition] = useTransition();
+  const userId = useCurrentUser();
+
   const [invoicesData, setInvoicesData] =
-    useState<z.infer<typeof InvoiceSchema>[]>();
+    useState<z.infer<typeof InvoicesSchema>>();
   const windowWidth = useWindowWith();
   const [countInvoiceInfo, setCountInvoiceInfo] = useState("");
   const { totalInvoicesCount, filteredUserInvoices } =
@@ -40,18 +43,38 @@ export default function InvoicesList() {
     }
   }, [windowWidth, totalInvoicesCount]);
   const fetchData = async () => {
-    fetchUserInvoices(userId).then((res) => {
-      // setInvoicesData(res);
+    startTransition(() => {
+      getUserInvoicesById(userId).then((res) => {
+        if (res) {
+          const validatedData = InvoicesSchema.safeParse(res);
+          if (validatedData.success) setInvoicesData(validatedData.data);
+        }
+      });
     });
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      startTransition(() => {
+        getUserInvoicesById(userId).then((res) => {
+          if (res) {
+            const validatedData = InvoicesSchema.safeParse(res);
+            if (validatedData.success) setInvoicesData(validatedData.data);
+          }
+        });
+      });
+    };
+    fetchData();
+  }, [userId]);
+  if (isPending) return <h2 className="text-[10rem]">Loading BRO</h2>;
   return (
     <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
       <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
         <div className="mr-auto">
           <h1 className="text-headingM sm:text-headingL mb-1">Invoices</h1>
-          <button className="p-3 bg-10" onClick={fetchData}>
-            fetchData
-          </button>
+          <button onClick={fetchData}>Fetch Data</button>
+          <h1 className="text-headingM sm:text-headingL mb-1">
+            {isPending ? "true" : "false"}
+          </h1>
           <p className="text-body">{countInvoiceInfo}</p>
         </div>
         <InvoiceFilterPopover />
@@ -64,7 +87,7 @@ export default function InvoicesList() {
           {windowWidth < 640 ? "New" : "New Invoice"}
         </Button>
       </div>
-      {filteredUserInvoices.length ? (
+      {/* {filteredUserInvoices.length ? (
         filteredUserInvoices.map((item) => (
           <InvoiceItem
             key={item.invoiceId}
@@ -77,7 +100,7 @@ export default function InvoicesList() {
         ))
       ) : (
         <EmptyInvoice />
-      )}
+      )} */}
       {invoicesData &&
         invoicesData.map((item) => (
           <InvoiceItem

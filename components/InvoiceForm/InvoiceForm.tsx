@@ -35,14 +35,13 @@ import {
   updateItemsTotalValue,
 } from "@/lib/utils";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
+import { settingsAppState } from "@/atoms/settingsAppAtom";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
 import BackButton from "@/components/ui/BackButton";
 import createInvoice from "@/actions/createInvoice";
-import { useSession } from "next-auth/react";
-import useUserId from "@/hooks/useUserId";
+import useCurrentUser from "@/hooks/useCurrentUser";
 export default function InvoiceForm({
   invoiceData,
   invoiceId,
@@ -50,7 +49,7 @@ export default function InvoiceForm({
   invoiceData?: z.infer<typeof InvoiceSchema>;
   invoiceId?: string;
 }) {
-  const userId = useUserId();
+  const userId = useCurrentUser();
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const [isPending, startTransition] = useTransition();
   const isDarkMode = useRecoilValue(darkModeState);
@@ -94,7 +93,7 @@ export default function InvoiceForm({
           paymentDue: new Date("2021-09-20"),
           description: "Graphic Design",
           paymentTerms: "30",
-          clientName: "Alex Grim",
+          clientName: "Alex Grimsssaaasv",
           clientEmail: "alexgrim@mail.com",
           status: "pending",
           senderAddress: {
@@ -115,6 +114,12 @@ export default function InvoiceForm({
               quantity: 1,
               price: 156.0,
               total: 156.0,
+            },
+            {
+              name: "Email Design",
+              quantity: 2,
+              price: 200.0,
+              total: 400.0,
             },
             {
               name: "Email Design",
@@ -149,9 +154,11 @@ export default function InvoiceForm({
     const validatedData = InvoiceSchema.safeParse(updatedData);
     if (validatedData.success) {
       startTransition(() => {
-        createInvoice(validatedData.data, userId || "").then((res) =>
-          console.log(res)
-        );
+        try {
+          createInvoice(validatedData.data, userId || "", invoiceId);
+        } catch (error) {
+          console.log({ error: "Something went wrong" });
+        }
       });
       if (invoiceData) {
         setSettingsState((prev) => {

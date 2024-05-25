@@ -21,6 +21,7 @@ type PreviewSummaryType = {
 
 export default function PreviewSummary({ items, total }: PreviewSummaryType) {
   const windowWidth = useWindowWith();
+  if (!items || !total) return undefined;
   return (
     <div className=" sm:row-start-4 sm:col-start-1 sm:col-span-4 rounded-lg bg-[#F9FEFB] dark:bg-04">
       <table className="w-full">
