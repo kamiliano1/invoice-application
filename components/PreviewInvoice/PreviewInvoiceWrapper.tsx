@@ -33,14 +33,16 @@ export default function PreviewInvoiceWrapper({
     const fetchData = async () => {
       startTransition(() => {
         getUserActiveInvoiceByInvoiceId(invoiceId).then((res) => {
-          console.log(res);
-
-          setInvoiceData(res);
+          if (res) {
+            const validatedData = InvoiceSchema.safeParse(res);
+            if (validatedData.success) setInvoiceData(validatedData.data);
+          }
         });
       });
     };
     fetchData();
   }, [invoiceId]);
+  if (isPending) return <h2 className="p-[10rem] text-headingL">LOADING</h2>;
   return (
     <main
       className={cn("flex flex-col lg:px-0 bg-11 dark:bg-12", {
@@ -52,13 +54,19 @@ export default function PreviewInvoiceWrapper({
           {isInvoiceEdit ? (
             <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
           ) : (
-            <PreviewInvoice activeInvoiceId={invoiceId} />
+            <PreviewInvoice
+              invoiceData={invoiceData}
+              activeInvoiceId={invoiceId}
+            />
           )}
         </>
       ) : (
         <>
           <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
-          <PreviewInvoice activeInvoiceId={invoiceId} />
+          <PreviewInvoice
+            invoiceData={invoiceData}
+            activeInvoiceId={invoiceId}
+          />
         </>
       )}
     </main>

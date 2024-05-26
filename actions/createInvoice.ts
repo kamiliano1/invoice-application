@@ -25,36 +25,14 @@ export default async function createInvoice(
     invoiceId,
   } = validatedData.data;
   try {
-    // console.log(invoiceToEdit);
-
-    // const invoiceUpdate = await db.invoice.update({
-    //   where: {
-    //     id: invoiceToEdit ? invoiceToEdit.id : "",
-    //   },
-    //   data: {
-    //     clientEmail,
-    //     clientName,
-    //     description,
-    //     paymentTerms,
-    //     status,
-    //     paymentDue: paymentDue as Date,
-    //     total: total as number,
-    //   },
-    // });
-    // console.log(invoiceUpdate, "invoiceUpdate");
-
     await db.$transaction(async (tx) => {
       if (userInvoiceId) {
         const invoiceToEdit = await getUserActiveInvoiceByInvoiceId(
           userInvoiceId
         );
-        console.log(invoiceToEdit?.id, "invoiceToEdit");
-
         const invoice = await tx.invoice.update({
           where: { id: invoiceToEdit?.id },
           data: {
-            // invoiceDbId: id,
-            // invoiceId: invoiceId as string,
             clientEmail,
             clientName,
             description,
@@ -80,50 +58,50 @@ export default async function createInvoice(
             },
           },
         });
-
         const dataWithItemId = items.map((item) => ({
           ...item,
           itemId: invoice.id,
         }));
-        await db.items.updateMany({
+        await db.items.deleteMany({ where: { itemId: invoice.id } });
+        await db.items.createMany({
           data: dataWithItemId,
         });
-        return;
+      } else {
+        const invoice = await tx.invoice.create({
+          data: {
+            invoiceDbId: id,
+            invoiceId: invoiceId as string,
+            clientEmail,
+            clientName,
+            description,
+            paymentTerms,
+            status,
+            paymentDue: paymentDue as Date,
+            total: total as number,
+            clientAddress: {
+              create: {
+                street: clientAddress.street,
+                city: clientAddress.city,
+                postCode: clientAddress.postCode,
+                country: clientAddress.country,
+              },
+            },
+            senderAddress: {
+              create: {
+                street: senderAddress.street,
+                city: senderAddress.city,
+                postCode: senderAddress.postCode,
+                country: senderAddress.country,
+              },
+            },
+          },
+        });
+        const dataWithItemId = items.map((item) => ({
+          ...item,
+          itemId: invoice.id,
+        }));
+        await db.items.createMany({ data: dataWithItemId });
       }
-      const invoice = await tx.invoice.create({
-        data: {
-          invoiceDbId: id,
-          invoiceId: invoiceId as string,
-          clientEmail,
-          clientName,
-          description,
-          paymentTerms,
-          status,
-          paymentDue: paymentDue as Date,
-          total: total as number,
-          clientAddress: {
-            create: {
-              street: clientAddress.street,
-              city: clientAddress.city,
-              postCode: clientAddress.postCode,
-              country: clientAddress.country,
-            },
-          },
-          senderAddress: {
-            create: {
-              street: senderAddress.street,
-              city: senderAddress.city,
-              postCode: senderAddress.postCode,
-              country: senderAddress.country,
-            },
-          },
-        },
-      });
-      const dataWithItemId = items.map((item) => ({
-        ...item,
-        itemId: invoice.id,
-      }));
-      await db.items.createMany({ data: dataWithItemId });
     });
   } catch (error) {
     console.log(error);
@@ -132,69 +110,3 @@ export default async function createInvoice(
   }
   return { success: "Invoice Created!" };
 }
-
-// const invoice = await tx.invoice.upsert({
-//   where: {
-//     id: invoiceToEdit?.id,
-//   },
-//   create: {
-//     invoiceDbId: id,
-//     invoiceId: invoiceId as string,
-//     clientEmail,
-//     clientName,
-//     description,
-//     paymentTerms,
-//     status,
-//     paymentDue: paymentDue as Date,
-//     total: total as number,
-//     clientAddress: {
-//       create: {
-//         street: clientAddress.street,
-//         city: clientAddress.city,
-//         postCode: clientAddress.postCode,
-//         country: clientAddress.country,
-//       },
-//     },
-//     senderAddress: {
-//       create: {
-//         street: senderAddress.street,
-//         city: senderAddress.city,
-//         postCode: senderAddress.postCode,
-//         country: senderAddress.country,
-//       },
-//     },
-//     // items: {
-//     //   createMany: dataWithItemId,
-//     // },
-//   },
-//   update: {
-//     invoiceDbId: id,
-//     invoiceId: invoiceId as string,
-//     clientEmail,
-//     clientName,
-//     description,
-//     paymentTerms,
-//     status,
-//     paymentDue: paymentDue as Date,
-//     total: total as number,
-//     clientAddress: {
-//       update: {
-//         street: clientAddress.street,
-//         city: clientAddress.city,
-//         postCode: clientAddress.postCode,
-//         country: clientAddress.country,
-//       },
-//     },
-//     senderAddress: {
-//       update: {
-//         street: senderAddress.street,
-//         city: senderAddress.city,
-//         postCode: senderAddress.postCode,
-//         country: senderAddress.country,
-//       },
-//     },
-//     // items: {
-//     //   updateMany: dataWithItemId,
-//     // },
-//   },
-// });

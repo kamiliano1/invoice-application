@@ -22,8 +22,11 @@ export default function InvoicesList() {
     useState<z.infer<typeof InvoicesSchema>>();
   const windowWidth = useWindowWith();
   const [countInvoiceInfo, setCountInvoiceInfo] = useState("");
-  const { totalInvoicesCount, filteredUserInvoices } =
-    useRecoilValue(userInvoicesState);
+  const {
+    totalInvoicesCount,
+    filteredUserInvoices,
+    filteredUserInvoicesPrisma,
+  } = useRecoilValue(userInvoicesState);
   const router = useRouter();
   const createNewInvoice = () => {
     router.push("/?invoiceEdit=true");
@@ -44,7 +47,7 @@ export default function InvoicesList() {
   }, [windowWidth, totalInvoicesCount]);
   const fetchData = async () => {
     startTransition(() => {
-      getUserInvoicesById(userId).then((res) => {
+      getUserInvoicesById(userId, filteredUserInvoicesPrisma).then((res) => {
         if (res) {
           const validatedData = InvoicesSchema.safeParse(res);
           if (validatedData.success) setInvoicesData(validatedData.data);
@@ -55,7 +58,7 @@ export default function InvoicesList() {
   useEffect(() => {
     const fetchData = async () => {
       startTransition(() => {
-        getUserInvoicesById(userId).then((res) => {
+        getUserInvoicesById(userId, filteredUserInvoicesPrisma).then((res) => {
           if (res) {
             const validatedData = InvoicesSchema.safeParse(res);
             if (validatedData.success) setInvoicesData(validatedData.data);
@@ -64,7 +67,7 @@ export default function InvoicesList() {
       });
     };
     fetchData();
-  }, [userId]);
+  }, [filteredUserInvoicesPrisma, userId]);
   if (isPending) return <h2 className="text-[10rem]">Loading BRO</h2>;
   return (
     <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
@@ -101,7 +104,7 @@ export default function InvoicesList() {
       ) : (
         <EmptyInvoice />
       )} */}
-      {invoicesData &&
+      {invoicesData?.length ? (
         invoicesData.map((item) => (
           <InvoiceItem
             key={item.invoiceId}
@@ -111,7 +114,10 @@ export default function InvoicesList() {
             status={item.status!}
             total={item.total!}
           />
-        ))}
+        ))
+      ) : (
+        <EmptyInvoice />
+      )}
     </div>
   );
 }

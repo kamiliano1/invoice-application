@@ -63,74 +63,61 @@ export default function InvoiceForm({
     resolver: zodResolver(InvoiceSchema),
     defaultValues: invoiceData
       ? invoiceData
-      : // : {
-        //     invoiceId: undefined,
-        //     paymentDue: undefined,
-        //     clientName: "",
-        //     status: "pending",
-        //     total: 0,
-        //     createdAt: new Date(),
-        //     description: "",
-        //     paymentTerms: "30",
-        //     clientEmail: "",
-        //     senderAddress: {
-        //       street: "",
-        //       city: "",
-        //       postCode: "",
-        //       country: "",
-        //     },
-        //     clientAddress: {
-        //       street: "",
-        //       city: "",
-        //       postCode: "",
-        //       country: "",
-        //     },
-        //     items: [{ name: "", quantity: 0, price: 0, total: 0 }],
-        //   },
-        {
-          invoiceId: generateUserId(),
-          createdAt: new Date("2021-08-21"),
-          paymentDue: new Date("2021-09-20"),
-          description: "Graphic Design",
-          paymentTerms: "30",
-          clientName: "Alex Grimsssaaasv",
-          clientEmail: "alexgrim@mail.com",
+      : {
+          invoiceId: undefined,
+          paymentDue: undefined,
+          clientName: "",
           status: "pending",
+          total: 0,
+          createdAt: new Date(),
+          description: "",
+          paymentTerms: "30",
+          clientEmail: "",
           senderAddress: {
-            street: "19 Union Terrace",
-            city: "London",
-            postCode: "E1 3EZ",
-            country: "United Kingdom",
+            street: "",
+            city: "",
+            postCode: "",
+            country: "",
           },
           clientAddress: {
-            street: "84 Church Way",
-            city: "Bradford",
-            postCode: "BD1 9PB",
-            country: "United Kingdom",
+            street: "",
+            city: "",
+            postCode: "",
+            country: "",
           },
-          items: [
-            {
-              name: "Banner Design",
-              quantity: 1,
-              price: 156.0,
-              total: 156.0,
-            },
-            {
-              name: "Email Design",
-              quantity: 2,
-              price: 200.0,
-              total: 400.0,
-            },
-            {
-              name: "Email Design",
-              quantity: 2,
-              price: 200.0,
-              total: 400.0,
-            },
-          ],
-          total: 556.0,
+          items: [{ name: "", quantity: 0, price: 0, total: 0 }],
         },
   });
+  // useForm({
+  //   defaultValues: async () => {
+  //     invoiceData
+  //       ? invoiceData
+  //       : {
+  //           invoiceId: undefined,
+  //           paymentDue: undefined,
+  //           clientName: "",
+  //           status: "pending",
+  //           total: 0,
+  //           createdAt: new Date(),
+  //           description: "",
+  //           paymentTerms: "30",
+  //           clientEmail: "",
+  //           senderAddress: {
+  //             street: "",
+  //             city: "",
+  //             postCode: "",
+  //             country: "",
+  //           },
+  //           clientAddress: {
+  //             street: "",
+  //             city: "",
+  //             postCode: "",
+  //             country: "",
+  //           },
+  //           items: [{ name: "", quantity: 0, price: 0, total: 0 }],
+  //         };
+  //   },
+  // });
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "items",
@@ -140,7 +127,7 @@ export default function InvoiceForm({
     router.back();
   };
 
-  async function onSubmit(values: z.infer<typeof InvoiceSchema>) {
+  function onSubmit(values: z.infer<typeof InvoiceSchema>) {
     const updatedData: z.infer<typeof InvoiceSchema> = {
       ...values,
       status: activeInvoiceStatus,
@@ -152,6 +139,8 @@ export default function InvoiceForm({
       ...updateItemsTotalValue(values),
     };
     const validatedData = InvoiceSchema.safeParse(updatedData);
+    console.log(validatedData);
+
     if (validatedData.success) {
       startTransition(() => {
         try {
@@ -185,7 +174,7 @@ export default function InvoiceForm({
         }));
       }
     }
-    router.back();
+    // router.back();
   }
   return (
     <Form {...form}>

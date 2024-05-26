@@ -9,6 +9,7 @@ import { FilterCheckbox } from "@/components/InvoicesList/CheckboxFilters";
 export default function InvoiceFilterPopover() {
   const isDarkMode = useRecoilValue(darkModeState);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   return (
     <Popover.Root onOpenChange={(event) => setIsPopoverOpen(event)}>
       <Popover.Trigger asChild>

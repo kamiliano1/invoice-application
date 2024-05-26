@@ -12,12 +12,13 @@ import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
 import DeleteModal from "@/components/PreviewInvoice/DeleteModal";
 import { dateToString } from "@/lib/utils";
 import BackButton from "@/components/ui/BackButton";
-import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
-import { useTransition, useEffect, useState, Suspense } from "react";
+
 import { z } from "zod";
 export default function PreviewInvoice({
+  invoiceData,
   activeInvoiceId,
 }: {
+  invoiceData?: z.infer<typeof InvoiceSchema>;
   activeInvoiceId: string;
 }) {
   const { userInvoices } = useRecoilValue(userInvoicesState);
@@ -29,22 +30,7 @@ export default function PreviewInvoice({
   const activeInvoice = userInvoices.filter(
     (item) => item.invoiceId === activeInvoiceId
   )[0];
-  const [isPending, startTransition] = useTransition();
-  const [invoicesData, setInvoicesData] =
-    useState<z.infer<typeof InvoiceSchema>>();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      startTransition(() => {
-        getUserActiveInvoiceByInvoiceId(activeInvoiceId).then((res) => {
-          console.log(res);
-
-          setInvoicesData(res);
-        });
-      });
-    };
-    fetchData();
-  }, [activeInvoiceId]);
   const {
     status,
     description,
@@ -57,7 +43,7 @@ export default function PreviewInvoice({
     clientEmail,
     items,
     total,
-  } = invoicesData || {};
+  } = invoiceData || {};
   const editActivatedInvoice = () => {
     router.push("?invoiceEdit=true");
   };
@@ -71,8 +57,6 @@ export default function PreviewInvoice({
       return { ...prev, userInvoices: updatedInvoices };
     });
   };
-
-  if (isPending) return <h2 className="text-[10rem]">Loading BRO</h2>;
   return (
     <div className="max-w-[778px] mx-auto w-full">
       <BackButton

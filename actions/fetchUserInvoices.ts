@@ -1,9 +1,13 @@
 "use server";
 import db from "@/lib/db";
-export default async function fetchUserInvoices(id: string | undefined) {
+import { InvoiceStatus } from "@prisma/client";
+export default async function fetchUserInvoices(
+  id: string | undefined,
+  filteredArray: InvoiceStatus[]
+) {
   try {
     const userInvoices = db.invoice.findMany({
-      where: { invoiceDbId: id },
+      where: { invoiceDbId: id, status: { in: filteredArray } },
       include: { clientAddress: true, senderAddress: true, items: true },
     });
     return userInvoices;

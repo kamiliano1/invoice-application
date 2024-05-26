@@ -6,12 +6,10 @@ export async function filterInvoices(
   filteredArray: InvoiceStatus[]
 ) {
   try {
-    console.log(filteredArray);
-
     const filteredInvoices = await db.invoice.findMany({
       where: { invoiceDbId: id, status: { in: filteredArray } },
     });
-    console.log(filteredInvoices.length);
+    return filteredInvoices;
   } catch {
     return null;
   }

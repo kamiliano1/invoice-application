@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { deleteInvoice } from "@/actions/deleteInvoice";
 
 export default function DeleteModal({
   invoiceId,
@@ -23,17 +24,21 @@ export default function DeleteModal({
   className?: string;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPending, setTransition] = useTransition();
   const isDarkMode = useRecoilValue(darkModeState);
   const router = useRouter();
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const deleteInvoice = () => {
+  const deleteUserInvoice = () => {
     setSettingsState((prev) => {
       const updatedInvoices = prev.userInvoices.filter(
         (item) => item.invoiceId !== invoiceId
       );
       return { ...prev, userInvoices: updatedInvoices };
     });
-    router.back();
+    setTransition(() => {
+      deleteInvoice(invoiceId);
+      router.back();
+    });
   };
   return (
     <Dialog onOpenChange={setIsModalOpen} open={isModalOpen} modal={true}>
@@ -41,6 +46,7 @@ export default function DeleteModal({
         onClick={() => setIsModalOpen(true)}
         className={cn(className)}
         variant="red"
+        loading={isPending}
       >
         Delete
       </Button>
@@ -77,7 +83,11 @@ export default function DeleteModal({
               </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button variant="red" className="px-5" onClick={deleteInvoice}>
+              <Button
+                variant="red"
+                className="px-5"
+                onClick={deleteUserInvoice}
+              >
                 Delete
               </Button>
             </DialogClose>

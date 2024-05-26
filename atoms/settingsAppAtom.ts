@@ -1,5 +1,6 @@
 import { invoiceData } from "@/data/data";
 import { InvoiceSchema } from "@/schemas";
+import { InvoiceStatus } from "@prisma/client";
 import { atom, selector } from "recoil";
 import { z } from "zod";
 export type SettingsAppState = {
@@ -9,7 +10,7 @@ export type SettingsAppState = {
     name: string;
     isActive: boolean;
   }[];
-  filtersArray: string[];
+  filtersArray: InvoiceStatus[];
   userInvoices: z.infer<typeof InvoiceSchema>[];
 };
 
@@ -43,7 +44,13 @@ export const userInvoicesState = selector({
     );
     const totalInvoicesCount = filteredUserInvoices.length;
     const userInvoices = settingsState.userInvoices;
-    return { totalInvoicesCount, filteredUserInvoices, userInvoices };
+    const filteredUserInvoicesPrisma = settingsState.filtersArray;
+    return {
+      totalInvoicesCount,
+      filteredUserInvoices,
+      userInvoices,
+      filteredUserInvoicesPrisma,
+    };
   },
 });
 export const darkModeState = selector({

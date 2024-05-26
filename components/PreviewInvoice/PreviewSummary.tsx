@@ -45,8 +45,8 @@ export default function PreviewSummary({ items, total }: PreviewSummaryType) {
           </tr>
         </thead>
         <tbody className="">
-          {items.map((item) => (
-            <PreviewSummaryItem key={item.name} items={item} />
+          {items.map((item, id) => (
+            <PreviewSummaryItem key={id} items={item} />
           ))}
         </tbody>
         <tfoot className="items-center  bg-[#373B53] dark:bg-08 ">
