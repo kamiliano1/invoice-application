@@ -1,4 +1,5 @@
 import useWindowWith from "@/hooks/useWindowWidth";
+import { Skeleton } from "../ui/skeleton";
 
 type PreviewSummaryItemType = {
   items: {
@@ -10,6 +11,7 @@ type PreviewSummaryItemType = {
 };
 
 type PreviewSummaryType = {
+  isPending?: boolean;
   total: number;
   items: {
     name: string;
@@ -19,11 +21,15 @@ type PreviewSummaryType = {
   }[];
 };
 
-export default function PreviewSummary({ items, total }: PreviewSummaryType) {
+export default function PreviewSummary({
+  items,
+  total,
+  isPending,
+}: PreviewSummaryType) {
   const windowWidth = useWindowWith();
   if (!items || !total) return undefined;
   return (
-    <div className=" sm:row-start-4 sm:col-start-1 sm:col-span-4 rounded-lg bg-[#F9FEFB] dark:bg-04">
+    <div className="sm:row-start-4 sm:col-start-1 sm:col-span-4 rounded-lg bg-[#F9FEFB] dark:bg-04">
       <table className="w-full">
         <thead className="hidden sm:table-row-group">
           <tr>
@@ -44,12 +50,12 @@ export default function PreviewSummary({ items, total }: PreviewSummaryType) {
             </th>
           </tr>
         </thead>
-        <tbody className="">
+        <tbody>
           {items.map((item, id) => (
             <PreviewSummaryItem key={id} items={item} />
           ))}
         </tbody>
-        <tfoot className="items-center  bg-[#373B53] dark:bg-08 ">
+        <tfoot className="items-center bg-[#373B53] dark:bg-08">
           <tr>
             <th
               colSpan={windowWidth > 640 ? 2 : 1}
@@ -74,8 +80,8 @@ function PreviewSummaryItem({ items }: PreviewSummaryItemType) {
   const { name, quantity, price, total } = items;
   return (
     <>
-      <tr className="first:rounded-t-lg ">
-        <td className="font-bold text-headingS text-08 dark:text-white pl-6 pt-3 sm:px-8 sm:pt-0 ">
+      <tr className="first:rounded-t-lg">
+        <td className="font-bold text-headingS text-08 dark:text-white pl-6 pt-3 sm:px-8 sm:pt-0">
           {" "}
           {name}
         </td>
@@ -106,4 +112,14 @@ function PreviewSummaryItem({ items }: PreviewSummaryItemType) {
       </tr>
     </>
   );
+}
+
+function PreviewSummaryItemSkeleton() {
+  return [0, 1, 2, 3].map((item) => (
+    <tr key={item}>
+      <td colSpan={4}>
+        <Skeleton className="h-10 mx-6 my-1" />
+      </td>
+    </tr>
+  ));
 }

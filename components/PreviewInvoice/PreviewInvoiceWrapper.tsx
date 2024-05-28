@@ -42,7 +42,6 @@ export default function PreviewInvoiceWrapper({
     };
     fetchData();
   }, [invoiceId]);
-  if (isPending) return <h2 className="p-[10rem] text-headingL">LOADING</h2>;
   return (
     <main
       className={cn("flex flex-col lg:px-0 bg-11 dark:bg-12", {
@@ -57,6 +56,7 @@ export default function PreviewInvoiceWrapper({
             <PreviewInvoice
               invoiceData={invoiceData}
               activeInvoiceId={invoiceId}
+              isPending={isPending}
             />
           )}
         </>
@@ -66,6 +66,7 @@ export default function PreviewInvoiceWrapper({
           <PreviewInvoice
             invoiceData={invoiceData}
             activeInvoiceId={invoiceId}
+            isPending={isPending}
           />
         </>
       )}
