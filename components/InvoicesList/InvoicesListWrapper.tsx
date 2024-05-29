@@ -6,11 +6,13 @@ import useWindowWith from "@/hooks/useWindowWidth";
 import { cn } from "@/lib/utils";
 import { useRecoilValue } from "recoil";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 export default function InvoicesListWrapper() {
   const windowWidth = useWindowWith();
   const isDarkMode = useRecoilValue(darkModeState);
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
+  const [getInvoices, setGetInvoices] = useState(false);
   return (
     <main
       className={cn("flex flex-col items-start bg-11 dark:bg-12", {
@@ -21,16 +23,16 @@ export default function InvoicesListWrapper() {
         <>
           {isInvoiceEdit ? (
             <>
-              <InvoiceForm />
+              <InvoiceForm setGetInvoices={setGetInvoices} />
             </>
           ) : (
-            <InvoicesList />
+            <InvoicesList getInvoices={getInvoices} />
           )}
         </>
       ) : (
         <>
-          <InvoicesList />
-          <InvoiceForm />
+          <InvoicesList getInvoices={getInvoices} />
+          <InvoiceForm setGetInvoices={setGetInvoices} />
         </>
       )}
     </main>

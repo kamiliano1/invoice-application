@@ -10,6 +10,7 @@ import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
 import { InvoiceSchema } from "@/schemas";
 import { useTransition, useState, useEffect } from "react";
 import { z } from "zod";
+import PreviewInvoiceSkeleton from "./PreviewInvoiceSkeleton";
 export default function PreviewInvoiceWrapper({
   params,
 }: {
@@ -28,46 +29,61 @@ export default function PreviewInvoiceWrapper({
   const [isPending, startTransition] = useTransition();
   const [invoiceData, setInvoiceData] =
     useState<z.infer<typeof InvoiceSchema>>();
-
+  const [getInvoices, setGetInvoices] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       startTransition(() => {
         getUserActiveInvoiceByInvoiceId(invoiceId).then((res) => {
           if (res) {
             const validatedData = InvoiceSchema.safeParse(res);
-            if (validatedData.success) setInvoiceData(validatedData.data);
+            if (validatedData.success) {
+              setInvoiceData(validatedData.data);
+            }
           }
         });
       });
     };
     fetchData();
-  }, [invoiceId]);
+  }, [invoiceId, getInvoices]);
+
   return (
     <main
       className={cn("flex flex-col lg:px-0 bg-11 dark:bg-12", {
         dark: isDarkMode,
       })}
     >
-      {windowWidth < 640 ? (
-        <>
-          {isInvoiceEdit ? (
-            <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
-          ) : (
-            <PreviewInvoice
-              invoiceData={invoiceData}
-              activeInvoiceId={invoiceId}
-              isPending={isPending}
-            />
-          )}
-        </>
+      {isPending ? (
+        <PreviewInvoiceSkeleton />
       ) : (
         <>
-          <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
-          <PreviewInvoice
-            invoiceData={invoiceData}
-            activeInvoiceId={invoiceId}
-            isPending={isPending}
-          />
+          {windowWidth < 640 ? (
+            <>
+              {isInvoiceEdit ? (
+                <InvoiceForm
+                  invoiceData={invoiceData}
+                  invoiceId={invoiceId}
+                  setGetInvoices={setGetInvoices}
+                />
+              ) : (
+                <PreviewInvoice
+                  invoiceData={invoiceData}
+                  activeInvoiceId={invoiceId}
+                />
+              )}
+            </>
+          ) : (
+            <>
+              <InvoiceForm
+                invoiceData={invoiceData}
+                invoiceId={invoiceId}
+                setGetInvoices={setGetInvoices}
+              />
+              <PreviewInvoice
+                invoiceData={invoiceData}
+                activeInvoiceId={invoiceId}
+              />
+            </>
+          )}
         </>
       )}
     </main>

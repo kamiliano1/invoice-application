@@ -37,7 +37,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { settingsAppState } from "@/atoms/settingsAppAtom";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { Dispatch, SetStateAction, useState, useTransition } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
 import BackButton from "@/components/ui/BackButton";
 import createInvoice from "@/actions/createInvoice";
@@ -45,9 +45,11 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 export default function InvoiceForm({
   invoiceData,
   invoiceId,
+  setGetInvoices,
 }: {
   invoiceData?: z.infer<typeof InvoiceSchema>;
   invoiceId?: string;
+  setGetInvoices: Dispatch<SetStateAction<boolean>>;
 }) {
   const userId = useCurrentUser();
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
@@ -88,36 +90,6 @@ export default function InvoiceForm({
           items: [{ name: "", quantity: 0, price: 0, total: 0 }],
         },
   });
-  // useForm({
-  //   defaultValues: async () => {
-  //     invoiceData
-  //       ? invoiceData
-  //       : {
-  //           invoiceId: undefined,
-  //           paymentDue: undefined,
-  //           clientName: "",
-  //           status: "pending",
-  //           total: 0,
-  //           createdAt: new Date(),
-  //           description: "",
-  //           paymentTerms: "30",
-  //           clientEmail: "",
-  //           senderAddress: {
-  //             street: "",
-  //             city: "",
-  //             postCode: "",
-  //             country: "",
-  //           },
-  //           clientAddress: {
-  //             street: "",
-  //             city: "",
-  //             postCode: "",
-  //             country: "",
-  //           },
-  //           items: [{ name: "", quantity: 0, price: 0, total: 0 }],
-  //         };
-  //   },
-  // });
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "items",
@@ -126,7 +98,6 @@ export default function InvoiceForm({
     form.reset();
     router.back();
   };
-
   function onSubmit(values: z.infer<typeof InvoiceSchema>) {
     const updatedData: z.infer<typeof InvoiceSchema> = {
       ...values,
@@ -139,40 +110,47 @@ export default function InvoiceForm({
       ...updateItemsTotalValue(values),
     };
     const validatedData = InvoiceSchema.safeParse(updatedData);
-    console.log(validatedData);
+    // console.log(validatedData);
 
     if (validatedData.success) {
       startTransition(() => {
         try {
-          createInvoice(validatedData.data, userId || "", invoiceId);
+          createInvoice(validatedData.data, userId || "", invoiceId).then(
+            () => {
+              setGetInvoices((prev) => !prev);
+              form.reset();
+              router.back();
+            }
+          );
         } catch (error) {
           console.log({ error: "Something went wrong" });
         }
       });
-      if (invoiceData) {
-        setSettingsState((prev) => {
-          const updatedInvoice = prev.userInvoices.map((item) =>
-            item.invoiceId === invoiceData.invoiceId
-              ? {
-                  ...item,
-                  ...values,
-                  ...updateItemsTotalValue(values),
-                  paymentDue: createInvoicePaymentDue(
-                    values.createdAt,
-                    values.paymentTerms
-                  ),
-                }
-              : item
-          );
 
-          return { ...prev, userInvoices: updatedInvoice };
-        });
-      } else {
-        setSettingsState((prev) => ({
-          ...prev,
-          userInvoices: [...prev.userInvoices, validatedData.data],
-        }));
-      }
+      // if (invoiceData) {
+      //   setSettingsState((prev) => {
+      //     const updatedInvoice = prev.userInvoices.map((item) =>
+      //       item.invoiceId === invoiceData.invoiceId
+      //         ? {
+      //             ...item,
+      //             ...values,
+      //             ...updateItemsTotalValue(values),
+      //             paymentDue: createInvoicePaymentDue(
+      //               values.createdAt,
+      //               values.paymentTerms
+      //             ),
+      //           }
+      //         : item
+      //     );
+
+      //     return { ...prev, userInvoices: updatedInvoice };
+      //   });
+      // } else {
+      //   setSettingsState((prev) => ({
+      //     ...prev,
+      //     userInvoices: [...prev.userInvoices, validatedData.data],
+      //   }));
+      // }
     }
     // router.back();
   }
@@ -606,7 +584,6 @@ export default function InvoiceForm({
                 </li>
               ))}
             </div>
-
             <Button
               type="button"
               variant="light"
@@ -642,6 +619,9 @@ export default function InvoiceForm({
                   Cancel
                 </Button>
                 <Button
+                  className="min-w-[110px]"
+                  loading={isPending}
+                  disabled={isPending}
                   variant="violet"
                   onClick={() => setActiveInvoiceStatus("paid")}
                 >
@@ -666,9 +646,11 @@ export default function InvoiceForm({
                   Save as Draft
                 </Button>
                 <Button
+                  loading={isPending}
+                  disabled={isPending}
                   variant="violet"
                   onClick={() => setActiveInvoiceStatus("paid")}
-                  className="w-[100%] sm:w-auto"
+                  className="w-[100%] sm:w-auto min-w-[110px]"
                 >
                   Save & Send
                 </Button>

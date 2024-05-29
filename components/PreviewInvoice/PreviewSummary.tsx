@@ -11,7 +11,6 @@ type PreviewSummaryItemType = {
 };
 
 type PreviewSummaryType = {
-  isPending?: boolean;
   total: number;
   items: {
     name: string;
@@ -21,11 +20,7 @@ type PreviewSummaryType = {
   }[];
 };
 
-export default function PreviewSummary({
-  items,
-  total,
-  isPending,
-}: PreviewSummaryType) {
+export default function PreviewSummary({ items, total }: PreviewSummaryType) {
   const windowWidth = useWindowWith();
   if (!items || !total) return undefined;
   return (

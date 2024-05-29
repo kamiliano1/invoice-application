@@ -25,6 +25,7 @@ export default async function createInvoice(
     invoiceId,
   } = validatedData.data;
   try {
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
     await db.$transaction(async (tx) => {
       if (userInvoiceId) {
         const invoiceToEdit = await getUserActiveInvoiceByInvoiceId(
@@ -103,6 +104,7 @@ export default async function createInvoice(
         await db.items.createMany({ data: dataWithItemId });
       }
     });
+    return true;
   } catch (error) {
     console.log(error);
 

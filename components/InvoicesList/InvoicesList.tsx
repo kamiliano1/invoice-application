@@ -16,7 +16,11 @@ import { getUserInvoicesById } from "@/data/invoices";
 import { Skeleton } from "../ui/skeleton";
 import InvoiceItemSkeleton from "./InvoiceItemSkeleton";
 
-export default function InvoicesList() {
+export default function InvoicesList({
+  getInvoices,
+}: {
+  getInvoices: boolean;
+}) {
   const [isPending, startTransition] = useTransition();
   const userId = useCurrentUser();
 
@@ -49,30 +53,6 @@ export default function InvoicesList() {
         : setCountInvoiceInfo(`There is ${invoicesData?.length} total invoice`);
     }
   }, [invoicesData?.length, windowWidth]);
-  // useEffect(() => {
-  //   if (totalInvoicesCount === 0) {
-  //     setCountInvoiceInfo("No invoices");
-  //     return;
-  //   }
-  //   totalInvoicesCount !== 1
-  //     ? setCountInvoiceInfo(`${totalInvoicesCount} invoices`)
-  //     : setCountInvoiceInfo(`${totalInvoicesCount} invoice`);
-  //   if (windowWidth > 640) {
-  //     totalInvoicesCount !== 1
-  //       ? setCountInvoiceInfo(`There are ${totalInvoicesCount} total invoices`)
-  //       : setCountInvoiceInfo(`There is ${totalInvoicesCount} total invoice`);
-  //   }
-  // }, [windowWidth, totalInvoicesCount]);
-  // const fetchData = async () => {
-  //   startTransition(() => {
-  //     getUserInvoicesById(userId, filteredUserInvoicesPrisma).then((res) => {
-  //       if (res) {
-  //         const validatedData = InvoicesSchema.safeParse(res);
-  //         if (validatedData.success) setInvoicesData(validatedData.data);
-  //       }
-  //     });
-  //   });
-  // };
   useEffect(() => {
     const fetchData = async () => {
       startTransition(() => {
@@ -85,7 +65,7 @@ export default function InvoicesList() {
       });
     };
     fetchData();
-  }, [filteredUserInvoicesPrisma, userId]);
+  }, [filteredUserInvoicesPrisma, userId, getInvoices]);
 
   return (
     <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
