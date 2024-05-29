@@ -10,7 +10,6 @@ import { useEffect, useState, useTransition } from "react";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { z } from "zod";
 import { InvoiceSchema, InvoicesSchema } from "@/schemas";
-// import useUserInvoices from "@/hooks/useUserInvoices";
 import { useSession } from "next-auth/react";
 import { getUserInvoicesById } from "@/data/invoices";
 import { Skeleton } from "../ui/skeleton";
