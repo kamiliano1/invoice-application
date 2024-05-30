@@ -7,11 +7,13 @@ import { cn } from "@/lib/utils";
 import { useRecoilValue } from "recoil";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import UserSettings from "../Auth/UserSettings";
 export default function InvoicesListWrapper() {
   const windowWidth = useWindowWith();
   const isDarkMode = useRecoilValue(darkModeState);
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
+  const isUserEdit = !!searchParams.get("userSetting");
   const [getInvoices, setGetInvoices] = useState(false);
   return (
     <main
@@ -33,6 +35,7 @@ export default function InvoicesListWrapper() {
         <>
           <InvoicesList getInvoices={getInvoices} />
           <InvoiceForm setGetInvoices={setGetInvoices} />
+          <UserSettings />
         </>
       )}
     </main>

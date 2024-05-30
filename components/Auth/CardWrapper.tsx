@@ -4,14 +4,11 @@ import {
   CardContent,
   CardDescription,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import RedirectButton from "./RedirectButton";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "@/atoms/settingsAppAtom";
 import clsx from "clsx";
-import Link from "next/link";
 
 type CardWrapperType = {
   children: React.ReactNode;
@@ -66,11 +63,6 @@ export default function CardWrapper({
             redirectLink={redirectLink}
           />
         </CardContent>
-        <CardFooter>
-          <Link className="text-06" href="../">
-            Back to main Page
-          </Link>
-        </CardFooter>
       </Card>
     </div>
   );

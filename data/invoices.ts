@@ -7,10 +7,12 @@ export const getUserInvoicesById = async (
   filteredArray: InvoiceStatus[]
 ) => {
   try {
+    if (!id) return null;
     const invoices = await db.invoice.findMany({
       where: { invoiceDbId: id, status: { in: filteredArray } },
       include: { clientAddress: true, senderAddress: true, items: true },
     });
+
     const validatedData = InvoicesSchema.safeParse(invoices);
     if (validatedData.success) return validatedData.data;
     return null;
@@ -21,8 +23,6 @@ export const getUserInvoicesById = async (
 
 export const getUserActiveInvoiceByInvoiceId = async (invoiceId: string) => {
   try {
-    console.log(invoiceId, "invoiceId");
-
     const activeUserInvoice = await db.invoice.findFirst({
       where: { invoiceId },
       include: { clientAddress: true, items: true, senderAddress: true },
