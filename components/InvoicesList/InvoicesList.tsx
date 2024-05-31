@@ -12,9 +12,8 @@ import { z } from "zod";
 import { InvoiceSchema, InvoicesSchema } from "@/schemas";
 import { useSession } from "next-auth/react";
 import { getUserInvoicesById } from "@/data/invoices";
-import { Skeleton } from "../ui/skeleton";
-import InvoiceItemSkeleton from "./InvoiceItemSkeleton";
-
+import { Skeleton } from "@/components/ui/skeleton";
+import InvoiceItemSkeleton from "@/components/InvoicesList/InvoiceItemSkeleton";
 export default function InvoicesList({
   getInvoices,
 }: {
@@ -22,7 +21,6 @@ export default function InvoicesList({
 }) {
   const [isPending, startTransition] = useTransition();
   const userId = useCurrentUser();
-
   const [invoicesData, setInvoicesData] =
     useState<z.infer<typeof InvoicesSchema>>();
   const windowWidth = useWindowWith();

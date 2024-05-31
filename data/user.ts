@@ -17,3 +17,14 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
+export const getUserAvatar = async (id: string | undefined) => {
+  try {
+    if (!id) return null;
+    const avatar = await db.invoice.findUnique({
+      where: { id },
+    });
+    return avatar?.description;
+  } catch {
+    return null;
+  }
+};

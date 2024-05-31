@@ -8,6 +8,8 @@ import Image from "next/image";
 import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
 export default function Navbar() {
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const { status } = useSession();
@@ -26,6 +28,14 @@ export default function Navbar() {
       isDarkMode: !prev.isDarkMode,
     }));
   };
+  // useEffect(() => {
+  //   const fetchAvatar = async () => {
+  //     getUserAvatar("aa").then((res) => {
+  //       if (res) setUserAvatar(res);
+  //     });
+  //   };
+  //   fetchAvatar();
+  // }, []);
   return (
     <nav className="bg-03 flex items-center lg:fixed lg:h-[100vh] lg:flex-col lg:rounded-r-[20px] z-[500]">
       <div className="w-[72px] sm:w-20 lg:w-[103px] aspect-square bg-01 rounded-r-[20px] flex items-center justify-center relative">

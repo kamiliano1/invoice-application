@@ -661,7 +661,7 @@ export default function InvoiceForm({
         <div
           onClick={closeFormInput}
           className={cn("delay-200 duration-500 h-full", {
-            "bg-12/50": isInvoiceEdit,
+            "bg-black/35": isInvoiceEdit,
           })}
         ></div>
       </div>
