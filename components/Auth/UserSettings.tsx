@@ -6,6 +6,8 @@ import Image from "next/image";
 import navAvatar from "@/public/assets/image-avatar.jpg";
 import uploadAvatar from "@/actions/uploadAvatar";
 import { RxAvatar } from "react-icons/rx";
+import NewEmailForm from "./NewEmailForm";
+import NewPasswordForm from "./NewPasswordForm";
 export default function UserSettings() {
   const selectedFileRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
@@ -44,9 +46,11 @@ export default function UserSettings() {
         }
       )}
     >
-      <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white">
+      <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white px-6 sm:p-14  gap-5">
         <h2 className="text-[5rem]">Ustawienia</h2>
-        <div
+        <NewEmailForm />
+        <NewPasswordForm />
+        {/* <div
           style={{
             backgroundImage: `url(${pictureURL})`,
           }}
@@ -66,13 +70,13 @@ export default function UserSettings() {
             type="file"
             onChange={onSelectAvatar}
           />
-          {/* <Image
+            </div> */}
+        {/* <Image
             fill
             src={pictureURL || navAvatar}
             alt="avatar"
             className="peer hover:opacity-70"
           /> */}
-        </div>
 
         <button onClick={logoutUser}>Logout</button>
       </div>

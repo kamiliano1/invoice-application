@@ -62,3 +62,23 @@ export const RegisterSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+export const ChangeEmailSchema = z.object({
+  currentEmail: z.string().email({ message: "Invalid Email" }),
+  newEmail: z.string().email({ message: "Invalid Email" }),
+});
+
+export const ChangePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(6, { message: "Minimum 6 characters required" }),
+    newPassword: z
+      .string()
+      .min(6, { message: "Minimum 6 characters required" }),
+    confirmNewPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmNewPassword"],
+  });

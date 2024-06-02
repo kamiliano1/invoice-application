@@ -23,6 +23,9 @@ export const {
       if (session.user && token.sub) {
         session.user.id = token.sub;
       }
+      if (session.user) {
+        session.user.email = token.email as string;
+      }
       // if (session.user && token.invoices) {
       //   session.user.invoices = token.invoices;
       // }
@@ -34,6 +37,7 @@ export const {
         const user = await getUserById(token.sub);
         if (!user) return token;
         token.id = user?.id;
+        token.email = user.email;
         // const invoices = await getUserInvoicesById(user?.id);
         // token.invoices = invoices;
       }
