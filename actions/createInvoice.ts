@@ -3,7 +3,6 @@ import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
 import db from "@/lib/db";
 import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
-import { getUserById } from "@/data/user";
 export default async function createInvoice(
   values: z.infer<typeof InvoiceSchema>,
   id: string,
@@ -69,11 +68,9 @@ export default async function createInvoice(
           data: dataWithItemId,
         });
       } else {
-        const user = await getUserById(id);
-        if (!user) return { error: "Something went wrong" };
         const invoice = await tx.invoice.create({
           data: {
-            invoiceDbId: user.id,
+            invoiceDbId: id,
             invoiceId: invoiceId as string,
             clientEmail,
             clientName,
