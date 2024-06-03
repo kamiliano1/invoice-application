@@ -4,7 +4,7 @@ import { InvoicesSchema } from "@/schemas";
 import { InvoiceStatus } from "@prisma/client";
 export const getUserInvoicesById = async (
   id: string | undefined,
-  filteredArray: InvoiceStatus[]
+  filteredArray?: InvoiceStatus[]
 ) => {
   try {
     if (!id) return null;

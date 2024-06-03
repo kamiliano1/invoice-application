@@ -55,6 +55,7 @@ export default function NewEmailForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-5"
       >
+        <h3 className="text-headingS text-08 dark:text-white">Change Email</h3>
         <FormField
           control={form.control}
           name="currentEmail"

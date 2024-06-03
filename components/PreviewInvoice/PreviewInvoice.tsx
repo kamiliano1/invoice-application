@@ -14,6 +14,9 @@ import { dateToString } from "@/lib/utils";
 import BackButton from "@/components/ui/BackButton";
 
 import { z } from "zod";
+import DeleteModalWrapper from "../ui/DeleteModalWrapper";
+import { deleteInvoice } from "@/actions/deleteInvoice";
+import { useTransition } from "react";
 
 export default function PreviewInvoice({
   invoiceData,
@@ -58,6 +61,19 @@ export default function PreviewInvoice({
       return { ...prev, userInvoices: updatedInvoices };
     });
   };
+  const [isPending, setTransition] = useTransition();
+  const deleteUserInvoice = () => {
+    setSettingsState((prev) => {
+      const updatedInvoices = prev.userInvoices.filter(
+        (item) => item.invoiceId !== invoiceId
+      );
+      return { ...prev, userInvoices: updatedInvoices };
+    });
+    setTransition(() => {
+      deleteInvoice(invoiceId);
+      router.back();
+    });
+  };
   return (
     <div className="max-w-[778px] mx-auto w-full">
       <BackButton
@@ -78,7 +94,15 @@ export default function PreviewInvoice({
             >
               Edit
             </Button>
-            <DeleteModal invoiceId={invoiceId!} className="px-6" />
+            {/* <DeleteModal invoiceId={invoiceId!} className="px-6" /> */}
+            <DeleteModalWrapper
+              buttonTriggerLabel="Delete"
+              modalDescription={`Are you sure you want to delete invoice ${invoiceId}? This action cannot be undone.`}
+              modalTitle="Confirm Deletion"
+              removeInvoice={deleteUserInvoice}
+              className="px-6"
+              loading={isPending}
+            />
             <Button variant="violet" onClick={switchToPaid} className="px-5">
               Mark as Paid
             </Button>
@@ -162,10 +186,15 @@ export default function PreviewInvoice({
         >
           Edit
         </Button>
-        <DeleteModal
-          invoiceId={invoiceId!}
+        <DeleteModalWrapper
+          buttonTriggerLabel="Delete"
+          modalDescription={`Are you sure you want to delete invoice ${invoiceId}? This action cannot be undone.`}
+          modalTitle="Confirm Deletion"
+          removeInvoice={deleteUserInvoice}
           className="px-4 w-[51%] sm:w-auto"
+          loading={isPending}
         />
+
         <Button variant="violet" className="w-full" onClick={switchToPaid}>
           Mark as Paid
         </Button>

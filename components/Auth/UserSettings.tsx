@@ -1,19 +1,30 @@
 import { logout } from "@/actions/logout";
 import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import navAvatar from "@/public/assets/image-avatar.jpg";
 import uploadAvatar from "@/actions/uploadAvatar";
 import { RxAvatar } from "react-icons/rx";
 import NewEmailForm from "./NewEmailForm";
 import NewPasswordForm from "./NewPasswordForm";
+import { Button } from "../ui/button";
+import DeleteModalWrapper from "../ui/DeleteModalWrapper";
+import { clearUserInvoices } from "@/actions/clearUserInvoices";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import FormError from "./FormError";
+import FormSuccess from "./FormSuccess";
+import { importDefaultInvoices } from "@/actions/importDefaultInvoices";
 export default function UserSettings() {
+  const userId = useCurrentUser();
   const selectedFileRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
   const [uploadImageError, setUploadImageError] = useState<string>("");
   const [pictureURL, setPictureURL] = useState<string>("");
+  const [isPending, setTransition] = useTransition();
   const isInvoiceEdit = !!searchParams.get("userSetting");
   const logoutUser = () => {
     logout();
@@ -37,17 +48,41 @@ export default function UserSettings() {
       }
     };
   };
+  const importInvoices = () => {
+    setTransition(() => {
+      if (userId) {
+        importDefaultInvoices(userId)
+          .then((res) => {
+            setSuccess(res?.success);
+            setError(res?.error);
+          })
+          .catch(() => setError("Something went wrong"));
+      }
+    });
+  };
+  const deleteAllInvoices = () => {
+    setTransition(() => {
+      if (userId) {
+        clearUserInvoices(userId)
+          .then((res) => {
+            setSuccess(res?.success);
+            setError(res?.error);
+          })
+          .catch(() => setError("Something went wrong"));
+      }
+    });
+  };
   return (
     <div
       className={cn(
-        "duration-500 w-full sm:absolute sm:top-0 sm:-translate-x-full grid sm:grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-full text-white",
+        "duration-500 w-full sm:absolute sm:top-0 sm:-translate-x-full grid sm:grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-full text-07 dark:text-06 ",
         {
           "sm:translate-x-0": isInvoiceEdit,
         }
       )}
     >
-      <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white px-6 sm:p-14  gap-5">
-        <h2 className="text-[5rem]">Ustawienia</h2>
+      <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white px-6 sm:p-14 gap-10">
+        <h2 className="text-headingM text-08 dark:text-white">User settings</h2>
         <NewEmailForm />
         <NewPasswordForm />
         {/* <div
@@ -77,8 +112,35 @@ export default function UserSettings() {
             alt="avatar"
             className="peer hover:opacity-70"
           /> */}
-
-        <button onClick={logoutUser}>Logout</button>
+        <div className="flex gap-5">
+          <DeleteModalWrapper
+            buttonTriggerLabel="Delete all invoices"
+            modalDescription="Are you sure you want to delete all invoices? This action cannot be undone."
+            modalTitle="Confirm Deletion"
+            removeInvoice={deleteAllInvoices}
+            className="w-full"
+            loading={isPending}
+          />{" "}
+          <Button
+            onClick={importInvoices}
+            variant="violet"
+            className="mt-auto py-3"
+            size="full"
+            loading={isPending}
+          >
+            Import default invoices
+          </Button>
+        </div>
+        <FormSuccess message={success} />
+        <FormError message={error} />
+        <Button
+          onClick={logoutUser}
+          variant="red"
+          className="mt-auto py-3"
+          size="full"
+        >
+          Logout
+        </Button>
       </div>
       <div
         onClick={() => router.back()}

@@ -22,6 +22,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import useCurrentEmail from "@/hooks/useCurrentEmail";
 import { changeEmail } from "@/actions/changeEmail";
 import { changePassword } from "@/actions/changePassword";
+import { Heading3 } from "lucide-react";
 export default function NewPasswordForm() {
   const userEmail = useCurrentEmail();
   const userId = useCurrentUser();
@@ -58,6 +59,9 @@ export default function NewPasswordForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-5"
       >
+        <h3 className="text-headingS text-08 dark:text-white">
+          Change Password
+        </h3>
         <FormField
           control={form.control}
           name="currentPassword"
