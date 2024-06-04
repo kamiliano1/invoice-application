@@ -12,9 +12,10 @@ export const getUserInvoicesById = async (
       where: { invoiceDbId: id, status: { in: filteredArray } },
       include: { clientAddress: true, senderAddress: true, items: true },
     });
-
-    const validatedData = InvoicesSchema.safeParse(invoices);
-    if (validatedData.success) return validatedData.data;
+    const validatedData = InvoicesSchema.safeParse(
+      invoices.filter((item) => item.status !== "draft")
+    );
+    if (validatedData.success) return invoices;
     return null;
   } catch {
     return null;

@@ -55,8 +55,12 @@ export default function InvoicesList({
       startTransition(() => {
         getUserInvoicesById(userId, filteredUserInvoicesPrisma).then((res) => {
           if (res) {
-            const validatedData = InvoicesSchema.safeParse(res);
-            if (validatedData.success) setInvoicesData(validatedData.data);
+            const validatedData = InvoicesSchema.safeParse(
+              res.filter((item) => item.status !== "draft")
+            );
+            if (validatedData.success) {
+              setInvoicesData(res as z.infer<typeof InvoicesSchema>);
+            }
           }
         });
       });
@@ -68,6 +72,7 @@ export default function InvoicesList({
     <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
       <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
         <div className="mr-auto">
+          <h1 className="text-headingS mb-1">Hi {userId}</h1>
           <h1 className="text-headingM sm:text-headingL mb-1">Invoices</h1>
           {isPending ? (
             <Skeleton className="h-[18px] w-30" />

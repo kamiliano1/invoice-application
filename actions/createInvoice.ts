@@ -8,7 +8,10 @@ export default async function createInvoice(
   id: string,
   userInvoiceId?: string
 ) {
-  const validatedData = InvoiceSchema.safeParse(values);
+  const validatedData =
+    values.status === "draft"
+      ? { success: true, data: values }
+      : InvoiceSchema.safeParse(values);
   if (!validatedData || !validatedData.success)
     return { error: "Something went wrong" };
   const {

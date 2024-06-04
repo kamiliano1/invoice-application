@@ -66,8 +66,8 @@ export default function InvoiceForm({
     defaultValues: invoiceData
       ? invoiceData
       : {
-          invoiceId: undefined,
-          paymentDue: undefined,
+          invoiceId: generateUserId(),
+          paymentDue: createInvoicePaymentDue(new Date(), "30"),
           clientName: "",
           status: "pending",
           total: 0,
@@ -97,6 +97,23 @@ export default function InvoiceForm({
   const closeFormInput = () => {
     form.reset();
     router.back();
+  };
+  const testDraft = () => {
+    startTransition(() => {
+      try {
+        createInvoice(
+          { ...form.getValues(), status: "draft" },
+          userId || "",
+          invoiceId
+        ).then(() => {
+          setGetInvoices((prev) => !prev);
+          form.reset();
+          router.back();
+        });
+      } catch (error) {
+        console.log({ error: "Something went wrong" });
+      }
+    });
   };
   function onSubmit(values: z.infer<typeof InvoiceSchema>) {
     const updatedData: z.infer<typeof InvoiceSchema> = {
@@ -644,6 +661,14 @@ export default function InvoiceForm({
                   className="w-[100%] sm:w-auto"
                 >
                   Save as Draft
+                </Button>
+                <Button
+                  variant={isDarkMode ? "darkDarkMode" : "dark"}
+                  onClick={testDraft}
+                  type="button"
+                  className="w-[100%] sm:w-auto"
+                >
+                  Save as Draft Dwa
                 </Button>
                 <Button
                   loading={isPending}
