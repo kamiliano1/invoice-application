@@ -37,8 +37,8 @@ export default function NewEmailForm() {
   const onSubmit = (values: z.infer<typeof ChangeEmailSchema>) => {
     setError("");
     setSuccess("");
-    const validatedData = ChangeEmailSchema.safeParse(values);
-    if (!validatedData.success) setError("Invalid credentials front");
+    const validatedFields = ChangeEmailSchema.safeParse(values);
+    if (!validatedFields.success) setError("Invalid credentials front");
     startTransition(() => {
       if (userEmail) {
         changeEmail(userEmail, values).then((res) => {

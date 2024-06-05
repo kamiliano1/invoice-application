@@ -35,8 +35,8 @@ export default function RegisterForm() {
   const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
     setError("");
     setSuccess("");
-    const validatedData = RegisterSchema.safeParse(values);
-    if (!validatedData.success) setError("Invalid credentials");
+    const validatedFields = RegisterSchema.safeParse(values);
+    if (!validatedFields.success) setError("Invalid credentials");
     startTransition(() => {
       register(values)
         .then((res) => {

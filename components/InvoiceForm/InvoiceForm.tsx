@@ -126,13 +126,12 @@ export default function InvoiceForm({
       ),
       ...updateItemsTotalValue(values),
     };
-    const validatedData = InvoiceSchema.safeParse(updatedData);
-    // console.log(validatedData);
+    const validatedFields = InvoiceSchema.safeParse(updatedData);
 
-    if (validatedData.success) {
+    if (validatedFields.success) {
       startTransition(() => {
         try {
-          createInvoice(validatedData.data, userId || "", invoiceId).then(
+          createInvoice(validatedFields.data, userId || "", invoiceId).then(
             () => {
               setGetInvoices((prev) => !prev);
               form.reset();
@@ -143,33 +142,7 @@ export default function InvoiceForm({
           console.log({ error: "Something went wrong" });
         }
       });
-
-      // if (invoiceData) {
-      //   setSettingsState((prev) => {
-      //     const updatedInvoice = prev.userInvoices.map((item) =>
-      //       item.invoiceId === invoiceData.invoiceId
-      //         ? {
-      //             ...item,
-      //             ...values,
-      //             ...updateItemsTotalValue(values),
-      //             paymentDue: createInvoicePaymentDue(
-      //               values.createdAt,
-      //               values.paymentTerms
-      //             ),
-      //           }
-      //         : item
-      //     );
-
-      //     return { ...prev, userInvoices: updatedInvoice };
-      //   });
-      // } else {
-      //   setSettingsState((prev) => ({
-      //     ...prev,
-      //     userInvoices: [...prev.userInvoices, validatedData.data],
-      //   }));
-      // }
     }
-    // router.back();
   }
   return (
     <Form {...form}>

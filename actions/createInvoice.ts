@@ -8,11 +8,11 @@ export default async function createInvoice(
   id: string,
   userInvoiceId?: string
 ) {
-  const validatedData =
+  const validatedFields =
     values.status === "draft"
       ? { success: true, data: values }
       : InvoiceSchema.safeParse(values);
-  if (!validatedData || !validatedData.success)
+  if (!validatedFields || !validatedFields.success)
     return { error: "Something went wrong" };
   const {
     clientEmail,
@@ -26,7 +26,7 @@ export default async function createInvoice(
     clientAddress,
     items,
     invoiceId,
-  } = validatedData.data;
+  } = validatedFields.data;
   try {
     // await new Promise((resolve) => setTimeout(resolve, 1000));
     await db.$transaction(async (tx) => {

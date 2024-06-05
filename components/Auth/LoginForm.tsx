@@ -34,8 +34,8 @@ export default function LoginForm() {
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
-    const validatedData = LoginSchema.safeParse(values);
-    if (!validatedData.success) setError("Invalid credentials");
+    const validatedFields = LoginSchema.safeParse(values);
+    if (!validatedFields.success) setError("Invalid credentials");
     startTransition(() => {
       login(values)
         .then((res) => {

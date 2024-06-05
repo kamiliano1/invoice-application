@@ -41,8 +41,8 @@ export default function NewPasswordForm() {
   const onSubmit = (values: z.infer<typeof ChangePasswordSchema>) => {
     setError("");
     setSuccess("");
-    const validatedData = ChangePasswordSchema.safeParse(values);
-    if (!validatedData.success) setError("Invalid credentials");
+    const validatedFields = ChangePasswordSchema.safeParse(values);
+    if (!validatedFields.success) setError("Invalid credentials");
     startTransition(() => {
       if (userId) {
         changePassword(userId, values).then((res) => {

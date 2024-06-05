@@ -17,6 +17,7 @@ import { z } from "zod";
 import DeleteModalWrapper from "../ui/DeleteModalWrapper";
 import { deleteInvoice } from "@/actions/deleteInvoice";
 import { useTransition } from "react";
+import { switchInvoiceToPaid } from "@/actions/switchInvoiceToPaid";
 
 export default function PreviewInvoice({
   invoiceData,
@@ -25,16 +26,11 @@ export default function PreviewInvoice({
   invoiceData?: z.infer<typeof InvoiceSchema>;
   activeInvoiceId: string;
 }) {
-  const { userInvoices } = useRecoilValue(userInvoicesState);
   const isDarkMode = useRecoilValue(darkModeState);
   const router = useRouter();
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
-  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const activeInvoice = userInvoices.filter(
-    (item) => item.invoiceId === activeInvoiceId
-  )[0];
-
+  const [isPending, startTransition] = useTransition();
   const {
     status,
     description,
@@ -52,26 +48,19 @@ export default function PreviewInvoice({
     router.push("?invoiceEdit=true");
   };
   const switchToPaid = () => {
-    setSettingsState((prev) => {
-      const updatedInvoices = prev.userInvoices.map((item) =>
-        item.invoiceId === activeInvoiceId
-          ? { ...item, status: "paid" as StatusInvoiceType }
-          : item
-      );
-      return { ...prev, userInvoices: updatedInvoices };
+    startTransition(() => {
+      if (invoiceId) {
+        const validatedFields = InvoiceSchema.safeParse(invoiceData);
+        if (validatedFields.success) switchInvoiceToPaid(invoiceId);
+      }
     });
   };
-  const [isPending, setTransition] = useTransition();
   const deleteUserInvoice = () => {
-    setSettingsState((prev) => {
-      const updatedInvoices = prev.userInvoices.filter(
-        (item) => item.invoiceId !== invoiceId
-      );
-      return { ...prev, userInvoices: updatedInvoices };
-    });
-    setTransition(() => {
-      deleteInvoice(invoiceId);
-      router.back();
+    startTransition(() => {
+      if (invoiceId) {
+        deleteInvoice(invoiceId);
+        router.back();
+      }
     });
   };
   return (
@@ -94,7 +83,6 @@ export default function PreviewInvoice({
             >
               Edit
             </Button>
-            {/* <DeleteModal invoiceId={invoiceId!} className="px-6" /> */}
             <DeleteModalWrapper
               buttonTriggerLabel="Delete"
               modalDescription={`Are you sure you want to delete invoice ${invoiceId}? This action cannot be undone.`}
@@ -194,7 +182,6 @@ export default function PreviewInvoice({
           className="px-4 w-[51%] sm:w-auto"
           loading={isPending}
         />
-
         <Button variant="violet" className="w-full" onClick={switchToPaid}>
           Mark as Paid
         </Button>

@@ -55,10 +55,10 @@ export default function InvoicesList({
       startTransition(() => {
         getUserInvoicesById(userId, filteredUserInvoicesPrisma).then((res) => {
           if (res) {
-            const validatedData = InvoicesSchema.safeParse(
+            const validatedFields = InvoicesSchema.safeParse(
               res.filter((item) => item.status !== "draft")
             );
-            if (validatedData.success) {
+            if (validatedFields.success) {
               setInvoicesData(res as z.infer<typeof InvoicesSchema>);
             }
           }

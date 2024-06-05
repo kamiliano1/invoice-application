@@ -10,7 +10,7 @@ import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
 import { InvoiceSchema } from "@/schemas";
 import { useTransition, useState, useEffect } from "react";
 import { z } from "zod";
-import PreviewInvoiceSkeleton from "./PreviewInvoiceSkeleton";
+import PreviewInvoiceSkeleton from "@/components/PreviewInvoice/PreviewInvoiceSkeleton";
 export default function PreviewInvoiceWrapper({
   params,
 }: {
@@ -22,7 +22,6 @@ export default function PreviewInvoiceWrapper({
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const windowWidth = useWindowWith();
-
   const activeInvoice = userInvoices.filter(
     (item) => item.invoiceId === invoiceId
   )[0];
@@ -35,9 +34,12 @@ export default function PreviewInvoiceWrapper({
       startTransition(() => {
         getUserActiveInvoiceByInvoiceId(invoiceId).then((res) => {
           if (res) {
-            const validatedData = InvoiceSchema.safeParse(res);
-            if (validatedData.success) {
-              setInvoiceData(validatedData.data);
+            const validatedFields =
+              res.status === "draft"
+                ? { success: true, data: res }
+                : InvoiceSchema.safeParse(res);
+            if (validatedFields.success) {
+              setInvoiceData(res as z.infer<typeof InvoiceSchema>);
             }
           }
         });

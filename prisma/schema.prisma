@@ -30,7 +30,7 @@ model User {
 
 model Invoice {
   id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  invoiceId     String
+  invoiceId     String         @unique
   invoiceDbId   String         @db.ObjectId
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
