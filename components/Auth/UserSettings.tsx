@@ -1,6 +1,6 @@
 import { logout } from "@/actions/logout";
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import navAvatar from "@/public/assets/image-avatar.jpg";
@@ -15,7 +15,13 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import FormError from "./FormError";
 import FormSuccess from "./FormSuccess";
 import { importDefaultInvoices } from "@/actions/importDefaultInvoices";
-export default function UserSettings() {
+import BackButton from "../ui/BackButton";
+export default function UserSettings({
+  invoiceId,
+}: {
+  invoiceId: string | undefined;
+}) {
+  const pathname = usePathname();
   const userId = useCurrentUser();
   const selectedFileRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
@@ -25,7 +31,7 @@ export default function UserSettings() {
   const [uploadImageError, setUploadImageError] = useState<string>("");
   const [pictureURL, setPictureURL] = useState<string>("");
   const [isPending, setTransition] = useTransition();
-  const isInvoiceEdit = !!searchParams.get("userSetting");
+  const isUserSettings = !!searchParams.get("userSetting");
   const logoutUser = () => {
     logout();
     router.push("/login");
@@ -72,16 +78,18 @@ export default function UserSettings() {
       }
     });
   };
+
   return (
-    <div
-      className={cn(
-        "duration-500 w-full sm:absolute sm:top-0 sm:-translate-x-full grid sm:grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-full text-07 dark:text-06 ",
-        {
-          "sm:translate-x-0": isInvoiceEdit,
-        }
-      )}
-    >
+    <>
       <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white px-6 sm:p-14 gap-10">
+        <BackButton
+          className="py-6 sm:hidden"
+          backLink={
+            isUserSettings && pathname.length > 1
+              ? `/${invoiceId}/preview`
+              : "../"
+          }
+        />
         <h2 className="text-headingM text-08 dark:text-white">User settings</h2>
         <NewEmailForm />
         <NewPasswordForm />
@@ -145,9 +153,12 @@ export default function UserSettings() {
       <div
         onClick={() => router.back()}
         className={cn("delay-200 duration-500 h-full", {
-          "bg-black/35": isInvoiceEdit,
+          "bg-black/35": isUserSettings,
         })}
       ></div>
-    </div>
+    </>
   );
+}
+{
+  /* </div> */
 }

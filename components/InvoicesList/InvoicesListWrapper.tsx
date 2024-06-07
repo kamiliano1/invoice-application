@@ -8,6 +8,7 @@ import { useRecoilValue } from "recoil";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import UserSettings from "../Auth/UserSettings";
+import Sidebar from "../ui/Sidebar";
 export default function InvoicesListWrapper() {
   const windowWidth = useWindowWith();
   const isDarkMode = useRecoilValue(darkModeState);
@@ -23,9 +24,9 @@ export default function InvoicesListWrapper() {
     >
       {windowWidth < 640 ? (
         <>
-          {isInvoiceEdit ? (
+          {isInvoiceEdit || isUserEdit ? (
             <>
-              <InvoiceForm setGetInvoices={setGetInvoices} />
+              <Sidebar setGetInvoices={setGetInvoices} />
             </>
           ) : (
             <InvoicesList getInvoices={getInvoices} />
@@ -34,8 +35,7 @@ export default function InvoicesListWrapper() {
       ) : (
         <>
           <InvoicesList getInvoices={getInvoices} />
-          <InvoiceForm setGetInvoices={setGetInvoices} />
-          <UserSettings />
+          <Sidebar setGetInvoices={setGetInvoices} />
         </>
       )}
     </main>

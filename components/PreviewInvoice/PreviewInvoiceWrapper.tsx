@@ -11,6 +11,7 @@ import { InvoiceSchema } from "@/schemas";
 import { useTransition, useState, useEffect } from "react";
 import { z } from "zod";
 import PreviewInvoiceSkeleton from "@/components/PreviewInvoice/PreviewInvoiceSkeleton";
+import Sidebar from "../ui/Sidebar";
 export default function PreviewInvoiceWrapper({
   params,
 }: {
@@ -22,6 +23,7 @@ export default function PreviewInvoiceWrapper({
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const windowWidth = useWindowWith();
+  const isUserEdit = !!searchParams.get("userSetting");
   const activeInvoice = userInvoices.filter(
     (item) => item.invoiceId === invoiceId
   )[0];
@@ -60,22 +62,24 @@ export default function PreviewInvoiceWrapper({
         <>
           {windowWidth < 640 ? (
             <>
-              {isInvoiceEdit ? (
-                <InvoiceForm
+              {isInvoiceEdit || isUserEdit ? (
+                <Sidebar
                   invoiceData={invoiceData}
                   invoiceId={invoiceId}
                   setGetInvoices={setGetInvoices}
                 />
               ) : (
-                <PreviewInvoice
-                  invoiceData={invoiceData}
-                  activeInvoiceId={invoiceId}
-                />
+                <>
+                  <PreviewInvoice
+                    invoiceData={invoiceData}
+                    activeInvoiceId={invoiceId}
+                  />
+                </>
               )}
             </>
           ) : (
             <>
-              <InvoiceForm
+              <Sidebar
                 invoiceData={invoiceData}
                 invoiceId={invoiceId}
                 setGetInvoices={setGetInvoices}
