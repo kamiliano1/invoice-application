@@ -31,7 +31,7 @@ model User {
 
 model Invoice {
   id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  invoiceId     String         @unique
+  invoiceId     String
   invoiceDbId   String         @db.ObjectId
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
@@ -46,6 +46,8 @@ model Invoice {
   senderAddress SenderAddress?
   clientAddress ClientAddress?
   items         Items[]
+
+  @@unique([invoiceId, invoiceDbId])
 }
 
 model SenderAddress {

@@ -16,6 +16,7 @@ import FormError from "./FormError";
 import FormSuccess from "./FormSuccess";
 import { importDefaultInvoices } from "@/actions/importDefaultInvoices";
 import BackButton from "../ui/BackButton";
+import { signOut } from "next-auth/react";
 export default function UserSettings({
   invoiceId,
 }: {
@@ -33,7 +34,8 @@ export default function UserSettings({
   const [isPending, setTransition] = useTransition();
   const isUserSettings = !!searchParams.get("userSetting");
   const logoutUser = () => {
-    logout();
+    // logout();
+    signOut();
     router.push("/login");
   };
   const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +89,7 @@ export default function UserSettings({
           backLink={
             isUserSettings && pathname.length > 1
               ? `/${invoiceId}/preview`
-              : "../"
+              : "/"
           }
         />
         <h2 className="text-headingM text-08 dark:text-white">User settings</h2>
