@@ -1,62 +1,67 @@
 "use client";
-import { darkModeState, userInvoicesState } from "@/atoms/settingsAppAtom";
+import {
+  darkModeState,
+  settingsAppState,
+  userInvoicesState,
+} from "@/atoms/settingsAppAtom";
 import useWindowWith from "@/hooks/useWindowWidth";
 import { useSearchParams } from "next/navigation";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { cn } from "@/lib/utils";
-import InvoiceForm from "@/components/InvoiceForm/InvoiceForm";
 import PreviewInvoice from "@/components/PreviewInvoice/PreviewInvoice";
-import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
-import { InvoiceSchema } from "@/schemas";
+import { getUserInvoicesById } from "@/data/invoices";
+import { InvoiceSchema, InvoicesSchema } from "@/schemas";
 import { useTransition, useState, useEffect } from "react";
 import { z } from "zod";
 import PreviewInvoiceSkeleton from "@/components/PreviewInvoice/PreviewInvoiceSkeleton";
 import Sidebar from "../ui/Sidebar";
+import useCurrentUser from "@/hooks/useCurrentUser";
 export default function PreviewInvoiceWrapper({
   params,
 }: {
   params: { invoiceId: string };
 }) {
-  const { userInvoices } = useRecoilValue(userInvoicesState);
+  const userId = useCurrentUser();
+  const { userInvoices, isLoaded, activeInvoice } =
+    useRecoilValue(userInvoicesState);
   const isDarkMode = useRecoilValue(darkModeState);
   const invoiceId = params.invoiceId;
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const windowWidth = useWindowWith();
   const isUserEdit = !!searchParams.get("userSetting");
-  const activeInvoice = userInvoices.filter(
-    (item) => item.invoiceId === invoiceId
-  )[0];
-  const [isPending, startTransition] = useTransition();
-  const [invoiceData, setInvoiceData] =
-    useState<z.infer<typeof InvoiceSchema>>();
-  const [getInvoices, setGetInvoices] = useState(false);
+  // const activeInvoice = userInvoices.filter(
+  //   (item) => item.invoiceId === invoiceId
+  // )[0];
+  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   useEffect(() => {
     const fetchData = async () => {
-      startTransition(() => {
-        getUserActiveInvoiceByInvoiceId(invoiceId).then((res) => {
+      if (!isLoaded) {
+        getUserInvoicesById(userId).then((res) => {
           if (res) {
-            const validatedFields =
-              res.status === "draft"
-                ? { success: true, data: res }
-                : InvoiceSchema.safeParse(res);
+            const validatedFields = InvoicesSchema.safeParse(
+              res.filter((item) => item.status !== "draft")
+            );
             if (validatedFields.success) {
-              setInvoiceData(res as z.infer<typeof InvoiceSchema>);
+              setSettingsState((prev) => ({
+                ...prev,
+                userInvoices: res as z.infer<typeof InvoicesSchema>,
+                isLoaded: true,
+              }));
             }
           }
         });
-      });
+      }
     };
     fetchData();
-  }, [invoiceId, getInvoices]);
-
+  }, [setSettingsState, isLoaded, userId]);
   return (
     <main
       className={cn("flex flex-col lg:px-0 bg-11 dark:bg-12", {
         dark: isDarkMode,
       })}
     >
-      {isPending ? (
+      {!isLoaded ? (
         <PreviewInvoiceSkeleton />
       ) : (
         <>
@@ -64,14 +69,13 @@ export default function PreviewInvoiceWrapper({
             <>
               {isInvoiceEdit || isUserEdit ? (
                 <Sidebar
-                  invoiceData={invoiceData}
+                  invoiceData={activeInvoice(invoiceId)}
                   invoiceId={invoiceId}
-                  setGetInvoices={setGetInvoices}
                 />
               ) : (
                 <>
                   <PreviewInvoice
-                    invoiceData={invoiceData}
+                    invoiceData={activeInvoice(invoiceId)}
                     activeInvoiceId={invoiceId}
                   />
                 </>
@@ -80,12 +84,11 @@ export default function PreviewInvoiceWrapper({
           ) : (
             <>
               <Sidebar
-                invoiceData={invoiceData}
+                invoiceData={activeInvoice(invoiceId)}
                 invoiceId={invoiceId}
-                setGetInvoices={setGetInvoices}
               />
               <PreviewInvoice
-                invoiceData={invoiceData}
+                invoiceData={activeInvoice(invoiceId)}
                 activeInvoiceId={invoiceId}
               />
             </>

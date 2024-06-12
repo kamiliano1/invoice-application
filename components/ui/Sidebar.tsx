@@ -1,18 +1,15 @@
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import InvoiceForm from "../InvoiceForm/InvoiceForm";
 import { InvoiceSchema } from "@/schemas";
-import { Dispatch, SetStateAction } from "react";
 import { z } from "zod";
 import UserSettings from "../Auth/UserSettings";
 export default function Sidebar({
   invoiceData,
   invoiceId,
-  setGetInvoices,
 }: {
   invoiceData?: z.infer<typeof InvoiceSchema>;
   invoiceId?: string;
-  setGetInvoices: Dispatch<SetStateAction<boolean>>;
 }) {
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
@@ -27,10 +24,7 @@ export default function Sidebar({
       )}
     >
       {isInvoiceEdit && (
-        <InvoiceForm
-          setGetInvoices={setGetInvoices}
-          invoiceData={invoiceData}
-        />
+        <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
       )}
       {isUserSettings && <UserSettings invoiceId={invoiceId} />}
     </div>

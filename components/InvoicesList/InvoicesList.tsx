@@ -1,31 +1,26 @@
-import { userInvoicesState } from "@/atoms/settingsAppAtom";
+import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
 import useWindowWith from "@/hooks/useWindowWidth";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import InvoiceItem from "@/components/InvoicesList/InvoiceItem";
 import InvoiceFilterPopover from "@/components/InvoicesList/InvoiceFilterPopover";
 import EmptyInvoice from "./EmptyInvoice";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { z } from "zod";
-import { InvoiceSchema, InvoicesSchema } from "@/schemas";
-import { useSession } from "next-auth/react";
+import { InvoicesSchema } from "@/schemas";
 import { getUserInvoicesById } from "@/data/invoices";
 import { Skeleton } from "@/components/ui/skeleton";
 import InvoiceItemSkeleton from "@/components/InvoicesList/InvoiceItemSkeleton";
-export default function InvoicesList({
-  getInvoices,
-}: {
-  getInvoices: boolean;
-}) {
-  const [isPending, startTransition] = useTransition();
+export default function InvoicesList() {
+  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const userId = useCurrentUser();
-  const [invoicesData, setInvoicesData] =
-    useState<z.infer<typeof InvoicesSchema>>();
   const windowWidth = useWindowWith();
   const [countInvoiceInfo, setCountInvoiceInfo] = useState("");
   const {
+    isLoaded,
+    userInvoices,
     totalInvoicesCount,
     filteredUserInvoices,
     filteredUserInvoicesPrisma,
@@ -35,46 +30,47 @@ export default function InvoicesList({
     router.push("/?invoiceEdit=true");
   };
   useEffect(() => {
-    if (invoicesData?.length === 0) {
+    if (totalInvoicesCount === 0) {
       setCountInvoiceInfo("No invoices");
       return;
     }
-    invoicesData?.length !== 1
-      ? setCountInvoiceInfo(`${invoicesData?.length} invoices`)
-      : setCountInvoiceInfo(`${invoicesData?.length} invoice`);
+    totalInvoicesCount !== 1
+      ? setCountInvoiceInfo(`${totalInvoicesCount} invoices`)
+      : setCountInvoiceInfo(`${totalInvoicesCount} invoice`);
     if (windowWidth > 640) {
-      invoicesData?.length !== 1
-        ? setCountInvoiceInfo(
-            `There are ${invoicesData?.length} total invoices`
-          )
-        : setCountInvoiceInfo(`There is ${invoicesData?.length} total invoice`);
+      totalInvoicesCount !== 1
+        ? setCountInvoiceInfo(`There are ${totalInvoicesCount} total invoices`)
+        : setCountInvoiceInfo(`There is ${totalInvoicesCount} total invoice`);
     }
-  }, [invoicesData?.length, windowWidth]);
+  }, [totalInvoicesCount, windowWidth]);
   useEffect(() => {
     const fetchData = async () => {
-      startTransition(() => {
-        getUserInvoicesById(userId, filteredUserInvoicesPrisma).then((res) => {
+      if (!isLoaded) {
+        getUserInvoicesById(userId).then((res) => {
           if (res) {
             const validatedFields = InvoicesSchema.safeParse(
               res.filter((item) => item.status !== "draft")
             );
             if (validatedFields.success) {
-              setInvoicesData(res as z.infer<typeof InvoicesSchema>);
+              setSettingsState((prev) => ({
+                ...prev,
+                userInvoices: res as z.infer<typeof InvoicesSchema>,
+                isLoaded: true,
+              }));
             }
           }
         });
-      });
+      }
     };
     fetchData();
-  }, [filteredUserInvoicesPrisma, userId, getInvoices]);
+  }, [setSettingsState, isLoaded, userId]);
 
   return (
     <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
       <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
         <div className="mr-auto">
-          <h1 className="text-headingS mb-1">Hi {userId}</h1>
           <h1 className="text-headingM sm:text-headingL mb-1">Invoices</h1>
-          {isPending ? (
+          {!isLoaded ? (
             <Skeleton className="h-[18px] w-30" />
           ) : (
             <p className="text-body">{countInvoiceInfo}</p>
@@ -90,12 +86,13 @@ export default function InvoicesList({
           {windowWidth < 640 ? "New" : "New Invoice"}
         </Button>
       </div>
-      {isPending ? (
+
+      {!isLoaded ? (
         <InvoiceItemSkeleton />
       ) : (
         <>
-          {invoicesData?.length ? (
-            invoicesData.map((item) => (
+          {filteredUserInvoices?.length ? (
+            filteredUserInvoices?.map((item) => (
               <InvoiceItem
                 key={item.invoiceId}
                 invoiceId={item.invoiceId!}

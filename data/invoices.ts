@@ -1,21 +1,19 @@
 "use server";
 import db from "@/lib/db";
 import { InvoicesSchema } from "@/schemas";
-import { InvoiceStatus } from "@prisma/client";
-export const getUserInvoicesById = async (
-  id: string | undefined,
-  filteredArray?: InvoiceStatus[]
-) => {
+export const getUserInvoicesById = async (id: string | undefined) => {
   try {
     if (!id) return null;
     const invoices = await db.invoice.findMany({
-      where: { invoiceDbId: id, status: { in: filteredArray } },
+      // where: { invoiceDbId: id, status: { in: filteredArray } },
+      where: { invoiceDbId: id },
       include: { clientAddress: true, senderAddress: true, items: true },
     });
     const validatedFields = InvoicesSchema.safeParse(
       invoices.filter((item) => item.status !== "draft")
     );
     if (validatedFields.success) return invoices;
+
     return null;
   } catch {
     return null;

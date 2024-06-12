@@ -1,4 +1,3 @@
-import { invoiceData } from "@/data/data";
 import { InvoiceSchema } from "@/schemas";
 import { InvoiceStatus } from "@prisma/client";
 import { atom, selector } from "recoil";
@@ -32,7 +31,7 @@ const defaultSettingsAppState: SettingsAppState = {
     },
   ],
   filtersArray: ["paid", "pending", "draft"],
-  userInvoices: invoiceData,
+  userInvoices: [],
 };
 
 export const userInvoicesState = selector({
@@ -45,11 +44,19 @@ export const userInvoicesState = selector({
     const totalInvoicesCount = filteredUserInvoices.length;
     const userInvoices = settingsState.userInvoices;
     const filteredUserInvoicesPrisma = settingsState.filtersArray;
+    const isLoaded = settingsState.isLoaded;
+    const activeInvoice = (invoiceId: string) => {
+      return settingsState.userInvoices.filter(
+        (item) => item.invoiceId === invoiceId
+      )[0];
+    };
     return {
       totalInvoicesCount,
       filteredUserInvoices,
       userInvoices,
       filteredUserInvoicesPrisma,
+      isLoaded,
+      activeInvoice,
     };
   },
 });

@@ -15,8 +15,11 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import FormError from "./FormError";
 import FormSuccess from "./FormSuccess";
 import { importDefaultInvoices } from "@/actions/importDefaultInvoices";
+import { invoiceData } from "@/data/data";
 import BackButton from "../ui/BackButton";
 import { signOut } from "next-auth/react";
+import { useRecoilState } from "recoil";
+import { settingsAppState } from "@/atoms/settingsAppAtom";
 export default function UserSettings({
   invoiceId,
 }: {
@@ -29,6 +32,7 @@ export default function UserSettings({
   const router = useRouter();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const [uploadImageError, setUploadImageError] = useState<string>("");
   const [pictureURL, setPictureURL] = useState<string>("");
   const [isPending, setTransition] = useTransition();
@@ -63,6 +67,11 @@ export default function UserSettings({
           .then((res) => {
             setSuccess(res?.success);
             setError(res?.error);
+            if (res.success)
+              setSettingsState((prev) => ({
+                ...prev,
+                userInvoices: [...prev.userInvoices, ...invoiceData],
+              }));
           })
           .catch(() => setError("Something went wrong"));
       }
@@ -75,6 +84,8 @@ export default function UserSettings({
           .then((res) => {
             setSuccess(res?.success);
             setError(res?.error);
+            if (res.success)
+              setSettingsState((prev) => ({ ...prev, userInvoices: [] }));
           })
           .catch(() => setError("Something went wrong"));
       }

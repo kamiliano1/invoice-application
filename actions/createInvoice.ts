@@ -3,6 +3,7 @@ import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
 import db from "@/lib/db";
 import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
+import { revalidatePath } from "next/cache";
 export default async function createInvoice(
   values: z.infer<typeof InvoiceSchema>,
   id: string,
@@ -109,8 +110,10 @@ export default async function createInvoice(
     });
   } catch (error) {
     console.log(error);
-
     return { error: "Something went wrong" };
   }
+  console.log("robi");
+
+  revalidatePath("/");
   return { success: "Invoice Created!" };
 }

@@ -1,41 +1,29 @@
 "use client";
-import { darkModeState } from "@/atoms/settingsAppAtom";
-import InvoiceForm from "@/components/InvoiceForm/InvoiceForm";
 import InvoicesList from "@/components/InvoicesList/InvoicesList";
 import useWindowWith from "@/hooks/useWindowWidth";
-import { cn } from "@/lib/utils";
-import { useRecoilValue } from "recoil";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import UserSettings from "../Auth/UserSettings";
-import Sidebar from "../ui/Sidebar";
+import Sidebar from "@/components/ui/Sidebar";
 export default function InvoicesListWrapper() {
   const windowWidth = useWindowWith();
-  const isDarkMode = useRecoilValue(darkModeState);
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const isUserEdit = !!searchParams.get("userSetting");
-  const [getInvoices, setGetInvoices] = useState(false);
   return (
-    <main
-      className={cn("flex flex-col items-start bg-11 dark:bg-12", {
-        dark: isDarkMode,
-      })}
-    >
+    <main className="flex flex-col items-start bg-11 dark:bg-12">
       {windowWidth < 640 ? (
         <>
           {isInvoiceEdit || isUserEdit ? (
             <>
-              <Sidebar setGetInvoices={setGetInvoices} />
+              <Sidebar />
             </>
           ) : (
-            <InvoicesList getInvoices={getInvoices} />
+            <InvoicesList />
           )}
         </>
       ) : (
         <>
-          <InvoicesList getInvoices={getInvoices} />
-          <Sidebar setGetInvoices={setGetInvoices} />
+          <InvoicesList />
+          <Sidebar />
         </>
       )}
     </main>

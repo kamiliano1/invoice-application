@@ -45,19 +45,17 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 export default function InvoiceForm({
   invoiceData,
   invoiceId,
-  setGetInvoices,
 }: {
   invoiceData?: z.infer<typeof InvoiceSchema>;
   invoiceId?: string;
-  setGetInvoices: Dispatch<SetStateAction<boolean>>;
 }) {
   const userId = useCurrentUser();
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const [isPending, startTransition] = useTransition();
   const isDarkMode = useRecoilValue(darkModeState);
   const [activeInvoiceStatus, setActiveInvoiceStatus] = useState<
-    "paid" | "draft"
-  >("paid");
+    "paid" | "draft" | "pending"
+  >("pending");
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
   const router = useRouter();
@@ -106,7 +104,6 @@ export default function InvoiceForm({
           userId || "",
           invoiceId
         ).then(() => {
-          setGetInvoices((prev) => !prev);
           form.reset();
           router.back();
         });
@@ -127,13 +124,26 @@ export default function InvoiceForm({
       ...updateItemsTotalValue(values),
     };
     const validatedFields = InvoiceSchema.safeParse(updatedData);
-
     if (validatedFields.success) {
       startTransition(() => {
         try {
           createInvoice(validatedFields.data, userId || "", invoiceId).then(
             () => {
-              setGetInvoices((prev) => !prev);
+              if (invoiceData) {
+                setSettingsState((prev) => {
+                  const updatedInvoices = prev.userInvoices.map((item) =>
+                    item.invoiceId === invoiceId ? validatedFields.data : item
+                  );
+                  console.log(updatedInvoices);
+
+                  return { ...prev, userInvoices: updatedInvoices };
+                });
+              } else {
+                setSettingsState((prev) => ({
+                  ...prev,
+                  userInvoices: [...prev.userInvoices, validatedFields.data],
+                }));
+              }
               form.reset();
               router.back();
             }
@@ -599,7 +609,7 @@ export default function InvoiceForm({
                 loading={isPending}
                 disabled={isPending}
                 variant="violet"
-                onClick={() => setActiveInvoiceStatus("paid")}
+                onClick={() => setActiveInvoiceStatus("pending")}
               >
                 Save Changes
               </Button>
@@ -633,7 +643,7 @@ export default function InvoiceForm({
                 loading={isPending}
                 disabled={isPending}
                 variant="violet"
-                onClick={() => setActiveInvoiceStatus("paid")}
+                onClick={() => setActiveInvoiceStatus("pending")}
                 className="w-[100%] sm:w-auto min-w-[110px]"
               >
                 Save & Send

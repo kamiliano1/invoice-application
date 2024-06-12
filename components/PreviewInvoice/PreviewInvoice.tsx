@@ -1,24 +1,17 @@
-import {
-  darkModeState,
-  settingsAppState,
-  userInvoicesState,
-} from "@/atoms/settingsAppAtom";
+import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
 import { InvoiceSchema, StatusInvoiceType } from "@/schemas";
 import { useRecoilState, useRecoilValue } from "recoil";
 import StatusInvoice from "@/components/ui/StatusInvoice";
 import { Button } from "@/components/ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
 import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
-import DeleteModal from "@/components/PreviewInvoice/DeleteModal";
 import { dateToString } from "@/lib/utils";
 import BackButton from "@/components/ui/BackButton";
-
 import { z } from "zod";
 import DeleteModalWrapper from "../ui/DeleteModalWrapper";
 import { deleteInvoice } from "@/actions/deleteInvoice";
 import { useTransition } from "react";
 import { switchInvoiceToPaid } from "@/actions/switchInvoiceToPaid";
-
 export default function PreviewInvoice({
   invoiceData,
   activeInvoiceId,
@@ -27,6 +20,7 @@ export default function PreviewInvoice({
   activeInvoiceId: string;
 }) {
   const isDarkMode = useRecoilValue(darkModeState);
+  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const router = useRouter();
   const searchParams = useSearchParams();
   const isInvoiceEdit = !!searchParams.get("invoiceEdit");
@@ -51,7 +45,15 @@ export default function PreviewInvoice({
     startTransition(() => {
       if (invoiceId) {
         const validatedFields = InvoiceSchema.safeParse(invoiceData);
-        if (validatedFields.success) switchInvoiceToPaid(invoiceId);
+        if (validatedFields.success) {
+          switchInvoiceToPaid(invoiceId);
+          setSettingsState((prev) => ({
+            ...prev,
+            userInvoices: prev.userInvoices.map((item) =>
+              item.invoiceId === invoiceId ? { ...item, status: "paid" } : item
+            ),
+          }));
+        }
       }
     });
   };
@@ -59,6 +61,12 @@ export default function PreviewInvoice({
     startTransition(() => {
       if (invoiceId) {
         deleteInvoice(invoiceId);
+        setSettingsState((prev) => ({
+          ...prev,
+          userInvoices: prev.userInvoices.filter(
+            (item) => item.invoiceId !== invoiceId
+          ),
+        }));
         router.back();
       }
     });

@@ -6,8 +6,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import RedirectButton from "./RedirectButton";
-import { useRecoilValue } from "recoil";
-import { darkModeState } from "@/atoms/settingsAppAtom";
 import clsx from "clsx";
 
 type CardWrapperType = {
@@ -27,29 +25,16 @@ export default function CardWrapper({
   redirectButtonDescription,
   redirectLink,
 }: CardWrapperType) {
-  const isDarkMode = useRecoilValue(darkModeState);
   return (
-    <div
-      className={clsx("h-full flex justify-center items-center", {
-        dark: isDarkMode,
-      })}
-    >
+    <div className="h-full flex justify-center items-center">
       <Card
-        className={clsx("max-w-[450px] w-[70vw] rounded-xl text-black", {
-          "bg-03": isDarkMode,
-          "bg-white": !isDarkMode,
-        })}
+        className={clsx(
+          "max-w-[450px] w-[70vw] rounded-xl text-black bg-white dark:bg-03",
+          {}
+        )}
       >
         <CardContent className="flex flex-col space-y-4">
-          <CardTitle
-            className={clsx(
-              {
-                "text-white": isDarkMode,
-                "text-08": !isDarkMode,
-              },
-              "text-headingM"
-            )}
-          >
+          <CardTitle className={clsx("text-headingM text-08 dark:text-white")}>
             {headerLabel}
           </CardTitle>
           <CardDescription className="text-06 leading-[22px]">

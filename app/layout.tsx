@@ -25,8 +25,9 @@ export default async function RootLayout({
       <SessionProvider session={session}>
         <RecoilProvider>
           <body
+            id="bodyPage"
             style={{ colorScheme: "dark" }}
-            className={`${leagueSpartan.className} ${leagueSpartan.variable}`}
+            className={`${leagueSpartan.className} ${leagueSpartan.variable} dark`}
           >
             <Navbar />
             {children}
