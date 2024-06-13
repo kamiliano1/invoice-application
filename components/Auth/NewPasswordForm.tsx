@@ -6,27 +6,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ChangeEmailSchema, ChangePasswordSchema } from "@/schemas";
+import { ChangePasswordSchema } from "@/schemas";
 import { MdEmail } from "react-icons/md";
-import { FaLock } from "react-icons/fa6";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useTransition } from "react";
-import FormError from "./FormError";
-import FormSuccess from "./FormSuccess";
-import { useSession } from "next-auth/react";
+import FormError from "@/components/Auth/FormError";
+import FormSuccess from "@/components/Auth/FormSuccess";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import useCurrentEmail from "@/hooks/useCurrentEmail";
-import { changeEmail } from "@/actions/changeEmail";
 import { changePassword } from "@/actions/changePassword";
-import CollapsibleContentWrapper from "../ui/CollapsibleContentWrapper";
+import CollapsibleContentWrapper from "@/components/ui/CollapsibleContentWrapper";
 export default function NewPasswordForm() {
-  const userEmail = useCurrentEmail();
   const userId = useCurrentUser();
-  const { update } = useSession();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -48,7 +42,6 @@ export default function NewPasswordForm() {
         changePassword(userId, values).then((res) => {
           setError(res?.error);
           setSuccess(res?.success);
-          // update();
         });
       }
     });

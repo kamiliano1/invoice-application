@@ -3,12 +3,10 @@ import { settingsAppState } from "@/atoms/settingsAppAtom";
 import { Checkbox } from "@/components/ui/checkbox";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { StatusInvoiceType } from "@/schemas";
-import { InvoiceStatus } from "@prisma/client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 export function FilterCheckbox({ label }: { label: StatusInvoiceType }) {
   const userId = useCurrentUser();
-
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const [isChanged, setIsChanged] = useState(false);
   const toggleCheckbox = async () => {

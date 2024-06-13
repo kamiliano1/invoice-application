@@ -8,25 +8,18 @@ import {
 } from "@/components/ui/form";
 import { ChangeEmailSchema } from "@/schemas";
 import { MdEmail } from "react-icons/md";
-import { FaLock } from "react-icons/fa6";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useTransition } from "react";
-import FormError from "./FormError";
-import FormSuccess from "./FormSuccess";
+import FormError from "@/components/Auth/FormError";
+import FormSuccess from "@/components/Auth/FormSuccess";
 import { useSession } from "next-auth/react";
-import useCurrentUser from "@/hooks/useCurrentUser";
-import { IoIosArrowDown } from "react-icons/io";
 import useCurrentEmail from "@/hooks/useCurrentEmail";
 import { changeEmail } from "@/actions/changeEmail";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+
 import CollapsibleContentWrapper from "../ui/CollapsibleContentWrapper";
 export default function NewEmailForm() {
   const userEmail = useCurrentEmail();

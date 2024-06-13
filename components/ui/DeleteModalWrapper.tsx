@@ -10,7 +10,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 export default function DeleteModalWrapper({
@@ -47,21 +46,8 @@ export default function DeleteModalWrapper({
       </Button>
       <DialogPortal>
         <DialogOverlay className="bg-12/40 data-[state=open]:animate-overlayShow fixed inset-0 z-[600]" />
-        <DialogContent
-          className={clsx(
-            "data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[87vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] rounded-lg p-8 z-[700] border-none gap-5",
-            {
-              "bg-03": isDarkMode,
-              "bg-white": !isDarkMode,
-            }
-          )}
-        >
-          <DialogTitle
-            className={clsx({
-              "text-white": isDarkMode,
-              "text-08": !isDarkMode,
-            })}
-          >
+        <DialogContent className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[87vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] rounded-lg p-8 z-[700] border-none gap-5 bg-white dark:bg-03">
+          <DialogTitle className="text-08 dark:text-white">
             {modalTitle}
           </DialogTitle>
           <DialogDescription className="text-06 leading-[22px]">

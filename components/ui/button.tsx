@@ -1,9 +1,8 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-
-import { cn } from "@/lib/utils";
 import Spinner from "@/components/ui/Spinner";
+import clsx from "clsx";
 
 const buttonVariants = cva(
   "rounded-3xl text-headingS font-bold flex items-center justify-center",
@@ -20,7 +19,7 @@ const buttonVariants = cva(
         grey: "text-07 bg-[#F9FAFE] hover:bg-[#DFE3FA] hover:bg-opacity-55",
       },
       size: {
-        default: "h-[48px] px-3 ",
+        default: "h-[48px] px-3",
         small: "h-[40px] pl-2 pr-3.5 sm:px-6",
         full: "w-full",
       },
@@ -47,7 +46,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={clsx(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
       >

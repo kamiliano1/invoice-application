@@ -1,25 +1,21 @@
-import { logout } from "@/actions/logout";
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useRef, useState, useTransition } from "react";
-import Image from "next/image";
-import navAvatar from "@/public/assets/image-avatar.jpg";
-import uploadAvatar from "@/actions/uploadAvatar";
-import { RxAvatar } from "react-icons/rx";
-import NewEmailForm from "./NewEmailForm";
-import NewPasswordForm from "./NewPasswordForm";
-import { Button } from "../ui/button";
-import DeleteModalWrapper from "../ui/DeleteModalWrapper";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState, useTransition } from "react";
 import { clearUserInvoices } from "@/actions/clearUserInvoices";
-import useCurrentUser from "@/hooks/useCurrentUser";
-import FormError from "./FormError";
-import FormSuccess from "./FormSuccess";
 import { importDefaultInvoices } from "@/actions/importDefaultInvoices";
+import { settingsAppState } from "@/atoms/settingsAppAtom";
+import FormError from "@/components/Auth/FormError";
+import FormSuccess from "@/components/Auth/FormSuccess";
+import NewEmailForm from "@/components/Auth/NewEmailForm";
+import NewPasswordForm from "@/components/Auth/NewPasswordForm";
+import UploadAvatarForm from "@/components/Auth/UploadAvatarForm";
+import BackButton from "@/components/ui/BackButton";
+import DeleteModalWrapper from "@/components/ui/DeleteModalWrapper";
+import { Button } from "@/components/ui/button";
 import { invoiceData } from "@/data/data";
-import BackButton from "../ui/BackButton";
+import useCurrentUser from "@/hooks/useCurrentUser";
 import { signOut } from "next-auth/react";
 import { useRecoilState } from "recoil";
-import { settingsAppState } from "@/atoms/settingsAppAtom";
 export default function UserSettings({
   invoiceId,
 }: {
@@ -27,14 +23,11 @@ export default function UserSettings({
 }) {
   const pathname = usePathname();
   const userId = useCurrentUser();
-  const selectedFileRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const [uploadImageError, setUploadImageError] = useState<string>("");
-  const [pictureURL, setPictureURL] = useState<string>("");
   const [isPending, setTransition] = useTransition();
   const isUserSettings = !!searchParams.get("userSetting");
   const logoutUser = () => {
@@ -42,24 +35,7 @@ export default function UserSettings({
     signOut();
     router.push("/login");
   };
-  const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUploadImageError("");
-    const reader = new FileReader();
 
-    if (e.target.files?.[0]) {
-      if (e.target.files[0].size / 512 > 512) {
-        setUploadImageError("Too big image size");
-        return;
-      }
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    reader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setPictureURL(readerEvent.target.result as string);
-        uploadAvatar(readerEvent.target.result as string);
-      }
-    };
-  };
   const importInvoices = () => {
     setTransition(() => {
       if (userId) {
@@ -106,33 +82,8 @@ export default function UserSettings({
         <h2 className="text-headingM text-08 dark:text-white">User settings</h2>
         <NewEmailForm />
         <NewPasswordForm />
-        {/* <div
-          style={{
-            backgroundImage: `url(${pictureURL})`,
-          }}
-          className={cn(
-            "text-slate-700 bg-slate-100 mb-6 sm:mb-0 flex flex-col items-center text-headingS bg-cover bg-no-repeat w-min px-10 py-[3.75rem] cursor-pointer relative rounded-xl sm:w-[193px]",
-            {
-              "hover:text-white hover:bg-zinc-500 bg-blend-multiply":
-                pictureURL,
-            }
-          )}
-          onClick={() => selectedFileRef.current?.click()}
-        >
-          <p className="w-[116px]">+ Upload Image</p>
-          <input
-            ref={selectedFileRef}
-            hidden
-            type="file"
-            onChange={onSelectAvatar}
-          />
-            </div> */}
-        {/* <Image
-            fill
-            src={pictureURL || navAvatar}
-            alt="avatar"
-            className="peer hover:opacity-70"
-          /> */}
+        <UploadAvatarForm />
+
         <div className="flex gap-5">
           <DeleteModalWrapper
             buttonTriggerLabel="Delete all invoices"
@@ -145,7 +96,7 @@ export default function UserSettings({
           <Button
             onClick={importInvoices}
             variant="violet"
-            className="mt-auto py-3"
+            className="mt-auto py-3 text-headingS"
             size="full"
             loading={isPending}
           >
@@ -171,7 +122,4 @@ export default function UserSettings({
       ></div>
     </>
   );
-}
-{
-  /* </div> */
 }

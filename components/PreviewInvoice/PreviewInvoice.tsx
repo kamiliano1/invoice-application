@@ -1,5 +1,5 @@
 import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
-import { InvoiceSchema, StatusInvoiceType } from "@/schemas";
+import { InvoiceSchema } from "@/schemas";
 import { useRecoilState, useRecoilValue } from "recoil";
 import StatusInvoice from "@/components/ui/StatusInvoice";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
 import { dateToString } from "@/lib/utils";
 import BackButton from "@/components/ui/BackButton";
 import { z } from "zod";
-import DeleteModalWrapper from "../ui/DeleteModalWrapper";
+import DeleteModalWrapper from "@/components/ui/DeleteModalWrapper";
 import { deleteInvoice } from "@/actions/deleteInvoice";
 import { useTransition } from "react";
 import { switchInvoiceToPaid } from "@/actions/switchInvoiceToPaid";

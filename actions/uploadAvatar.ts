@@ -1,12 +1,14 @@
 "use server";
 import db from "@/lib/db";
-export default async function uploadAvatar(image: string) {
+export default async function uploadAvatar(id: string, avatar: string) {
   try {
-    await db.invoice.update({
-      where: { id: "665225653c512fd100dec786" },
-      data: { description: image },
+    await db.user.update({
+      where: { id },
+      data: { avatar },
     });
+    return { success: "Avatar successfully updated" };
   } catch (error) {
     console.log(error);
+    return { error: "Something went wrong during sending avatar" };
   }
 }

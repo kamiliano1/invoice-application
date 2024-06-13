@@ -17,7 +17,7 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FormSuccess from "@/components/Auth/FormSuccess";
-import FormError from "./FormError";
+import FormError from "@/components/Auth/FormError";
 import { useState, useTransition } from "react";
 import { login } from "@/actions/login";
 export default function LoginForm() {

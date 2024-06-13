@@ -1,5 +1,5 @@
 import useWindowWith from "@/hooks/useWindowWidth";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PreviewInvoiceSkeleton() {
   const windowWidth = useWindowWith();

@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import RedirectButton from "./RedirectButton";
+import RedirectButton from "@/components/Auth/RedirectButton";
 import clsx from "clsx";
 
 type CardWrapperType = {

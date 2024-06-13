@@ -38,8 +38,8 @@ export const InvoiceSchema = z.object({
     .array(
       z.object({
         name: z.string().min(2, EMPTY_MESSAGE),
-        quantity: z.coerce.number(),
-        price: z.coerce.number(),
+        quantity: z.coerce.number().min(1),
+        price: z.coerce.number().min(1),
         total: z.coerce.number(),
       })
     )

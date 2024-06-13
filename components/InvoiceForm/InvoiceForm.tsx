@@ -37,7 +37,7 @@ import {
 import { useRecoilState, useRecoilValue } from "recoil";
 import { settingsAppState } from "@/atoms/settingsAppAtom";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Dispatch, SetStateAction, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
 import BackButton from "@/components/ui/BackButton";
 import createInvoice from "@/actions/createInvoice";
@@ -85,7 +85,7 @@ export default function InvoiceForm({
             postCode: "",
             country: "",
           },
-          items: [{ name: "", quantity: 0, price: 0, total: 0 }],
+          items: [{ name: "", quantity: 1, price: 1, total: 1 }],
         },
   });
   const { fields, append, remove } = useFieldArray({
@@ -96,16 +96,39 @@ export default function InvoiceForm({
     form.reset();
     router.back();
   };
-  const testDraft = () => {
+  const safeInvoiceAsDraft = () => {
     startTransition(() => {
       try {
         createInvoice(
-          { ...form.getValues(), status: "draft" },
+          {
+            ...form.getValues(),
+            paymentDue: createInvoicePaymentDue(
+              form.getValues("createdAt"),
+              form.getValues("paymentTerms")
+            ),
+            status: "draft",
+          },
           userId || "",
           invoiceId
-        ).then(() => {
-          form.reset();
-          router.back();
+        ).then((res) => {
+          if (res.success) {
+            setSettingsState((prev) => ({
+              ...prev,
+              userInvoices: [
+                ...prev.userInvoices,
+                {
+                  ...form.getValues(),
+                  paymentDue: createInvoicePaymentDue(
+                    form.getValues("createdAt"),
+                    form.getValues("paymentTerms")
+                  ),
+                  status: "draft",
+                },
+              ],
+            }));
+            form.reset();
+            router.back();
+          }
         });
       } catch (error) {
         console.log({ error: "Something went wrong" });
@@ -134,8 +157,6 @@ export default function InvoiceForm({
                   const updatedInvoices = prev.userInvoices.map((item) =>
                     item.invoiceId === invoiceId ? validatedFields.data : item
                   );
-                  console.log(updatedInvoices);
-
                   return { ...prev, userInvoices: updatedInvoices };
                 });
               } else {
@@ -179,6 +200,7 @@ export default function InvoiceForm({
           </h2>
 
           <p className="text-01 text-headingSVariant mb-3">Bill from</p>
+
           <div className="grid gap-5">
             <FormField
               control={form.control}
@@ -624,20 +646,16 @@ export default function InvoiceForm({
               >
                 Discard
               </Button>
+
               <Button
+                loading={isPending}
+                disabled={isPending}
                 variant={isDarkMode ? "darkDarkMode" : "dark"}
-                onClick={() => setActiveInvoiceStatus("draft")}
-                className="w-[100%] sm:w-auto"
+                onClick={safeInvoiceAsDraft}
+                type="button"
+                className="w-[100%] sm:w-auto min-w-[119px]"
               >
                 Save as Draft
-              </Button>
-              <Button
-                variant={isDarkMode ? "darkDarkMode" : "dark"}
-                onClick={testDraft}
-                type="button"
-                className="w-[100%] sm:w-auto"
-              >
-                Save as Draft Dwa
               </Button>
               <Button
                 loading={isPending}
