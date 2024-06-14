@@ -8,10 +8,8 @@ export async function deleteInvoice(userInvoiceId: string) {
         userInvoiceId
       );
       if (!invoiceToDelete) return { error: "Something went wrong" };
-      setTimeout(async () => {
-        await db.invoice.delete({ where: { id: invoiceToDelete?.id } });
-        return { success: "Deleted" };
-      }, 6000);
+      await db.invoice.delete({ where: { id: invoiceToDelete?.id } });
+      return { success: "Deleted" };
     }
   } catch {
     return { error: "Something went wrong during delete" };

@@ -5,31 +5,16 @@ import { z } from "zod";
 export type SettingsAppState = {
   isDarkMode: boolean;
   isLoaded: boolean;
-  filtersActivated: {
-    name: string;
-    isActive: boolean;
-  }[];
+
   filtersArray: InvoiceStatus[];
+  avatar: string;
   userInvoices: z.infer<typeof InvoiceSchema>[];
 };
 
 const defaultSettingsAppState: SettingsAppState = {
   isDarkMode: true,
   isLoaded: false,
-  filtersActivated: [
-    {
-      name: "draft",
-      isActive: true,
-    },
-    {
-      name: "pending",
-      isActive: true,
-    },
-    {
-      name: "paid",
-      isActive: true,
-    },
-  ],
+  avatar: "",
   filtersArray: ["paid", "pending", "draft"],
   userInvoices: [],
 };
@@ -42,9 +27,8 @@ export const userInvoicesState = selector({
       settingsState.filtersArray.includes(item.status)
     );
     const totalInvoicesCount = filteredUserInvoices.length;
-    const userInvoices = settingsState.userInvoices;
-    const filteredUserInvoicesPrisma = settingsState.filtersArray;
     const isLoaded = settingsState.isLoaded;
+    const userAvatar = settingsState.avatar;
     const activeInvoice = (invoiceId: string) => {
       return settingsState.userInvoices.filter(
         (item) => item.invoiceId === invoiceId
@@ -53,9 +37,8 @@ export const userInvoicesState = selector({
     return {
       totalInvoicesCount,
       filteredUserInvoices,
-      userInvoices,
-      filteredUserInvoicesPrisma,
       isLoaded,
+      userAvatar,
       activeInvoice,
     };
   },

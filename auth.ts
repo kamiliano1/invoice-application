@@ -38,8 +38,6 @@ export const {
         if (!user) return token;
         token.id = user?.id;
         token.email = user.email;
-        // const invoices = await getUserInvoicesById(user?.id);
-        // token.invoices = invoices;
       }
       return token;
     },

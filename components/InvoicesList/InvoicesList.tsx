@@ -13,18 +13,14 @@ import { InvoicesSchema } from "@/schemas";
 import { getUserInvoicesById } from "@/data/invoices";
 import { Skeleton } from "@/components/ui/skeleton";
 import InvoiceItemSkeleton from "@/components/InvoicesList/InvoiceItemSkeleton";
+import { getUserAvatar } from "@/data/user";
 export default function InvoicesList() {
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const userId = useCurrentUser();
   const windowWidth = useWindowWith();
   const [countInvoiceInfo, setCountInvoiceInfo] = useState("");
-  const {
-    isLoaded,
-    userInvoices,
-    totalInvoicesCount,
-    filteredUserInvoices,
-    filteredUserInvoicesPrisma,
-  } = useRecoilValue(userInvoicesState);
+  const { isLoaded, totalInvoicesCount, filteredUserInvoices } =
+    useRecoilValue(userInvoicesState);
   const router = useRouter();
   const createNewInvoice = () => {
     router.push("/?invoiceEdit=true");
@@ -52,11 +48,14 @@ export default function InvoicesList() {
               res.filter((item) => item.status !== "draft")
             );
             if (validatedFields.success) {
-              setSettingsState((prev) => ({
-                ...prev,
-                userInvoices: res as z.infer<typeof InvoicesSchema>,
-                isLoaded: true,
-              }));
+              getUserAvatar(userId).then((response) => {
+                setSettingsState((prev) => ({
+                  ...prev,
+                  userInvoices: res as z.infer<typeof InvoicesSchema>,
+                  isLoaded: true,
+                  avatar: response as string,
+                }));
+              });
             }
           }
         });

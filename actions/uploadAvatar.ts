@@ -1,6 +1,6 @@
 "use server";
 import db from "@/lib/db";
-export default async function uploadAvatar(id: string, avatar: string) {
+export async function uploadAvatar(id: string, avatar: string) {
   try {
     await db.user.update({
       where: { id },

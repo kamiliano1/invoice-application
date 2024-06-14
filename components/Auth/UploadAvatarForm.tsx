@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import uploadAvatar from "@/actions/uploadAvatar";
+import { uploadAvatar } from "@/actions/uploadAvatar";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import navAvatar from "@/public/assets/image-avatar.jpg";
@@ -10,8 +10,12 @@ import FormSuccess from "@/components/Auth/FormSuccess";
 import FormError from "@/components/Auth/FormError";
 import CollapsibleContentWrapper from "@/components/ui/CollapsibleContentWrapper";
 import { Button } from "@/components/ui/button";
+import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
 export default function UploadAvatarForm() {
   const [isPending, startTransition] = useTransition();
+  const { userAvatar } = useRecoilValue(userInvoicesState);
+  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const userId = useCurrentUser();
   const selectedFileRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | undefined>("");
@@ -44,9 +48,10 @@ export default function UploadAvatarForm() {
         uploadAvatar(userId, pictureURL).then((res) => {
           if (res.success) {
             setSuccess(res.success);
-            return;
+            setSettingsState((prev) => ({ ...prev, avatar: pictureURL }));
+          } else {
+            setError(res.error);
           }
-          setError(res.error);
         });
       }
     });
@@ -74,7 +79,7 @@ export default function UploadAvatarForm() {
             />
             <Image
               fill
-              src={pictureURL || navAvatar}
+              src={pictureURL || userAvatar || navAvatar}
               alt="avatar"
               className="peer hover:opacity-50 rounded-xl"
             />
