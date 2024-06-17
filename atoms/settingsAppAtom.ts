@@ -5,7 +5,6 @@ import { z } from "zod";
 export type SettingsAppState = {
   isDarkMode: boolean;
   isLoaded: boolean;
-
   filtersArray: InvoiceStatus[];
   avatar: string;
   userInvoices: z.infer<typeof InvoiceSchema>[];
@@ -31,7 +30,7 @@ export const userInvoicesState = selector({
     const userAvatar = settingsState.avatar;
     const activeInvoice = (invoiceId: string) => {
       return settingsState.userInvoices.filter(
-        (item) => item.invoiceId === invoiceId
+        (item) => item.id === invoiceId
       )[0];
     };
     return {

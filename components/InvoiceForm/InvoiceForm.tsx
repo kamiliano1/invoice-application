@@ -64,6 +64,7 @@ export default function InvoiceForm({
     defaultValues: invoiceData
       ? invoiceData
       : {
+          id: "",
           invoiceId: generateUserId(),
           paymentDue: createInvoicePaymentDue(new Date(), "30"),
           clientName: "",
@@ -155,7 +156,7 @@ export default function InvoiceForm({
               if (invoiceData) {
                 setSettingsState((prev) => {
                   const updatedInvoices = prev.userInvoices.map((item) =>
-                    item.invoiceId === invoiceId ? validatedFields.data : item
+                    item.id === invoiceId ? validatedFields.data : item
                   );
                   return { ...prev, userInvoices: updatedInvoices };
                 });

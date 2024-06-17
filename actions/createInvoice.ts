@@ -2,7 +2,6 @@
 import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
 import db from "@/lib/db";
-import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
 export default async function createInvoice(
   values: z.infer<typeof InvoiceSchema>,
   id: string,
@@ -30,11 +29,8 @@ export default async function createInvoice(
   try {
     await db.$transaction(async (tx) => {
       if (userInvoiceId) {
-        const invoiceToEdit = await getUserActiveInvoiceByInvoiceId(
-          userInvoiceId
-        );
         const invoice = await tx.invoice.update({
-          where: { id: invoiceToEdit?.id },
+          where: { id: userInvoiceId },
           data: {
             clientEmail,
             clientName,
@@ -65,7 +61,7 @@ export default async function createInvoice(
           ...item,
           itemId: invoice.id,
         }));
-        await tx.items.deleteMany({ where: { itemId: invoice.id } });
+        await tx.items.deleteMany({ where: { itemId: userInvoiceId } });
         await tx.items.createMany({
           data: dataWithItemId,
         });
@@ -109,6 +105,5 @@ export default async function createInvoice(
   } catch (error) {
     return { error: "Something went wrong" };
   }
-
   return { success: "Invoice Created!" };
 }

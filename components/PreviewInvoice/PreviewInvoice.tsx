@@ -37,35 +37,36 @@ export default function PreviewInvoice({
     clientEmail,
     items,
     total,
+    id,
   } = invoiceData || {};
   const editActivatedInvoice = () => {
     router.push("?invoiceEdit=true");
   };
   const switchToPaid = () => {
     startTransition(() => {
-      if (invoiceId) {
+      if (id) {
         const validatedFields = InvoiceSchema.safeParse(invoiceData);
         if (validatedFields.success) {
-          switchInvoiceToPaid(invoiceId);
-          setSettingsState((prev) => ({
-            ...prev,
-            userInvoices: prev.userInvoices.map((item) =>
-              item.invoiceId === invoiceId ? { ...item, status: "paid" } : item
-            ),
-          }));
+          switchInvoiceToPaid(id).then((res) => {
+            if (res.success)
+              setSettingsState((prev) => ({
+                ...prev,
+                userInvoices: prev.userInvoices.map((item) =>
+                  item.id === id ? { ...item, status: "paid" } : item
+                ),
+              }));
+          });
         }
       }
     });
   };
   const deleteUserInvoice = () => {
     startTransition(() => {
-      if (invoiceId) {
-        deleteInvoice(invoiceId);
+      if (id) {
+        deleteInvoice(id);
         setSettingsState((prev) => ({
           ...prev,
-          userInvoices: prev.userInvoices.filter(
-            (item) => item.invoiceId !== invoiceId
-          ),
+          userInvoices: prev.userInvoices.filter((item) => item.id !== id),
         }));
         router.back();
       }

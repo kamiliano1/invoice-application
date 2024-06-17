@@ -5,6 +5,7 @@ const EMPTY_MESSAGE = "can't be empty!";
 export type StatusInvoiceType = "draft" | "pending" | "paid";
 
 export const PreviewInvoiceSchema = z.object({
+  id: z.string().optional(),
   invoiceId: z.string().length(6),
   paymentDue: z.date(),
   clientName: z.string(),
@@ -13,6 +14,7 @@ export const PreviewInvoiceSchema = z.object({
 });
 
 export const InvoiceSchema = z.object({
+  id: z.string().optional(),
   invoiceId: z.string().optional(),
   paymentDue: z.date().optional(),
   clientName: z.string().min(3, EMPTY_MESSAGE),

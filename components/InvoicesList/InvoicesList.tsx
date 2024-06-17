@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import InvoiceItem from "@/components/InvoicesList/InvoiceItem";
 import InvoiceFilterPopover from "@/components/InvoicesList/InvoiceFilterPopover";
 import EmptyInvoice from "./EmptyInvoice";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { z } from "zod";
 import { InvoicesSchema } from "@/schemas";
@@ -14,7 +14,10 @@ import { getUserInvoicesById } from "@/data/invoices";
 import { Skeleton } from "@/components/ui/skeleton";
 import InvoiceItemSkeleton from "@/components/InvoicesList/InvoiceItemSkeleton";
 import { getUserAvatar } from "@/data/user";
+import useData from "@/hooks/useData";
 export default function InvoicesList() {
+  useData();
+
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const userId = useCurrentUser();
   const windowWidth = useWindowWith();
@@ -39,31 +42,6 @@ export default function InvoicesList() {
         : setCountInvoiceInfo(`There is ${totalInvoicesCount} total invoice`);
     }
   }, [totalInvoicesCount, windowWidth]);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!isLoaded) {
-        getUserInvoicesById(userId).then((res) => {
-          if (res) {
-            const validatedFields = InvoicesSchema.safeParse(
-              res.filter((item) => item.status !== "draft")
-            );
-            if (validatedFields.success) {
-              getUserAvatar(userId).then((response) => {
-                setSettingsState((prev) => ({
-                  ...prev,
-                  userInvoices: res as z.infer<typeof InvoicesSchema>,
-                  isLoaded: true,
-                  avatar: response as string,
-                }));
-              });
-            }
-          }
-        });
-      }
-    };
-    fetchData();
-  }, [setSettingsState, isLoaded, userId]);
-
   return (
     <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
       <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
@@ -93,6 +71,7 @@ export default function InvoicesList() {
           {filteredUserInvoices?.length ? (
             filteredUserInvoices?.map((item) => (
               <InvoiceItem
+                id={item.id}
                 key={item.invoiceId}
                 invoiceId={item.invoiceId!}
                 clientName={item.clientName}

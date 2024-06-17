@@ -12,10 +12,12 @@ import UploadAvatarForm from "@/components/Auth/UploadAvatarForm";
 import BackButton from "@/components/ui/BackButton";
 import DeleteModalWrapper from "@/components/ui/DeleteModalWrapper";
 import { Button } from "@/components/ui/button";
-import { invoiceData } from "@/data/data";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { signOut } from "next-auth/react";
 import { useRecoilState } from "recoil";
+import { getUserInvoicesById } from "@/data/invoices";
+import { InvoicesSchema } from "@/schemas";
+import { z } from "zod";
 export default function UserSettings({
   invoiceId,
 }: {
@@ -43,11 +45,21 @@ export default function UserSettings({
           .then((res) => {
             setSuccess(res?.success);
             setError(res?.error);
-            if (res.success)
-              setSettingsState((prev) => ({
-                ...prev,
-                userInvoices: [...prev.userInvoices, ...invoiceData],
-              }));
+            if (res.success) {
+              getUserInvoicesById(userId).then((response) => {
+                if (response) {
+                  const validatedFields = InvoicesSchema.safeParse(
+                    response.filter((item) => item.status !== "draft")
+                  );
+                  if (validatedFields.success) {
+                    setSettingsState((prev) => ({
+                      ...prev,
+                      userInvoices: response as z.infer<typeof InvoicesSchema>,
+                    }));
+                  }
+                }
+              });
+            }
           })
           .catch(() => setError("Something went wrong"));
       }
