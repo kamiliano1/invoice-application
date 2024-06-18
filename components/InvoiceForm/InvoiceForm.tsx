@@ -42,6 +42,7 @@ import { darkModeState } from "@/atoms/settingsAppAtom";
 import BackButton from "@/components/ui/BackButton";
 import createInvoice from "@/actions/createInvoice";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import { getUserInvoicesById } from "@/data/invoices";
 export default function InvoiceForm({
   invoiceData,
   invoiceId,
@@ -97,7 +98,7 @@ export default function InvoiceForm({
     form.reset();
     router.back();
   };
-  const safeInvoiceAsDraft = () => {
+  const saveInvoiceAsDraft = () => {
     startTransition(() => {
       try {
         createInvoice(
@@ -113,20 +114,20 @@ export default function InvoiceForm({
           invoiceId
         ).then((res) => {
           if (res.success) {
-            setSettingsState((prev) => ({
-              ...prev,
-              userInvoices: [
-                ...prev.userInvoices,
-                {
-                  ...form.getValues(),
-                  paymentDue: createInvoicePaymentDue(
-                    form.getValues("createdAt"),
-                    form.getValues("paymentTerms")
-                  ),
-                  status: "draft",
-                },
-              ],
-            }));
+            getUserInvoicesById(userId).then((response) => {
+              if (response) {
+                setSettingsState((prev) => ({
+                  ...prev,
+                  userInvoices: [
+                    ...prev.userInvoices,
+                    response[response.length - 1] as z.infer<
+                      typeof InvoiceSchema
+                    >,
+                  ],
+                }));
+              }
+            });
+
             form.reset();
             router.back();
           }
@@ -140,7 +141,7 @@ export default function InvoiceForm({
     const updatedData: z.infer<typeof InvoiceSchema> = {
       ...values,
       status: activeInvoiceStatus,
-      invoiceId: generateUserId(),
+      invoiceId: invoiceData ? invoiceData.invoiceId : generateUserId(),
       paymentDue: createInvoicePaymentDue(
         values.createdAt,
         values.paymentTerms
@@ -652,7 +653,7 @@ export default function InvoiceForm({
                 loading={isPending}
                 disabled={isPending}
                 variant={isDarkMode ? "darkDarkMode" : "dark"}
-                onClick={safeInvoiceAsDraft}
+                onClick={saveInvoiceAsDraft}
                 type="button"
                 className="w-[100%] sm:w-auto min-w-[119px]"
               >

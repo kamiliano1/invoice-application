@@ -19,6 +19,7 @@ export default function DeleteModalWrapper({
   modalDescription,
   removeInvoice,
   loading,
+  disabled,
 }: {
   className?: string;
   buttonTriggerLabel: string;
@@ -26,6 +27,7 @@ export default function DeleteModalWrapper({
   modalDescription: string;
   removeInvoice: () => void;
   loading: boolean;
+  disabled?: boolean;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isDarkMode = useRecoilValue(darkModeState);
@@ -38,6 +40,8 @@ export default function DeleteModalWrapper({
   return (
     <Dialog onOpenChange={setIsModalOpen} open={isModalOpen} modal={true}>
       <Button
+        // type="button"
+        disabled={disabled}
         onClick={() => setIsModalOpen(true)}
         className={cn(className)}
         variant="red"

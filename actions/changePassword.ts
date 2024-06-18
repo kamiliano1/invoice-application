@@ -22,18 +22,16 @@ export async function changePassword(
     existingUser.password
   );
   if (!isCurrentPasswordCorrect) return { error: "Password does not match" };
-  if (isCurrentPasswordCorrect) {
-    try {
-      const newPasswordHashed = await bcrypt.hash(newPassword, 10);
-      await db.user.update({
-        where: { id: existingUser.id },
-        data: { password: newPasswordHashed },
-      });
-      return { success: "Password Changed" };
-    } catch (error) {
-      console.log(error);
+  try {
+    const newPasswordHashed = await bcrypt.hash(newPassword, 10);
+    await db.user.update({
+      where: { id: existingUser.id },
+      data: { password: newPasswordHashed },
+    });
+    return { success: "Password Changed" };
+  } catch (error) {
+    console.log(error);
 
-      return { error: "Something went wrong" };
-    }
+    return { error: "Something went wrong" };
   }
 }

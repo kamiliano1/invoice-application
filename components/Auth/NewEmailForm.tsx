@@ -20,7 +20,7 @@ import { useSession } from "next-auth/react";
 import useCurrentEmail from "@/hooks/useCurrentEmail";
 import { changeEmail } from "@/actions/changeEmail";
 
-import CollapsibleContentWrapper from "../ui/CollapsibleContentWrapper";
+import CollapsibleContentWrapper from "@/components/ui/CollapsibleContentWrapper";
 export default function NewEmailForm() {
   const userEmail = useCurrentEmail();
   const { update } = useSession();

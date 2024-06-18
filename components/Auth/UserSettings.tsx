@@ -9,6 +9,7 @@ import FormSuccess from "@/components/Auth/FormSuccess";
 import NewEmailForm from "@/components/Auth/NewEmailForm";
 import NewPasswordForm from "@/components/Auth/NewPasswordForm";
 import UploadAvatarForm from "@/components/Auth/UploadAvatarForm";
+import DeleteAccountForm from "@/components/Auth/DeleteAccountForm";
 import BackButton from "@/components/ui/BackButton";
 import DeleteModalWrapper from "@/components/ui/DeleteModalWrapper";
 import { Button } from "@/components/ui/button";
@@ -95,7 +96,7 @@ export default function UserSettings({
         <NewEmailForm />
         <NewPasswordForm />
         <UploadAvatarForm />
-
+        <DeleteAccountForm />
         <div className="flex gap-5">
           <DeleteModalWrapper
             buttonTriggerLabel="Delete all invoices"
