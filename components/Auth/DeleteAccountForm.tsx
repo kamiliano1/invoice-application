@@ -20,7 +20,8 @@ import { MdEmail } from "react-icons/md";
 import DeleteModalWrapper from "@/components/ui/DeleteModalWrapper";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { deleteUser } from "@/actions/deleteUser";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 export default function DeleteAccountForm() {
   const form = useForm<z.infer<typeof DeleteUserSchema>>({
     resolver: zodResolver(DeleteUserSchema),
@@ -30,7 +31,8 @@ export default function DeleteAccountForm() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
-
+  const { update } = useSession();
+  const router = useRouter();
   const onSubmit = (value: z.infer<typeof DeleteUserSchema>) => {};
   const deleteUserForever = () => {
     setError("");
@@ -44,6 +46,8 @@ export default function DeleteAccountForm() {
           if (res.success) {
             setSuccess(res?.success);
             signOut();
+            update();
+            router.push("/login");
           }
         });
       }

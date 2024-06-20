@@ -5,7 +5,7 @@ import { InvoicesSchema } from "@/schemas";
 import { useCallback, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { z } from "zod";
-import useCurrentUser from "./useCurrentUser";
+import useCurrentUser from "@/hooks/useCurrentUser";
 
 export default function useData() {
   const userId = useCurrentUser();

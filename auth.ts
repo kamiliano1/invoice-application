@@ -11,7 +11,7 @@ export const {
   signOut,
 } = NextAuth({
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user }) {
       if (user && user.id) {
         const existingUser = await getUserById(user.id);
         if (!existingUser) return false;
@@ -32,13 +32,14 @@ export const {
 
       return session;
     },
-    async jwt({ token }) {
+    async jwt({ token, trigger }) {
       if (token.sub) {
         const user = await getUserById(token.sub);
         if (!user) return token;
         token.id = user?.id;
         token.email = user.email;
       }
+
       return token;
     },
   },

@@ -1,6 +1,6 @@
 "use client";
 import CardWrapper from "@/components/Auth/CardWrapper";
-import { LoginSchema } from "@/schemas";
+import { InvoicesSchema, LoginSchema } from "@/schemas";
 import {
   Form,
   FormControl,
@@ -20,8 +20,18 @@ import FormSuccess from "@/components/Auth/FormSuccess";
 import FormError from "@/components/Auth/FormError";
 import { useState, useTransition } from "react";
 import { login } from "@/actions/login";
+import { useSession } from "next-auth/react";
+import { getUserInvoicesById } from "@/data/invoices";
+import { getUserAvatar } from "@/data/user";
+import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
+import useCurrentUser from "@/hooks/useCurrentUser";
+import { useRecoilState, useRecoilValue } from "recoil";
 export default function LoginForm() {
+  const { data } = useSession();
+  const userId = useCurrentUser();
   const [isPending, startTransition] = useTransition();
+  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
+  const { isLoaded } = useRecoilValue(userInvoicesState);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -45,6 +55,28 @@ export default function LoginForm() {
         .catch(() => setError("Something went wrong"));
     });
   };
+  const loguj = () => {
+    login({ email: "aaa@wp.plllll", password: "aaa@wp.plllll" });
+    // if (!isLoaded) {
+    //   getUserInvoicesById(userId).then((res) => {
+    //     if (res) {
+    //       const validatedFields = InvoicesSchema.safeParse(
+    //         res.filter((item) => item.status !== "draft")
+    //       );
+    //       if (validatedFields.success) {
+    //         getUserAvatar(userId).then((response) => {
+    //           setSettingsState((prev) => ({
+    //             ...prev,
+    //             userInvoices: res as z.infer<typeof InvoicesSchema>,
+    //             isLoaded: true,
+    //             avatar: response as string,
+    //           }));
+    //         });
+    //       }
+    //     }
+    //   });
+    // }
+  };
   return (
     <CardWrapper
       headerLabel="Login"
@@ -58,6 +90,13 @@ export default function LoginForm() {
           className="flex flex-col gap-5"
           onSubmit={form.handleSubmit(onSubmit)}
         >
+          <Button
+            type="button"
+            onClick={loguj}
+            className="text-headingS text-white"
+          >
+            Logowanie
+          </Button>
           <FormField
             control={form.control}
             name="email"
