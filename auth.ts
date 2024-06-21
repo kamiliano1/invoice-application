@@ -10,6 +10,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  pages: { signIn: "/login" },
   callbacks: {
     async signIn({ user }) {
       if (user && user.id) {

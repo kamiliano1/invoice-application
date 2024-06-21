@@ -2,6 +2,7 @@
 import InvoicesListWrapper from "@/components/InvoicesList/InvoicesListWrapper";
 import { Button } from "@/components/ui/button";
 import { getSession, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 export default function HomePage() {
   const wylogownie = () => {
     signOut();
@@ -13,8 +14,10 @@ export default function HomePage() {
     console.log("session", session);
     update(session);
   }
+  const router = useRouter();
   return (
-    <div className="p-[20rem]">
+    <>
+      {/* <div className="p-[20rem]">
       {JSON.stringify(data)}
       <Button onClick={wylogownie} className="text-headingS text-white">
         Wylogouj
@@ -25,6 +28,14 @@ export default function HomePage() {
       <Button onClick={myFunction} className="text-headingS text-white">
         getSession
       </Button>
-    </div>
+    </div> */}
+      <InvoicesListWrapper />
+      <Button
+        onClick={() => router.push("/")}
+        className="text-headingS text-white ml-[400px]"
+      >
+        Refresh
+      </Button>
+    </>
   );
 }
