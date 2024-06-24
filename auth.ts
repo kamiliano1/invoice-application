@@ -15,8 +15,7 @@ export const {
     async signIn({ user }) {
       if (user && user.id) {
         const existingUser = await getUserById(user.id);
-        if (!existingUser) return false;
-        return true;
+        if (existingUser) return true;
       }
       return false;
     },
@@ -33,7 +32,7 @@ export const {
 
       return session;
     },
-    async jwt({ token, trigger }) {
+    async jwt({ token }) {
       if (token.sub) {
         const user = await getUserById(token.sub);
         if (!user) return token;

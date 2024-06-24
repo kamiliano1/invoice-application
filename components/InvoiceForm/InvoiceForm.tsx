@@ -153,7 +153,7 @@ export default function InvoiceForm({
       startTransition(() => {
         try {
           createInvoice(validatedFields.data, userId || "", invoiceId).then(
-            () => {
+            (res) => {
               if (invoiceData) {
                 setSettingsState((prev) => {
                   const updatedInvoices = prev.userInvoices.map((item) =>
@@ -162,10 +162,23 @@ export default function InvoiceForm({
                   return { ...prev, userInvoices: updatedInvoices };
                 });
               } else {
-                setSettingsState((prev) => ({
-                  ...prev,
-                  userInvoices: [...prev.userInvoices, validatedFields.data],
-                }));
+                getUserInvoicesById(userId).then((response) => {
+                  if (response) {
+                    setSettingsState((prev) => ({
+                      ...prev,
+                      userInvoices: [
+                        ...prev.userInvoices,
+                        response[response.length - 1] as z.infer<
+                          typeof InvoiceSchema
+                        >,
+                      ],
+                    }));
+                  }
+                });
+                // setSettingsState((prev) => ({
+                //   ...prev,
+                //   userInvoices: [...prev.userInvoices, validatedFields.data],
+                // }));
               }
               form.reset();
               router.back();

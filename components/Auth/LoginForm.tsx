@@ -1,6 +1,10 @@
 "use client";
+import { login } from "@/actions/login";
+import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
 import CardWrapper from "@/components/Auth/CardWrapper";
-import { InvoicesSchema, LoginSchema } from "@/schemas";
+import FormError from "@/components/Auth/FormError";
+import FormSuccess from "@/components/Auth/FormSuccess";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -9,27 +13,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { MdEmail } from "react-icons/md";
-import { signIn, signOut } from "next-auth/react";
-import { FaLock } from "react-icons/fa6";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import FormSuccess from "@/components/Auth/FormSuccess";
-import FormError from "@/components/Auth/FormError";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { login } from "@/actions/login";
-import { useSession } from "next-auth/react";
-import { getUserInvoicesById } from "@/data/invoices";
-import { getUserAvatar, getUserByEmail } from "@/data/user";
-import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import { LoginSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { FaLock } from "react-icons/fa6";
+import { MdEmail } from "react-icons/md";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { AuthError } from "next-auth";
+import { z } from "zod";
 export default function LoginForm() {
   const { data } = useSession();
   const userId = useCurrentUser();
@@ -59,37 +53,7 @@ export default function LoginForm() {
         .catch(() => setError("Something went wrong"));
     });
   };
-  const router = useRouter();
-  const loguj = async () => {
-    await signIn("credentials", {
-      email: "aaa@wp.plllll",
-      password: "aaa@wp.plllll",
-      redirectTo: "/",
-    });
-  };
-  const logujj = async () => {
-    login({ email: "aaa@wp.plllll", password: "aaa@wp.plllll" });
 
-    // if (!isLoaded) {
-    //   getUserInvoicesById(userId).then((res) => {
-    //     if (res) {
-    //       const validatedFields = InvoicesSchema.safeParse(
-    //         res.filter((item) => item.status !== "draft")
-    //       );
-    //       if (validatedFields.success) {
-    //         getUserAvatar(userId).then((response) => {
-    //           setSettingsState((prev) => ({
-    //             ...prev,
-    //             userInvoices: res as z.infer<typeof InvoicesSchema>,
-    //             isLoaded: true,
-    //             avatar: response as string,
-    //           }));
-    //         });
-    //       }
-    //     }
-    //   });
-    // }
-  };
   return (
     <CardWrapper
       headerLabel="Login"
@@ -103,20 +67,6 @@ export default function LoginForm() {
           className="flex flex-col gap-5"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <Button
-            type="button"
-            onClick={loguj}
-            className="text-headingS text-white"
-          >
-            Logowanie
-          </Button>
-          <Button
-            type="button"
-            onClick={logujj}
-            className="text-headingS text-white"
-          >
-            Logowanieee
-          </Button>
           <FormField
             control={form.control}
             name="email"

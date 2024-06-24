@@ -1,5 +1,8 @@
-import { InvoiceSchema } from "@/schemas";
+import { signIn } from "@/auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { InvoiceSchema, LoginSchema } from "@/schemas";
 import { type ClassValue, clsx } from "clsx";
+import { AuthError } from "next-auth";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
 

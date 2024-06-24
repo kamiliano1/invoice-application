@@ -1,27 +1,19 @@
+"use client";
 import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
-import useWindowWith from "@/hooks/useWindowWidth";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import InvoiceItem from "@/components/InvoicesList/InvoiceItem";
 import InvoiceFilterPopover from "@/components/InvoicesList/InvoiceFilterPopover";
-import EmptyInvoice from "./EmptyInvoice";
-import { useCallback, useEffect, useState } from "react";
-import useCurrentUser from "@/hooks/useCurrentUser";
-import { z } from "zod";
-import { InvoicesSchema } from "@/schemas";
-import { getUserInvoicesById } from "@/data/invoices";
-import { Skeleton } from "@/components/ui/skeleton";
+import InvoiceItem from "@/components/InvoicesList/InvoiceItem";
 import InvoiceItemSkeleton from "@/components/InvoicesList/InvoiceItemSkeleton";
-import { getUserAvatar } from "@/data/user";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import useCurrentUser from "@/hooks/useCurrentUser";
 import useData from "@/hooks/useData";
-import { login } from "@/actions/login";
-import { signOut, useSession } from "next-auth/react";
+import useWindowWith from "@/hooks/useWindowWidth";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import EmptyInvoice from "./EmptyInvoice";
 export default function InvoicesList() {
   useData();
-  const { update, data } = useSession();
-  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const userId = useCurrentUser();
   const windowWidth = useWindowWith();
   const [countInvoiceInfo, setCountInvoiceInfo] = useState("");
   const { isLoaded, totalInvoicesCount, filteredUserInvoices } =
@@ -45,19 +37,11 @@ export default function InvoicesList() {
     }
   }, [totalInvoicesCount, windowWidth]);
 
-  const wylogownie = () => {
-    setSettingsState((prev) => ({ ...prev, isLoaded: false }));
-    signOut();
-  };
-  const updatejtuj = () => {
-    update({ name: "kk" });
-  };
   return (
     <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
       <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
         <div className="mr-auto">
           <h1 className="text-headingM sm:text-headingL mb-1">Invoices</h1>
-          <h1 className="">{JSON.stringify(data)}</h1>
           {!isLoaded ? (
             <Skeleton className="h-[18px] w-30" />
           ) : (
@@ -72,21 +56,6 @@ export default function InvoicesList() {
           className="text-headingS text-white"
         >
           {windowWidth < 640 ? "New" : "New Invoice"}
-        </Button>
-
-        <Button
-          onClick={wylogownie}
-          size={windowWidth < 640 ? "small" : "default"}
-          className="text-headingS text-white"
-        >
-          Wylogouj
-        </Button>
-        <Button
-          onClick={() => update()}
-          size={windowWidth < 640 ? "small" : "default"}
-          className="text-headingS text-white"
-        >
-          updatejtuj
         </Button>
       </div>
 
