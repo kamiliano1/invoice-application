@@ -102,7 +102,7 @@ export default function UserSettings({
             buttonTriggerLabel="Delete all invoices"
             modalDescription="Are you sure you want to delete all invoices? This action cannot be undone."
             modalTitle="Confirm Deletion"
-            removeInvoice={deleteAllInvoices}
+            deleteModalAction={deleteAllInvoices}
             className="w-full"
             loading={isPending}
           />{" "}

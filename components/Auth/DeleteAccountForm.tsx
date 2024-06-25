@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { DeleteUserSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { MdEmail } from "react-icons/md";
@@ -33,6 +33,7 @@ export default function DeleteAccountForm() {
   const [success, setSuccess] = useState<string | undefined>("");
   const { update } = useSession();
   const router = useRouter();
+  const deleteAccountModalRef = useRef<HTMLButtonElement>(null);
   const onSubmit = (value: z.infer<typeof DeleteUserSchema>) => {};
   const deleteUserForever = () => {
     setError("");
@@ -56,7 +57,6 @@ export default function DeleteAccountForm() {
   return (
     <CollapsibleContentWrapper buttonTriggerLabel="Delete account">
       <Form {...form}>
-        {/* <form> */}
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
@@ -82,15 +82,24 @@ export default function DeleteAccountForm() {
               </FormItem>
             )}
           />
+          <Button
+            onClick={() => deleteAccountModalRef.current?.click()}
+            variant="red"
+            className="w-full my-5"
+            loading={isPending}
+          >
+            Delete Account
+          </Button>
           <DeleteModalWrapper
+            deleteModalRef={deleteAccountModalRef}
             disabled={
               form.getValues("currentPassword").length < 1 ? true : false
             }
             buttonTriggerLabel="Delete Account"
             modalDescription={`Are you sure you want to delete your account? This action cannot be undone.`}
             modalTitle="Confirm User Deletion"
-            removeInvoice={deleteUserForever}
-            className="my-5 w-full"
+            deleteModalAction={deleteUserForever}
+            className="my-5 w-full hidden"
             loading={isPending}
           />
           <FormError message={error} />

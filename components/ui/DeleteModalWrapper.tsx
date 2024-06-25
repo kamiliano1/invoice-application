@@ -10,24 +10,26 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
+import { LegacyRef, RefAttributes, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 export default function DeleteModalWrapper({
   className,
   buttonTriggerLabel,
   modalTitle,
   modalDescription,
-  removeInvoice,
+  deleteModalAction,
   loading,
   disabled,
+  deleteModalRef,
 }: {
   className?: string;
   buttonTriggerLabel: string;
   modalTitle: string;
   modalDescription: string;
-  removeInvoice: () => void;
+  deleteModalAction: () => void;
   loading: boolean;
   disabled?: boolean;
+  deleteModalRef?: LegacyRef<HTMLButtonElement>;
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isDarkMode = useRecoilValue(darkModeState);
@@ -40,11 +42,11 @@ export default function DeleteModalWrapper({
   return (
     <Dialog onOpenChange={setIsModalOpen} open={isModalOpen} modal={true}>
       <Button
-        // type="button"
-        disabled={disabled}
+        ref={deleteModalRef}
         onClick={() => setIsModalOpen(true)}
         className={cn(className)}
         variant="red"
+        disabled={disabled}
       >
         {buttonTriggerLabel}
       </Button>
@@ -69,7 +71,7 @@ export default function DeleteModalWrapper({
             <Button
               variant="red"
               className="w-[83px]"
-              onClick={removeInvoice}
+              onClick={deleteModalAction}
               loading={loading}
             >
               Delete

@@ -96,7 +96,7 @@ export default function PreviewInvoice({
               buttonTriggerLabel="Delete"
               modalDescription={`Are you sure you want to delete invoice ${invoiceId}? This action cannot be undone.`}
               modalTitle="Confirm Deletion"
-              removeInvoice={deleteUserInvoice}
+              deleteModalAction={deleteUserInvoice}
               className="px-6"
               loading={isPending}
             />
@@ -187,7 +187,7 @@ export default function PreviewInvoice({
           buttonTriggerLabel="Delete"
           modalDescription={`Are you sure you want to delete invoice ${invoiceId}? This action cannot be undone.`}
           modalTitle="Confirm Deletion"
-          removeInvoice={deleteUserInvoice}
+          deleteModalAction={deleteUserInvoice}
           className="px-4 w-[51%] sm:w-auto"
           loading={isPending}
         />
