@@ -1,4 +1,6 @@
+import { filterOptions, sortByStatus } from "@/lib/utils";
 import { InvoiceSchema } from "@/schemas";
+import { SortLabelTypes, SortStatusTypes } from "@/types";
 import { InvoiceStatus } from "@prisma/client";
 import { atom, selector } from "recoil";
 import { z } from "zod";
@@ -22,36 +24,38 @@ export const userInvoicesState = selector({
   key: "userInvoicesSelector",
   get: ({ get }) => {
     const settingsState = get(settingsAppState);
+    const filteringInvoices = ({
+      status,
+      label,
+    }: {
+      label: SortLabelTypes;
+      status: SortStatusTypes;
+    }) => {
+      const activatedFilter = Object.keys(filterOptions)[
+        Object.values(filterOptions).indexOf(label)
+      ] as "invoiceId" | "paymentDue" | "clientName" | "total" | "status";
+      const filteredUserInvoices = settingsState.userInvoices.filter((item) =>
+        settingsState.filtersArray.includes(item.status)
+      );
+      if (status === "") return filteredUserInvoices;
+      return filteredUserInvoices.sort((a, b) => {
+        if (status === "asc" && activatedFilter) {
+          return sortByStatus({
+            activatedFilter,
+            firstElement: a,
+            secondElement: b,
+          });
+        }
+        return sortByStatus({
+          activatedFilter,
+          firstElement: b,
+          secondElement: a,
+        });
+      });
+    };
     const filteredUserInvoices = settingsState.userInvoices.filter((item) =>
       settingsState.filtersArray.includes(item.status)
     );
-    const sortByName = settingsState.userInvoices
-      .filter((item) => settingsState.filtersArray.includes(item.status))
-      .sort((a, b) => a.clientName.localeCompare(b.clientName));
-    const sortByInvoiceId = settingsState.userInvoices
-      .filter((item) => settingsState.filtersArray.includes(item.status))
-      .sort((a, b) => a.invoiceId!.localeCompare(b.invoiceId!));
-    const sortByTotalValue = settingsState.userInvoices
-      .filter((item) => settingsState.filtersArray.includes(item.status))
-      .sort((a, b) => {
-        if (a.total && b.total) return a.total! - b.total!;
-        return 1;
-      });
-    const sortByStatus = settingsState.userInvoices
-      .filter((item) => settingsState.filtersArray.includes(item.status))
-      .sort((a, b) => a.status.localeCompare(b.status));
-    const sortByDate = settingsState.userInvoices
-      .filter((item) => settingsState.filtersArray.includes(item.status))
-      .sort((a, b) =>
-        new Date(a.paymentDue!) > new Date(b.paymentDue!) ? 1 : -1
-      );
-    // const sortByDate = settingsState.userInvoices
-    // .filter((item) => settingsState.filtersArray.includes(item.status))
-    // .sort((a, b) => {
-    //   var dateA = new Date(a.createdAt);
-    //   var dateB = new Date(b.createdAt);
-    //   return dateA > dateB ? 1 : -1;
-    // });
     const totalInvoicesCount = filteredUserInvoices.length;
     const isLoaded = settingsState.isLoaded;
     const userAvatar = settingsState.avatar;
@@ -61,13 +65,8 @@ export const userInvoicesState = selector({
       )[0];
     };
     return {
-      sortByName,
-      sortByInvoiceId,
-      sortByDate,
-      sortByStatus,
-      sortByTotalValue,
+      filteringInvoices,
       totalInvoicesCount,
-      filteredUserInvoices,
       isLoaded,
       userAvatar,
       activeInvoice,

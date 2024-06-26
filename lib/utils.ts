@@ -50,3 +50,39 @@ export const updateItemsTotalValue = (data: z.infer<typeof InvoiceSchema>) => {
 export const createInvoicePaymentDue = (date: Date, paymentTerms: string) => {
   return new Date(date.getTime() + 1000 * 60 * 60 * 24 * Number(paymentTerms));
 };
+
+export const sortByStatus = ({
+  activatedFilter,
+  firstElement,
+  secondElement,
+}: {
+  activatedFilter:
+    | "invoiceId"
+    | "paymentDue"
+    | "clientName"
+    | "total"
+    | "status";
+  firstElement: z.infer<typeof InvoiceSchema>;
+  secondElement: z.infer<typeof InvoiceSchema>;
+}) => {
+  if (activatedFilter === "total") {
+    return firstElement[activatedFilter]! - secondElement[activatedFilter]!;
+  }
+  if (activatedFilter === "paymentDue") {
+    return new Date(firstElement[activatedFilter]!) >
+      new Date(secondElement[activatedFilter]!)
+      ? 1
+      : -1;
+  }
+  return firstElement[activatedFilter]!.localeCompare(
+    secondElement[activatedFilter]!
+  );
+};
+
+export const filterOptions = {
+  invoiceId: "Invoice Id",
+  paymentDue: "Payment Due",
+  clientName: "Name",
+  total: "Price",
+  status: "Status",
+};
