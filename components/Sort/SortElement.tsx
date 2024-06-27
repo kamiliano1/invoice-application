@@ -9,7 +9,7 @@ export default function SortElement({
   actualSortStatus,
   setActualSortStatus,
 }: {
-  className: string;
+  className?: string;
   label: SortLabelTypes;
   actualSortStatus: SortTypes;
   setActualSortStatus: Dispatch<SetStateAction<SortTypes>>;
@@ -34,7 +34,7 @@ export default function SortElement({
   return (
     <p
       className={cn(
-        "cursor-pointer select-none hover:text-opacity-70 flex items-center text-08 dark:text-white",
+        "cursor-pointer select-none hover:text-opacity-70 flex items-center text-08 dark:text-white justify-between w-full sm:justify-start",
         className,
         {
           "text-01 dark:text-01":

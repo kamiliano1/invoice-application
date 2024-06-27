@@ -3,7 +3,6 @@ import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
 import InvoiceFilterPopover from "@/components/InvoicesList/InvoiceFilterPopover";
 import InvoiceItem from "@/components/InvoicesList/InvoiceItem";
 import InvoiceItemSkeleton from "@/components/InvoicesList/InvoiceItemSkeleton";
-import SortElement from "@/components/Sort/SortElement";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useData from "@/hooks/useData";
@@ -14,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import EmptyInvoice from "@/components/InvoicesList/EmptyInvoice";
 import SortSection from "@/components/Sort/SortSection";
+
 export default function InvoicesList() {
   useData();
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
