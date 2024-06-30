@@ -1,16 +1,18 @@
-"use client";
+// "use client";
 import InvoicesList from "@/components/InvoicesList/InvoicesList";
-import useWindowWith from "@/hooks/useWindowWidth";
-import { useSearchParams } from "next/navigation";
+// import useWindowWith from "@/hooks/useWindowWidth";
+// import { useSearchParams } from "next/navigation";
 import Sidebar from "@/components/ui/Sidebar";
 export default function InvoicesListWrapper() {
-  const windowWidth = useWindowWith();
-  const searchParams = useSearchParams();
-  const isInvoiceEdit = !!searchParams.get("invoiceEdit");
-  const isUserEdit = !!searchParams.get("userSetting");
+  // const windowWidth = useWindowWith();
+  // const searchParams = useSearchParams();
+  // const isInvoiceEdit = !!searchParams.get("invoiceEdit");
+  // const isUserEdit = !!searchParams.get("userSetting");
   return (
     <main className="flex flex-col items-start bg-11 dark:bg-12">
-      {windowWidth < 640 ? (
+      <InvoicesList />
+      {/* <Sidebar /> */}
+      {/* {windowWidth < 640 ? (
         <>
           {isInvoiceEdit || isUserEdit ? (
             <>
@@ -25,7 +27,7 @@ export default function InvoicesListWrapper() {
           <InvoicesList />
           <Sidebar />
         </>
-      )}
+      )} */}
     </main>
   );
 }
