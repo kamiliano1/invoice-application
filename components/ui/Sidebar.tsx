@@ -1,25 +1,27 @@
+"use client";
 import { cn } from "@/lib/utils";
-import { useSearchParams } from "next/navigation";
 import InvoiceForm from "../InvoiceForm/InvoiceForm";
 import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
 import UserSettings from "../Auth/UserSettings";
+import { SearchParamsType } from "@/types";
 export default function Sidebar({
   invoiceData,
   invoiceId,
+  searchParams,
 }: {
   invoiceData?: z.infer<typeof InvoiceSchema>;
   invoiceId?: string;
+  searchParams: SearchParamsType;
 }) {
-  const searchParams = useSearchParams();
-  const isInvoiceEdit = !!searchParams.get("invoiceEdit");
-  const isUserSettings = !!searchParams.get("userSetting");
+  const isInvoiceEdit = searchParams.invoiceEdit;
+  const isUserSettings = searchParams.userSetting;
   return (
     <div
       className={cn(
-        "duration-500 w-full sm:absolute sm:top-0 sm:-translate-x-full grid sm:grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-full",
+        "top-[72px] duration-500 w-full absolute sm:top-0 -translate-x-full grid grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-[calc(100vh_-72px)] sm:min-h-full",
         {
-          "sm:translate-x-0": isInvoiceEdit || isUserSettings,
+          "translate-x-0": isInvoiceEdit || isUserSettings,
         }
       )}
     >

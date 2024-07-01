@@ -1,4 +1,9 @@
 import InvoicesListWrapper from "@/components/InvoicesList/InvoicesListWrapper";
-export default function HomePage() {
-  return <InvoicesListWrapper />;
+import { SearchParamsType } from "@/types";
+export default function HomePage({
+  searchParams,
+}: {
+  searchParams: SearchParamsType;
+}) {
+  return <InvoicesListWrapper searchParams={searchParams} />;
 }

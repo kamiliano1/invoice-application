@@ -83,7 +83,7 @@ export default function UserSettings({
 
   return (
     <>
-      <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white px-6 sm:p-14 gap-10">
+      <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white px-6 pb-6 sm:p-14 gap-10">
         <BackButton
           className="py-6 sm:hidden"
           backLink={
@@ -129,7 +129,7 @@ export default function UserSettings({
       </div>
       <div
         onClick={() => router.back()}
-        className={cn("delay-200 duration-500 h-full", {
+        className={cn("hidden delay-200 duration-500 sm:block h-full", {
           "bg-black/35": isUserSettings,
         })}
       ></div>

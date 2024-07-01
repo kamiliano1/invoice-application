@@ -11,3 +11,8 @@ export type SortTypes = {
   label: SortLabelTypes;
   status: SortStatusTypes;
 };
+
+export type SearchParamsType = {
+  userSetting: string | undefined;
+  invoiceEdit: string | undefined;
+};
