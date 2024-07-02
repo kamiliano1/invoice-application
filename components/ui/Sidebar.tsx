@@ -1,9 +1,9 @@
-"use client";
+// "use client";
 import { cn } from "@/lib/utils";
-import InvoiceForm from "../InvoiceForm/InvoiceForm";
+import InvoiceForm from "@/components/InvoiceForm/InvoiceForm";
 import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
-import UserSettings from "../Auth/UserSettings";
+import UserSettings from "@/components/Auth/UserSettings";
 import { SearchParamsType } from "@/types";
 export default function Sidebar({
   invoiceData,
@@ -25,10 +25,12 @@ export default function Sidebar({
         }
       )}
     >
-      {isInvoiceEdit && (
+      {/* {isInvoiceEdit && (
         <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
+      )} */}
+      {isUserSettings && (
+        <UserSettings invoiceId={invoiceId} searchParams={searchParams} />
       )}
-      {isUserSettings && <UserSettings invoiceId={invoiceId} />}
     </div>
   );
 }

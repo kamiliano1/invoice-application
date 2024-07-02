@@ -26,7 +26,9 @@ export default function InvoicesList() {
           {/* {!isLoaded ? ( */}
           {/* <Skeleton className="h-[18px] w-30" /> */}
           {/* ) : ( */}
-          <InvoicesCount />
+          <Suspense fallback={<Skeleton className="h-[18px] w-30" />}>
+            <InvoicesCount />
+          </Suspense>
           {/* )} */}
         </div>
         <InvoiceFilterPopover />

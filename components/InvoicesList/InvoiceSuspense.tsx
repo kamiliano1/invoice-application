@@ -6,12 +6,6 @@ import InvoiceItem from "./InvoiceItem";
 
 export default async function InvoiceSuspense() {
   const session = await auth();
-  // useData();
-  // const [actualSortStatus, setActualSortStatus] = useState<SortTypes>({
-  //   label: "",
-  //   status: "",
-  // });
-  // const { filteringInvoices } = useRecoilValue(userInvoicesState);
   const invoices = await getUserInvoicesById(session?.user?.id);
   return (
     <>

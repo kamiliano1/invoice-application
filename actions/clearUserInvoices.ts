@@ -2,6 +2,7 @@
 import { getUserInvoicesById } from "@/data/invoices";
 import { getUserById } from "@/data/user";
 import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
 export async function clearUserInvoices(userId: string) {
   try {
     const user = await getUserById(userId);
@@ -9,6 +10,7 @@ export async function clearUserInvoices(userId: string) {
     const userInvoices = await getUserInvoicesById(user.id);
     if (!userInvoices?.length) return { error: "You don't have any invoices" };
     await db.invoice.deleteMany({ where: { invoiceDbId: userId } });
+    revalidatePath("/");
   } catch (error) {
     console.log(error);
     return { error: "Something went wrong" };
