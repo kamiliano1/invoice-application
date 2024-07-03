@@ -1,3 +1,4 @@
+"use client";
 import CollapsibleContentWrapper from "@/components/ui/CollapsibleContentWrapper";
 import {
   Form,

@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import InvoiceForm from "@/components/InvoiceForm/InvoiceForm";
 import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
-import UserSettings from "@/components/Auth/UserSettings";
+import UserSettings from "@/components/UserSettings/UserSettings";
 import { SearchParamsType } from "@/types";
 export default function Sidebar({
   invoiceData,

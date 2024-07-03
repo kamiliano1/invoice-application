@@ -1,5 +1,6 @@
 "use server";
 import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -23,6 +24,8 @@ export const getUserAvatar = async (id: string | undefined) => {
     const avatar = await db.user.findUnique({
       where: { id },
     });
+    revalidatePath("/");
+    // TODO DRUGA STRONA
     return avatar?.avatar;
   } catch {
     return null;

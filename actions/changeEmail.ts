@@ -2,6 +2,7 @@
 import { getUserByEmail } from "@/data/user";
 import db from "@/lib/db";
 import { ChangeEmailSchema } from "@/schemas";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 export async function changeEmail(
   activeEmail: string,
@@ -23,6 +24,7 @@ export async function changeEmail(
       where: { id: existingUser.id },
       data: { email: newEmail },
     });
+    revalidatePath("/");
   } catch (error) {
     console.log(error);
     return { error: "Something went wrong" };

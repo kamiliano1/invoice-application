@@ -72,6 +72,7 @@ export async function importDefaultInvoices(id: string) {
     revalidatePath("/");
     if (importedInvoicesQty === 0)
       return { error: "Invoices already imported" };
+    revalidatePath("/");
     return {
       success: `${importedInvoicesQty} Invoice${
         importedInvoicesQty !== 1 ? "s" : ""

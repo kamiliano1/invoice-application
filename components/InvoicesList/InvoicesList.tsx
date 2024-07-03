@@ -16,6 +16,7 @@ import { InvoicesSchema } from "@/schemas";
 import { getUserInvoicesById } from "@/data/invoices";
 import { auth } from "@/auth";
 import InvoiceSuspense from "./InvoiceSuspense";
+import NavLink from "../Navbar/NavLink";
 
 export default function InvoicesList() {
   return (
@@ -29,11 +30,13 @@ export default function InvoicesList() {
           <Suspense fallback={<Skeleton className="h-[18px] w-30" />}>
             <InvoicesCount />
           </Suspense>
+
           {/* )} */}
         </div>
         <InvoiceFilterPopover />
         <NewInvoiceButton />
       </div>
+
       <Suspense fallback={<InvoiceItemSkeleton />}>
         <InvoiceSuspense />
       </Suspense>

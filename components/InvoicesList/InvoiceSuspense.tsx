@@ -9,6 +9,7 @@ export default async function InvoiceSuspense() {
   const invoices = await getUserInvoicesById(session?.user?.id);
   return (
     <>
+      <h2 className="text-[3rem]">{JSON.stringify(session)}</h2>
       {invoices?.map((item) => (
         <InvoiceItem
           id={item.id}

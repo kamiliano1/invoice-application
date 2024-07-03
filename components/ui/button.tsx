@@ -21,7 +21,7 @@ const buttonVariants = cva(
       size: {
         default: "h-[48px] px-3",
         small: "h-[40px] pl-2 pr-3.5 sm:px-6",
-        full: "w-full",
+        full: "h-[48px] w-full",
       },
     },
     defaultVariants: {

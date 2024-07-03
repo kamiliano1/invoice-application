@@ -1,15 +1,13 @@
-"use client";
-import { userInvoicesState } from "@/atoms/settingsAppAtom";
+import { auth } from "@/auth";
+import { getUserAvatar } from "@/data/user";
 import navAvatar from "@/public/assets/image-avatar.jpg";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRecoilValue } from "recoil";
-export default function NavLink() {
-  const { status } = useSession();
-  const { userAvatar } = useRecoilValue(userInvoicesState);
+export default async function NavLink() {
+  const session = await auth();
+  const userAvatar = await getUserAvatar(session?.user?.id);
   return (
-    <Link href={status !== "authenticated" ? "/login" : "?userSetting=true"}>
+    <Link href={!session?.user ? "/login" : "?userSetting=true"}>
       <Image
         src={userAvatar || navAvatar}
         alt="user avatar"

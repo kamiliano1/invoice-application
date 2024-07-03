@@ -1,3 +1,4 @@
+"use client";
 import { useRef, useState } from "react";
 import { uploadAvatar } from "@/actions/uploadAvatar";
 import { cn } from "@/lib/utils";
@@ -10,17 +11,21 @@ import FormSuccess from "@/components/Auth/FormSuccess";
 import FormError from "@/components/Auth/FormError";
 import CollapsibleContentWrapper from "@/components/ui/CollapsibleContentWrapper";
 import { Button } from "@/components/ui/button";
-import { settingsAppState, userInvoicesState } from "@/atoms/settingsAppAtom";
-import { useRecoilState, useRecoilValue } from "recoil";
-export default function UploadAvatarForm() {
+import { settingsAppState } from "@/atoms/settingsAppAtom";
+import { useRecoilState } from "recoil";
+export default function UploadAvatarForm({
+  userAvatar,
+}: {
+  userAvatar?: string | null | undefined;
+}) {
   const [isPending, startTransition] = useTransition();
-  const { userAvatar } = useRecoilValue(userInvoicesState);
   const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const userId = useCurrentUser();
   const selectedFileRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [pictureURL, setPictureURL] = useState<string>("");
+
   const onSelectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
     setSuccess("");

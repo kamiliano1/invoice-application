@@ -2,7 +2,8 @@ import NavLink from "@/components/Navbar/NavLink";
 import ToggleThemeButton from "@/components/Navbar/ToggleThemeButton";
 import navLogo from "@/public/assets/logo.svg";
 import Image from "next/image";
-
+import { Suspense } from "react";
+import AvatarSkeleton from "@/components/Navbar/AvatarSkeleton";
 export default function Navbar() {
   return (
     <nav className="bg-03 flex items-center lg:fixed lg:h-[100vh] lg:flex-col lg:rounded-r-[20px] z-[500]">
@@ -17,7 +18,9 @@ export default function Navbar() {
       </div>
       <ToggleThemeButton />
       <span className="w-[1px] h-[72px] sm:h-20 bg-[#494E6E] mx-6 lg:h-[1px] lg:w-full lg:mt-8 lg:mb-6"></span>
-      <NavLink />
+      <Suspense fallback={<AvatarSkeleton />}>
+        <NavLink />
+      </Suspense>
     </nav>
   );
 }
