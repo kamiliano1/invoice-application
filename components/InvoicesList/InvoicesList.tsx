@@ -24,9 +24,7 @@ export default function InvoicesList() {
       <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
         <div className="mr-auto">
           <h1 className="text-headingM sm:text-headingL mb-1">Invoices</h1>
-          {/* {!isLoaded ? ( */}
-          {/* <Skeleton className="h-[18px] w-30" /> */}
-          {/* ) : ( */}
+
           <Suspense fallback={<Skeleton className="h-[18px] w-30" />}>
             <InvoicesCount />
           </Suspense>
@@ -40,23 +38,6 @@ export default function InvoicesList() {
       <Suspense fallback={<InvoiceItemSkeleton />}>
         <InvoiceSuspense />
       </Suspense>
-      {/* <Suspense fallback={<InvoiceItemSkeleton />}>
-        {invoices?.map((item) => (
-          <InvoiceItem
-            id={item.id}
-            key={item.invoiceId}
-            invoiceId={item.invoiceId!}
-            clientName={item.clientName}
-            paymentDue={item.paymentDue!}
-            status={item.status!}
-            total={item.total!}
-          />
-        ))}
-      </Suspense> */}
-
-      {/* {!isLoaded ? ( */}
-      {/* <InvoiceItemSkeleton /> */}
-      {/* ) : ( */}
       <>
         {/* {filteringInvoices({
           label: actualSortStatus.label,

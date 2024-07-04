@@ -1,4 +1,5 @@
 // "use client";
+import activeUserFilter from "@/actions/activeUserFilter";
 import { auth } from "@/auth";
 import { getUserInvoicesCountById } from "@/data/invoices";
 // import useCurrentInvoicesStatus from "@/hooks/useCurrentInvoicesStatus";
@@ -6,6 +7,7 @@ import { getUserInvoicesCountById } from "@/data/invoices";
 export default async function InvoicesCount() {
   const session = await auth();
   const userCount = await getUserInvoicesCountById(session?.user?.id);
+
   return <CountText userCount={userCount} />;
 }
 

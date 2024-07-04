@@ -5,10 +5,13 @@ import { headers } from "next/headers";
 export const getUserInvoicesById = async (id: string | undefined) => {
   try {
     if (!id) return null;
+    const activeUserFilter = await db.sortInvoices.findUnique({
+      where: { id },
+    });
     // await new Promise((resolve) => setTimeout(resolve, 5000));
     const invoices = await db.invoice.findMany({
-      // where: { invoiceDbId: id, status: { in: filteredArray } },
-      where: { invoiceDbId: id },
+      where: { invoiceDbId: id, status: { in: activeUserFilter?.filterType } },
+      // where: { invoiceDbId: id },
       include: { clientAddress: true, senderAddress: true, items: true },
     });
     const validatedFields = InvoicesSchema.safeParse(

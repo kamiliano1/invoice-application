@@ -32,7 +32,7 @@ export default async function UserSettings({
         <NewEmailForm userEmail={session?.user?.email} />
         <NewPasswordForm userId={session?.user?.id} />
         <UploadAvatarForm userAvatar={userAvatar} />
-        <DeleteAccountForm />
+        <DeleteAccountForm userId={session?.user?.id} />
         <div className="flex gap-5">
           <UserSettingsDeleteModal />
           <ImportDefaultInvoicesButton />
