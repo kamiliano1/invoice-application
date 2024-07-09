@@ -1,22 +1,10 @@
-// "use client";
-import { userInvoicesState } from "@/atoms/settingsAppAtom";
-import EmptyInvoice from "@/components/InvoicesList/EmptyInvoice";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 import InvoiceFilterPopover from "@/components/InvoicesList/InvoiceFilterPopover";
-import InvoiceItem from "@/components/InvoicesList/InvoiceItem";
 import InvoiceItemSkeleton from "@/components/InvoicesList/InvoiceItemSkeleton";
 import InvoicesCount from "@/components/InvoicesList/InvoicesCount";
-import SortSection from "@/components/Sort/SortSection";
-import { Skeleton } from "@/components/ui/skeleton";
-import useData from "@/hooks/useData";
-import { SortTypes } from "@/types";
-import { Suspense, useState } from "react";
-import { useRecoilValue } from "recoil";
-import NewInvoiceButton from "./NewInvoiceButton";
-import { InvoicesSchema } from "@/schemas";
-import { getUserInvoicesById } from "@/data/invoices";
-import { auth } from "@/auth";
-import InvoiceSuspense from "./InvoiceSuspense";
-import NavLink from "../Navbar/NavLink";
+import NewInvoiceButton from "@/components/InvoicesList/NewInvoiceButton";
+import InvoiceSuspense from "@/components/InvoicesList/InvoiceSuspense";
 
 export default function InvoicesList() {
   return (
@@ -24,50 +12,16 @@ export default function InvoicesList() {
       <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
         <div className="mr-auto">
           <h1 className="text-headingM sm:text-headingL mb-1">Invoices</h1>
-
           <Suspense fallback={<Skeleton className="h-[18px] w-30" />}>
             <InvoicesCount />
           </Suspense>
-
-          {/* )} */}
         </div>
         <InvoiceFilterPopover />
         <NewInvoiceButton />
       </div>
-
       <Suspense fallback={<InvoiceItemSkeleton />}>
         <InvoiceSuspense />
       </Suspense>
-      <>
-        {/* {filteringInvoices({
-          label: actualSortStatus.label,
-          status: actualSortStatus.status,
-        })?.length ? (
-          <>
-            <SortSection
-              actualSortStatus={actualSortStatus}
-              setActualSortStatus={setActualSortStatus}
-            />
-            {filteringInvoices({
-              label: actualSortStatus.label,
-              status: actualSortStatus.status,
-            })?.map((item) => (
-              <InvoiceItem
-                id={item.id}
-                key={item.invoiceId}
-                invoiceId={item.invoiceId!}
-                clientName={item.clientName}
-                paymentDue={item.paymentDue!}
-                status={item.status!}
-                total={item.total!}
-              />
-            ))}
-          </>
-        ) : (
-          <EmptyInvoice />
-        )} */}
-      </>
-      {/* )} */}
     </div>
   );
 }

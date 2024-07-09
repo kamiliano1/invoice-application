@@ -1,4 +1,3 @@
-// "use client";
 import { cn } from "@/lib/utils";
 import InvoiceForm from "@/components/InvoiceForm/InvoiceForm";
 import { InvoiceSchema } from "@/schemas";
@@ -25,9 +24,9 @@ export default function Sidebar({
         }
       )}
     >
-      {/* {isInvoiceEdit && (
+      {isInvoiceEdit && (
         <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
-      )} */}
+      )}
       {isUserSettings && (
         <UserSettings invoiceId={invoiceId} searchParams={searchParams} />
       )}

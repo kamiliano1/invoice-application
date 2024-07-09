@@ -1,36 +1,36 @@
+"use client";
 import { cn } from "@/lib/utils";
-import { SortLabelTypes, SortTypes } from "@/types";
-import { Dispatch, SetStateAction } from "react";
+import { SortLabelTypes } from "@/types";
 import SortIcon from "@/components/Sort/SortIcon";
+import { userFilters } from "@/atoms/settingsAppAtom";
+import { useRecoilState } from "recoil";
 
 export default function SortElement({
   className,
   label,
-  actualSortStatus,
-  setActualSortStatus,
 }: {
   className?: string;
   label: SortLabelTypes;
-  actualSortStatus: SortTypes;
-  setActualSortStatus: Dispatch<SetStateAction<SortTypes>>;
 }) {
+  const [userFilterState, setUserFilterState] = useRecoilState(userFilters);
   const sortInvoices = () => {
-    if (actualSortStatus.label === label) {
-      if (actualSortStatus.status === "asc") {
-        setActualSortStatus((prev) => ({ ...prev, status: "desc" }));
+    if (userFilterState.label === label) {
+      if (userFilterState.status === "asc") {
+        setUserFilterState((prev) => ({ ...prev, status: "desc" }));
         return;
       }
-      if (actualSortStatus.status === "desc") {
-        setActualSortStatus((prev) => ({ ...prev, status: "" }));
+      if (userFilterState.status === "desc") {
+        setUserFilterState((prev) => ({ ...prev, status: "" }));
         return;
       }
-      if (actualSortStatus.status === "") {
-        setActualSortStatus((prev) => ({ ...prev, status: "asc" }));
+      if (userFilterState.status === "") {
+        setUserFilterState((prev) => ({ ...prev, status: "asc" }));
         return;
       }
     }
-    setActualSortStatus({ label: label, status: "asc" });
+    setUserFilterState((prev) => ({ ...prev, label: label, status: "asc" }));
   };
+
   return (
     <p
       className={cn(
@@ -38,13 +38,13 @@ export default function SortElement({
         className,
         {
           "text-01 dark:text-01":
-            actualSortStatus.label === label && actualSortStatus.status !== "",
+            userFilterState.label === label && userFilterState.status !== "",
         }
       )}
       onClick={sortInvoices}
     >
       {label}
-      <SortIcon label={label} sortStatus={actualSortStatus} />
+      <SortIcon label={label} sortStatus={userFilterState} />
     </p>
   );
 }

@@ -1,15 +1,11 @@
 import { cn } from "@/lib/utils";
-import { StatusInvoiceType } from "@/schemas";
+import { InvoiceStatus } from "@prisma/client";
 
 const uppercaseFirstLetter = (word: string) => {
   if (!word) return undefined;
   return `${word[0].toUpperCase()}${word.slice(1)}`;
 };
-export default function StatusInvoice({
-  status,
-}: {
-  status: StatusInvoiceType;
-}) {
+export default function StatusInvoice({ status }: { status: InvoiceStatus }) {
   return (
     <p
       className={cn(

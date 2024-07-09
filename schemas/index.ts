@@ -2,8 +2,6 @@ import { z } from "zod";
 
 const EMPTY_MESSAGE = "can't be empty!";
 
-export type StatusInvoiceType = "draft" | "pending" | "paid";
-
 export const PreviewInvoiceSchema = z.object({
   id: z.string().optional(),
   invoiceId: z.string().length(6),

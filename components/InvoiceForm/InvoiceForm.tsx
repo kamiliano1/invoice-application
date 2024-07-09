@@ -1,3 +1,4 @@
+"use client";
 import {
   Form,
   FormControl,
@@ -137,6 +138,31 @@ export default function InvoiceForm({
       }
     });
   };
+  // Without setSettingsState
+  // function onSubmit(values: z.infer<typeof InvoiceSchema>) {
+  //   const updatedData: z.infer<typeof InvoiceSchema> = {
+  //     ...values,
+  //     status: activeInvoiceStatus,
+  //     invoiceId: invoiceData ? invoiceData.invoiceId : generateUserId(),
+  //     paymentDue: createInvoicePaymentDue(
+  //       values.createdAt,
+  //       values.paymentTerms
+  //     ),
+  //     ...updateItemsTotalValue(values),
+  //   };
+  //   const validatedFields = InvoiceSchema.safeParse(updatedData);
+  //   if (validatedFields.success) {
+  //     startTransition(() => {
+  //       try {
+  //         createInvoice(validatedFields.data, userId || "", invoiceId)
+  //         form.reset();
+  //         router.back();
+  //       } catch (error) {
+  //         console.log({ error: "Something went wrong" });
+  //       }
+  //     });
+  //   }
+  // }
   function onSubmit(values: z.infer<typeof InvoiceSchema>) {
     const updatedData: z.infer<typeof InvoiceSchema> = {
       ...values,
@@ -175,15 +201,11 @@ export default function InvoiceForm({
                     }));
                   }
                 });
-                // setSettingsState((prev) => ({
-                //   ...prev,
-                //   userInvoices: [...prev.userInvoices, validatedFields.data],
-                // }));
               }
-              form.reset();
-              router.back();
             }
           );
+          form.reset();
+          router.back();
         } catch (error) {
           console.log({ error: "Something went wrong" });
         }
