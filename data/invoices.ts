@@ -26,10 +26,11 @@ export const getUserInvoicesById = async (id: string | undefined) => {
   }
 };
 
-export const getUserActiveInvoiceByInvoiceId = async (invoiceId: string) => {
+export const getUserActiveInvoiceByInvoiceId = async (id: string) => {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const activeUserInvoice = await db.invoice.findFirst({
-      where: { invoiceId },
+      where: { id },
       include: { clientAddress: true, items: true, senderAddress: true },
     });
     return activeUserInvoice;

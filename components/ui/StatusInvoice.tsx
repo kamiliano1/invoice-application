@@ -1,11 +1,14 @@
+import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
 import { cn } from "@/lib/utils";
 import { InvoiceStatus } from "@prisma/client";
 
-const uppercaseFirstLetter = (word: string) => {
+const uppercaseFirstLetter = (word: string | undefined) => {
   if (!word) return undefined;
   return `${word[0].toUpperCase()}${word.slice(1)}`;
 };
-export default function StatusInvoice({ status }: { status: InvoiceStatus }) {
+export default async function StatusInvoice({ id }: { id: string }) {
+  const activeInvoice = await getUserActiveInvoiceByInvoiceId(id);
+  const status = activeInvoice?.status;
   return (
     <p
       className={cn(
