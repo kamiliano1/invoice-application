@@ -10,7 +10,7 @@ export default function CloseForm({
   closeForm?: () => void;
 }) {
   const router = useRouter();
-  const closeThisForm = () => {
+  const closeActiveForm = () => {
     if (closeForm) {
       closeForm();
       return;
@@ -19,7 +19,7 @@ export default function CloseForm({
   };
   return (
     <div
-      onClick={closeThisForm}
+      onClick={closeActiveForm}
       className={cn("hidden delay-200 duration-500 sm:block h-full", {
         "bg-black/35": trigger,
       })}

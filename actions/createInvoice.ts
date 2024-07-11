@@ -66,6 +66,7 @@ export default async function createInvoice(
         await tx.items.createMany({
           data: dataWithItemId,
         });
+        revalidatePath(`${id}/preview`);
       } else {
         const invoice = await tx.invoice.create({
           data: {

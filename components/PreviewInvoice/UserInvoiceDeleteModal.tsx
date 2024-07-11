@@ -10,7 +10,7 @@ export default function UserInvoiceDeleteModal({
   className,
 }: {
   id: string | undefined;
-  invoiceId: string | undefined;
+  invoiceId: string | null | undefined;
   className: string;
 }) {
   const [isPending, startTransition] = useTransition();
@@ -18,9 +18,9 @@ export default function UserInvoiceDeleteModal({
   const deleteUserInvoice = () => {
     startTransition(() => {
       if (id) {
-        deleteInvoice(id);
-
-        router.back();
+        deleteInvoice(id).then((res) => {
+          if (res?.success) router.back();
+        });
       }
     });
   };

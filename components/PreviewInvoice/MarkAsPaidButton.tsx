@@ -1,9 +1,7 @@
 "use client";
 import { switchInvoiceToPaid } from "@/actions/switchInvoiceToPaid";
 import { Button } from "@/components/ui/button";
-import { invoiceData } from "@/data/data";
 import { cn } from "@/lib/utils";
-import { InvoiceSchema } from "@/schemas";
 import { useTransition } from "react";
 
 export default function MarkAsPaidButton({
@@ -16,16 +14,14 @@ export default function MarkAsPaidButton({
   const [isPending, startTransition] = useTransition();
   const switchToPaid = () => {
     startTransition(() => {
-      if (id) {
-        const validatedFields = InvoiceSchema.safeParse(invoiceData);
-        if (validatedFields.success) switchInvoiceToPaid(id);
-      }
+      if (id) switchInvoiceToPaid(id);
     });
   };
   return (
     <Button
       variant="violet"
       disabled={isPending}
+      loading={isPending}
       onClick={switchToPaid}
       className={cn(className)}
     >

@@ -4,10 +4,8 @@ import { useRouter } from "next/navigation";
 
 export default function UserSettingsCloseForm({
   trigger,
-  closeForm,
 }: {
   trigger: string | undefined;
-  closeForm?: () => void;
 }) {
   const router = useRouter();
 

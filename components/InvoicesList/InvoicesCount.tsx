@@ -7,7 +7,6 @@ export default async function InvoicesCount() {
 
   return <CountText userCount={userCount} />;
 }
-
 const CountText = ({ userCount }: { userCount: number | null }) => {
   if (userCount === 0) {
     return <p className="text-body">No invoices</p>;
@@ -23,7 +22,7 @@ const CountText = ({ userCount }: { userCount: number | null }) => {
     <>
       <p className="text-body sm:hidden">{userCount} invoice</p>
       <p className="text-body hidden sm:block">
-        There are {userCount} total invoice
+        There is {userCount} total invoice
       </p>
     </>
   );

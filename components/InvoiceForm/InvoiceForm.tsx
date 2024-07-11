@@ -35,15 +35,13 @@ import {
   generateUserId,
   updateItemsTotalValue,
 } from "@/lib/utils";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { settingsAppState } from "@/atoms/settingsAppAtom";
+import { useRecoilValue } from "recoil";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
 import BackButton from "@/components/ui/BackButton";
 import createInvoice from "@/actions/createInvoice";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { getUserInvoicesById } from "@/data/invoices";
 export default function InvoiceForm({
   invoiceData,
   invoiceId,
@@ -52,7 +50,6 @@ export default function InvoiceForm({
   invoiceId?: string;
 }) {
   const userId = useCurrentUser();
-  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const [isPending, startTransition] = useTransition();
   const isDarkMode = useRecoilValue(darkModeState);
   const [activeInvoiceStatus, setActiveInvoiceStatus] = useState<
@@ -115,20 +112,6 @@ export default function InvoiceForm({
           invoiceId
         ).then((res) => {
           if (res.success) {
-            getUserInvoicesById(userId).then((response) => {
-              if (response) {
-                setSettingsState((prev) => ({
-                  ...prev,
-                  userInvoices: [
-                    ...prev.userInvoices,
-                    response[response.length - 1] as z.infer<
-                      typeof InvoiceSchema
-                    >,
-                  ],
-                }));
-              }
-            });
-
             form.reset();
             router.back();
           }
@@ -138,31 +121,6 @@ export default function InvoiceForm({
       }
     });
   };
-  // Without setSettingsState
-  // function onSubmit(values: z.infer<typeof InvoiceSchema>) {
-  //   const updatedData: z.infer<typeof InvoiceSchema> = {
-  //     ...values,
-  //     status: activeInvoiceStatus,
-  //     invoiceId: invoiceData ? invoiceData.invoiceId : generateUserId(),
-  //     paymentDue: createInvoicePaymentDue(
-  //       values.createdAt,
-  //       values.paymentTerms
-  //     ),
-  //     ...updateItemsTotalValue(values),
-  //   };
-  //   const validatedFields = InvoiceSchema.safeParse(updatedData);
-  //   if (validatedFields.success) {
-  //     startTransition(() => {
-  //       try {
-  //         createInvoice(validatedFields.data, userId || "", invoiceId)
-  //         form.reset();
-  //         router.back();
-  //       } catch (error) {
-  //         console.log({ error: "Something went wrong" });
-  //       }
-  //     });
-  //   }
-  // }
   function onSubmit(values: z.infer<typeof InvoiceSchema>) {
     const updatedData: z.infer<typeof InvoiceSchema> = {
       ...values,
@@ -180,32 +138,12 @@ export default function InvoiceForm({
         try {
           createInvoice(validatedFields.data, userId || "", invoiceId).then(
             (res) => {
-              if (invoiceData) {
-                setSettingsState((prev) => {
-                  const updatedInvoices = prev.userInvoices.map((item) =>
-                    item.id === invoiceId ? validatedFields.data : item
-                  );
-                  return { ...prev, userInvoices: updatedInvoices };
-                });
-              } else {
-                getUserInvoicesById(userId).then((response) => {
-                  if (response) {
-                    setSettingsState((prev) => ({
-                      ...prev,
-                      userInvoices: [
-                        ...prev.userInvoices,
-                        response[response.length - 1] as z.infer<
-                          typeof InvoiceSchema
-                        >,
-                      ],
-                    }));
-                  }
-                });
+              if (res.success) {
+                form.reset();
+                router.back();
               }
             }
           );
-          form.reset();
-          router.back();
         } catch (error) {
           console.log({ error: "Something went wrong" });
         }

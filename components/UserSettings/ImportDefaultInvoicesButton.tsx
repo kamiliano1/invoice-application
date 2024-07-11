@@ -5,10 +5,13 @@ import { useTransition } from "react";
 import { useRecoilState } from "recoil";
 import { Button } from "@/components/ui/button";
 import { importDefaultInvoices } from "@/actions/importDefaultInvoices";
-export default function ImportDefaultInvoicesButton() {
+export default function ImportDefaultInvoicesButton({
+  userId,
+}: {
+  userId: string | undefined;
+}) {
   const [userSettingsFormStatusState, setUserSettingsFormStatusState] =
     useRecoilState(userSettingsFormStatus);
-  const userId = useCurrentUser();
   const [isPending, setTransition] = useTransition();
   const importUserInvoices = () => {
     setTransition(() => {

@@ -2,9 +2,9 @@
 import { MdKeyboardArrowRight } from "react-icons/md";
 import Link from "next/link";
 import { dateToString } from "@/lib/utils";
-import StatusInvoice from "@/components/ui/StatusInvoice";
 import { z } from "zod";
 import { PreviewInvoiceSchema } from "@/schemas";
+import InvoiceListStatus from "./InvoiceListStatus";
 
 export default function InvoiceItem({
   invoiceId,
@@ -31,7 +31,7 @@ export default function InvoiceItem({
       <p className="row-start-3 col-start-1 sm:row-start-1 sm:col-start-4 text-headingS text-08 dark:text-white">
         £ {total.toFixed(2)}
       </p>
-      <StatusInvoice status={status} />
+      <InvoiceListStatus status={status} />
       <MdKeyboardArrowRight className="hidden sm:block text-01 sm:justify-self-end sm:ml-5" />
     </Link>
   );

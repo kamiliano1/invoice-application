@@ -4,17 +4,21 @@ import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
 import UserSettings from "@/components/UserSettings/UserSettings";
 import { SearchParamsType } from "@/types";
-export default function Sidebar({
-  invoiceData,
+import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
+export default async function Sidebar({
   invoiceId,
   searchParams,
+  id,
 }: {
-  invoiceData?: z.infer<typeof InvoiceSchema>;
   invoiceId?: string;
   searchParams: SearchParamsType;
+  id?: string;
 }) {
   const isInvoiceEdit = searchParams.invoiceEdit;
   const isUserSettings = searchParams.userSetting;
+  const activeInvoice = (await getUserActiveInvoiceByInvoiceId(id)) as z.infer<
+    typeof InvoiceSchema
+  >;
   return (
     <div
       className={cn(
@@ -25,7 +29,7 @@ export default function Sidebar({
       )}
     >
       {isInvoiceEdit && (
-        <InvoiceForm invoiceData={invoiceData} invoiceId={invoiceId} />
+        <InvoiceForm invoiceData={activeInvoice} invoiceId={id} />
       )}
       {isUserSettings && (
         <UserSettings invoiceId={invoiceId} searchParams={searchParams} />

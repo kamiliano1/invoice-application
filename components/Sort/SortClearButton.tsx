@@ -10,7 +10,12 @@ export default function SortClearButton() {
     return (
       <span
         onClick={() => {
-          setUserFilterState((prev) => ({ ...prev, label: "", status: "" }));
+          setUserFilterState((prev) => ({
+            ...prev,
+            label: "",
+            status: "",
+            filters: ["draft", "paid", "pending"],
+          }));
         }}
         className="flex items-center text-headingS cursor-pointer text-08 dark:text-white"
       >
@@ -21,7 +26,12 @@ export default function SortClearButton() {
   return (
     <MdOutlineClear
       onClick={() => {
-        setUserFilterState((prev) => ({ ...prev, label: "", status: "" }));
+        setUserFilterState((prev) => ({
+          ...prev,
+          label: "",
+          status: "",
+          filters: ["draft", "paid", "pending"],
+        }));
       }}
       className="cursor-pointer hidden text-headingSVariant sm:block text-01 hover:text-0 sm:justify-self-end sm:ml-5"
     />

@@ -5,8 +5,11 @@ import { useTransition } from "react";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useRecoilState } from "recoil";
 import { userSettingsFormStatus } from "@/atoms/settingsAppAtom";
-export default function UserSettingsDeleteModal() {
-  const userId = useCurrentUser();
+export default function UserSettingsDeleteModal({
+  userId,
+}: {
+  userId: string | undefined;
+}) {
   const [userSettingsFormStatusState, setUserSettingsFormStatusState] =
     useRecoilState(userSettingsFormStatus);
   const [isPending, setTransition] = useTransition();
