@@ -1,12 +1,15 @@
 "use server";
-import { auth } from "@/auth";
 import db from "@/lib/db";
 import { InvoicesSchema } from "@/schemas";
+
 export const getUserInvoicesById = async (id: string | undefined) => {
   try {
     if (!id) return null;
+    // const activeUserFilter = await db.sortInvoices.findUnique({
+    //   where: { id },
+    // });
     const invoices = await db.invoice.findMany({
-      // where: { invoiceDbId: id, status: { in: filteredArray } },
+      // where: { invoiceDbId: id, status: { in: activeUserFilter?.filterType } },
       where: { invoiceDbId: id },
       include: { clientAddress: true, senderAddress: true, items: true },
     });
@@ -21,14 +24,38 @@ export const getUserInvoicesById = async (id: string | undefined) => {
   }
 };
 
-export const getUserActiveInvoiceByInvoiceId = async (invoiceId: string) => {
+export const getUserActiveInvoiceByInvoiceId = async (id?: string) => {
   try {
+    if (!id) return;
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
     const activeUserInvoice = await db.invoice.findFirst({
-      where: { invoiceId },
+      where: { id },
       include: { clientAddress: true, items: true, senderAddress: true },
     });
     return activeUserInvoice;
   } catch (error) {
+    return null;
+  }
+};
+export const getUserActiveInvoiceId = async (id: string) => {
+  try {
+    const activeUserInvoiceId = await db.invoice.findFirst({
+      where: { id },
+    });
+    return activeUserInvoiceId?.invoiceId;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getUserInvoicesCountById = async (id: string | undefined) => {
+  try {
+    if (!id) return null;
+    const invoicesCount = await db.invoice.count({
+      where: { invoiceDbId: id },
+    });
+    return invoicesCount;
+  } catch {
     return null;
   }
 };

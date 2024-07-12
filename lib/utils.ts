@@ -51,6 +51,11 @@ export const createInvoicePaymentDue = (date: Date, paymentTerms: string) => {
   return new Date(date.getTime() + 1000 * 60 * 60 * 24 * Number(paymentTerms));
 };
 
+export const uppercaseFirstLetter = (word: string | undefined) => {
+  if (!word) return undefined;
+  return `${word[0].toUpperCase()}${word.slice(1)}`;
+};
+
 export const sortByStatus = ({
   activatedFilter,
   firstElement,

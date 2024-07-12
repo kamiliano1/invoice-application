@@ -2,6 +2,7 @@
 import { InvoiceSchema } from "@/schemas";
 import { z } from "zod";
 import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
 export default async function createInvoice(
   values: z.infer<typeof InvoiceSchema>,
   id: string,
@@ -65,6 +66,7 @@ export default async function createInvoice(
         await tx.items.createMany({
           data: dataWithItemId,
         });
+        revalidatePath(`${id}/preview`);
       } else {
         const invoice = await tx.invoice.create({
           data: {
@@ -101,6 +103,7 @@ export default async function createInvoice(
         }));
         await tx.items.createMany({ data: dataWithItemId });
       }
+      revalidatePath("/");
     });
   } catch (error) {
     return { error: "Something went wrong" };

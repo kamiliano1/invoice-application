@@ -1,4 +1,3 @@
-"use client";
 import { FilterCheckbox } from "@/components/InvoicesList/CheckboxFilters";
 import PopoverWrapper from "@/components/ui/PopoverWrapper";
 export default function InvoiceFilterPopover() {

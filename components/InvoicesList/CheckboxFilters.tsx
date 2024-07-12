@@ -1,22 +1,21 @@
-import { settingsAppState } from "@/atoms/settingsAppAtom";
+"use client";
+import { userFilters } from "@/atoms/settingsAppAtom";
 import { Checkbox } from "@/components/ui/checkbox";
-import useCurrentUser from "@/hooks/useCurrentUser";
-import { StatusInvoiceType } from "@/schemas";
+import { InvoiceStatus } from "@prisma/client";
 import { useRecoilState } from "recoil";
-export function FilterCheckbox({ label }: { label: StatusInvoiceType }) {
-  const userId = useCurrentUser();
-  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
+export function FilterCheckbox({ label }: { label: InvoiceStatus }) {
+  const [userFilterState, setUserFilterState] = useRecoilState(userFilters);
   const toggleCheckbox = async () => {
-    if (settingsState.filtersArray.find((item) => item === label)) {
-      setSettingsState((prev) => ({
+    if (userFilterState.filters.find((item) => item === label)) {
+      setUserFilterState((prev) => ({
         ...prev,
-        filtersArray: prev.filtersArray.filter((item) => item !== label),
+        filters: prev.filters.filter((item) => item !== label),
       }));
       return;
     }
-    setSettingsState((prev) => ({
+    setUserFilterState((prev) => ({
       ...prev,
-      filtersArray: [...prev.filtersArray, label],
+      filters: [...prev.filters, label],
     }));
   };
   return (
@@ -25,7 +24,7 @@ export function FilterCheckbox({ label }: { label: StatusInvoiceType }) {
         id={label}
         onCheckedChange={toggleCheckbox}
         checked={
-          settingsState.filtersArray.filter((item) => item === label).length
+          userFilterState.filters.filter((item) => item === label).length
             ? true
             : false
         }

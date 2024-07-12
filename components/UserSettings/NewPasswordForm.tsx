@@ -1,3 +1,4 @@
+"use client";
 import {
   Form,
   FormControl,
@@ -6,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ChangeEmailSchema } from "@/schemas";
+import { ChangePasswordSchema } from "@/schemas";
 import { MdEmail } from "react-icons/md";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -16,41 +17,40 @@ import { Button } from "@/components/ui/button";
 import { useState, useTransition } from "react";
 import FormError from "@/components/Auth/FormError";
 import FormSuccess from "@/components/Auth/FormSuccess";
-import { useSession } from "next-auth/react";
-import useCurrentEmail from "@/hooks/useCurrentEmail";
-import { changeEmail } from "@/actions/changeEmail";
-
+import { changePassword } from "@/actions/changePassword";
 import CollapsibleContentWrapper from "@/components/ui/CollapsibleContentWrapper";
-export default function NewEmailForm() {
-  const userEmail = useCurrentEmail();
-  const { update } = useSession();
+export default function NewPasswordForm({
+  userId,
+}: {
+  userId: string | undefined;
+}) {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-  const form = useForm<z.infer<typeof ChangeEmailSchema>>({
-    resolver: zodResolver(ChangeEmailSchema),
+  const form = useForm<z.infer<typeof ChangePasswordSchema>>({
+    resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
-      currentEmail: "",
-      newEmail: "",
+      currentPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
     },
   });
-  const onSubmit = (values: z.infer<typeof ChangeEmailSchema>) => {
+  const onSubmit = (values: z.infer<typeof ChangePasswordSchema>) => {
     setError("");
     setSuccess("");
-    const validatedFields = ChangeEmailSchema.safeParse(values);
+    const validatedFields = ChangePasswordSchema.safeParse(values);
     if (!validatedFields.success) setError("Invalid credentials");
     startTransition(() => {
-      if (userEmail) {
-        changeEmail(userEmail, values).then((res) => {
+      if (userId) {
+        changePassword(userId, values).then((res) => {
           setError(res?.error);
           setSuccess(res?.success);
-          update();
         });
       }
     });
   };
   return (
-    <CollapsibleContentWrapper buttonTriggerLabel="Change Email">
+    <CollapsibleContentWrapper buttonTriggerLabel="Change Password">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -58,19 +58,20 @@ export default function NewEmailForm() {
         >
           <FormField
             control={form.control}
-            name="currentEmail"
+            name="currentPassword"
             render={({ field }) => (
               <FormItem>
                 <div className="flex justify-between">
-                  <FormLabel>Current Email</FormLabel>
+                  <FormLabel>Current Password</FormLabel>
                   <FormMessage />
                 </div>
                 <FormControl>
                   <div className="relative overflow-hidden">
                     <Input
+                      type="password"
                       className="pl-10 focus:pl-4 peer duration-100 dark:bg-04"
-                      placeholder="Current Email"
-                      error={form.formState.errors.currentEmail}
+                      placeholder="Current Password"
+                      error={form.formState.errors.currentPassword}
                       {...field}
                     />
                     <MdEmail className="absolute top-[27%] left-2 size-5 text-06 peer-focus:-translate-x-[140%] duration-100" />
@@ -81,19 +82,44 @@ export default function NewEmailForm() {
           />
           <FormField
             control={form.control}
-            name="newEmail"
+            name="newPassword"
             render={({ field }) => (
               <FormItem>
                 <div className="flex justify-between">
-                  <FormLabel>New Email</FormLabel>
+                  <FormLabel>New Password</FormLabel>
                   <FormMessage />
                 </div>
                 <FormControl>
                   <div className="relative overflow-hidden">
                     <Input
+                      type="password"
                       className="pl-10 focus:pl-4 peer duration-100 dark:bg-04"
-                      placeholder="New Email"
-                      error={form.formState.errors.newEmail}
+                      placeholder="New Password"
+                      error={form.formState.errors.newPassword}
+                      {...field}
+                    />
+                    <MdEmail className="absolute top-[27%] left-2 size-5 text-06 peer-focus:-translate-x-[140%] duration-100" />
+                  </div>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmNewPassword"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex justify-between">
+                  <FormLabel>Repeat New Password</FormLabel>
+                  <FormMessage />
+                </div>
+                <FormControl>
+                  <div className="relative overflow-hidden">
+                    <Input
+                      type="password"
+                      className="pl-10 focus:pl-4 peer duration-100 dark:bg-04"
+                      placeholder="Repeat New Password"
+                      error={form.formState.errors.confirmNewPassword}
                       {...field}
                     />
                     <MdEmail className="absolute top-[27%] left-2 size-5 text-06 peer-focus:-translate-x-[140%] duration-100" />

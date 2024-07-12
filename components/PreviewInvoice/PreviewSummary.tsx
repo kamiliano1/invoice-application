@@ -1,27 +1,6 @@
-import useWindowWith from "@/hooks/useWindowWidth";
-import { Skeleton } from "@/components/ui/skeleton";
-
-type PreviewSummaryItemType = {
-  items: {
-    name: string;
-    quantity: number;
-    price: number;
-    total: number;
-  };
-};
-
-type PreviewSummaryType = {
-  total: number;
-  items: {
-    name: string;
-    quantity: number;
-    price: number;
-    total: number;
-  }[];
-};
+import { PreviewSummaryItemType, PreviewSummaryType } from "@/types";
 
 export default function PreviewSummary({ items, total }: PreviewSummaryType) {
-  const windowWidth = useWindowWith();
   if (!items || !total) return undefined;
   return (
     <div className="sm:row-start-4 sm:col-start-1 sm:col-span-4 rounded-lg bg-[#F9FEFB] dark:bg-04">
@@ -50,16 +29,32 @@ export default function PreviewSummary({ items, total }: PreviewSummaryType) {
             <PreviewSummaryItem key={id} items={item} />
           ))}
         </tbody>
-        <tfoot className="items-center bg-[#373B53] dark:bg-08">
+        <tfoot className="items-center bg-[#373B53] dark:bg-08 sm:hidden">
           <tr>
             <th
-              colSpan={windowWidth > 640 ? 2 : 1}
+              colSpan={1}
+              className="text-start text-body text-white p-6 pr-0 sm:px-8 rounded-bl-lg w-[100px]"
+            >
+              Amount Due
+            </th>
+            <th
+              colSpan={1}
+              className="text-white text-end text-headingM p-6 pl-0 sm:px-8 rounded-br-lg"
+            >
+              £ {total.toFixed(2)}
+            </th>
+          </tr>
+        </tfoot>
+        <tfoot className="hidden items-center bg-[#373B53] dark:bg-08 sm:table-row-group">
+          <tr>
+            <th
+              colSpan={2}
               className="text-start text-body text-white p-6 pr-0 sm:px-8 rounded-bl-lg"
             >
               Amount Due
             </th>
             <th
-              colSpan={windowWidth > 640 ? 2 : 1}
+              colSpan={2}
               className="text-white text-end text-headingM p-6 pl-0 sm:px-8 rounded-br-lg"
             >
               £ {total.toFixed(2)}
@@ -107,14 +102,4 @@ function PreviewSummaryItem({ items }: PreviewSummaryItemType) {
       </tr>
     </>
   );
-}
-
-function PreviewSummaryItemSkeleton() {
-  return [0, 1, 2, 3].map((item) => (
-    <tr key={item}>
-      <td colSpan={4}>
-        <Skeleton className="h-10 mx-6 my-1" />
-      </td>
-    </tr>
-  ));
 }

@@ -1,3 +1,4 @@
+"use client";
 import {
   Form,
   FormControl,
@@ -34,15 +35,13 @@ import {
   generateUserId,
   updateItemsTotalValue,
 } from "@/lib/utils";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { settingsAppState } from "@/atoms/settingsAppAtom";
+import { useRecoilValue } from "recoil";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { darkModeState } from "@/atoms/settingsAppAtom";
 import BackButton from "@/components/ui/BackButton";
 import createInvoice from "@/actions/createInvoice";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { getUserInvoicesById } from "@/data/invoices";
 export default function InvoiceForm({
   invoiceData,
   invoiceId,
@@ -51,7 +50,6 @@ export default function InvoiceForm({
   invoiceId?: string;
 }) {
   const userId = useCurrentUser();
-  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
   const [isPending, startTransition] = useTransition();
   const isDarkMode = useRecoilValue(darkModeState);
   const [activeInvoiceStatus, setActiveInvoiceStatus] = useState<
@@ -114,20 +112,6 @@ export default function InvoiceForm({
           invoiceId
         ).then((res) => {
           if (res.success) {
-            getUserInvoicesById(userId).then((response) => {
-              if (response) {
-                setSettingsState((prev) => ({
-                  ...prev,
-                  userInvoices: [
-                    ...prev.userInvoices,
-                    response[response.length - 1] as z.infer<
-                      typeof InvoiceSchema
-                    >,
-                  ],
-                }));
-              }
-            });
-
             form.reset();
             router.back();
           }
@@ -154,34 +138,10 @@ export default function InvoiceForm({
         try {
           createInvoice(validatedFields.data, userId || "", invoiceId).then(
             (res) => {
-              if (invoiceData) {
-                setSettingsState((prev) => {
-                  const updatedInvoices = prev.userInvoices.map((item) =>
-                    item.id === invoiceId ? validatedFields.data : item
-                  );
-                  return { ...prev, userInvoices: updatedInvoices };
-                });
-              } else {
-                getUserInvoicesById(userId).then((response) => {
-                  if (response) {
-                    setSettingsState((prev) => ({
-                      ...prev,
-                      userInvoices: [
-                        ...prev.userInvoices,
-                        response[response.length - 1] as z.infer<
-                          typeof InvoiceSchema
-                        >,
-                      ],
-                    }));
-                  }
-                });
-                // setSettingsState((prev) => ({
-                //   ...prev,
-                //   userInvoices: [...prev.userInvoices, validatedFields.data],
-                // }));
+              if (res.success) {
+                form.reset();
+                router.back();
               }
-              form.reset();
-              router.back();
             }
           );
         } catch (error) {

@@ -1,13 +1,20 @@
 "use server";
+import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
 import db from "@/lib/db";
-export async function switchInvoiceToPaid(userInvoiceId: string) {
+import { InvoiceSchema } from "@/schemas";
+import { revalidatePath } from "next/cache";
+export async function switchInvoiceToPaid(id: string) {
   try {
-    await db.invoice.update({
-      where: { id: userInvoiceId },
-      data: { status: "paid" },
-    });
-
-    return { success: "Invoice switched to paid" };
+    const activeInvoice = await getUserActiveInvoiceByInvoiceId(id);
+    const validatedFields = InvoiceSchema.safeParse(activeInvoice);
+    if (validatedFields.success) {
+      await db.invoice.update({
+        where: { id },
+        data: { status: "paid" },
+      });
+      revalidatePath(`/${id}/preview`);
+      return { success: "Invoice switched to paid" };
+    }
   } catch (error) {
     console.log(error);
     return { error: "Something went wrong" };

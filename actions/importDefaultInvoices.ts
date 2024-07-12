@@ -4,6 +4,7 @@ import { invoiceData } from "@/data/data";
 import { getUserById } from "@/data/user";
 import { Prisma } from "@prisma/client";
 import { getUserInvoicesById } from "@/data/invoices";
+import { revalidatePath } from "next/cache";
 export async function importDefaultInvoices(id: string) {
   try {
     let importedInvoicesQty = 0;
@@ -68,8 +69,10 @@ export async function importDefaultInvoices(id: string) {
         })
       );
     });
+    revalidatePath("/");
     if (importedInvoicesQty === 0)
       return { error: "Invoices already imported" };
+    revalidatePath("/");
     return {
       success: `${importedInvoicesQty} Invoice${
         importedInvoicesQty !== 1 ? "s" : ""

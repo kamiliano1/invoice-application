@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import * as Popover from "@radix-ui/react-popover";
 import { clsx } from "clsx";

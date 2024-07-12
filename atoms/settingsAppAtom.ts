@@ -1,5 +1,5 @@
 import { filterOptions, sortByStatus } from "@/lib/utils";
-import { InvoiceSchema } from "@/schemas";
+import { InvoiceSchema, InvoicesSchema } from "@/schemas";
 import { SortLabelTypes, SortStatusTypes } from "@/types";
 import { InvoiceStatus } from "@prisma/client";
 import { atom, selector } from "recoil";
@@ -86,3 +86,71 @@ export const settingsAppState = atom<SettingsAppState>({
   key: "settingsAppState",
   default: defaultSettingsAppState,
 });
+
+export type ActiveFormStatus = {
+  success: string | undefined;
+  error: string | undefined;
+};
+
+const defaultActiveFormStatus: ActiveFormStatus = {
+  success: "",
+  error: "",
+};
+
+export const userSettingsFormStatus = atom<ActiveFormStatus>({
+  key: "userSettingsFormStatus",
+  default: defaultActiveFormStatus,
+});
+
+export type ActivatedFilter = {
+  label: SortLabelTypes;
+  status: SortStatusTypes;
+  filters: InvoiceStatus[];
+};
+
+const defaultActivatedFilter: ActivatedFilter = {
+  label: "",
+  status: "",
+  filters: ["draft", "paid", "pending"],
+};
+export const userFilters = atom<ActivatedFilter>({
+  key: "userFilters",
+  default: defaultActivatedFilter,
+});
+
+// export const filteredInvoices = selector({
+//   key: "filteredInvoicesSelector",
+//   get: ({ get }) => {
+//     const userFilterState = get(userFilters);
+//     const filteringInvoices = ({
+//       invoices,
+//     }: {
+//       invoices: z.infer<typeof InvoicesSchema>;
+//     }) => {
+//       if (!invoices) return;
+//       const activatedFilter = Object.keys(filterOptions)[
+//         Object.values(filterOptions).indexOf(userFilterState.label)
+//       ] as "invoiceId" | "paymentDue" | "clientName" | "total" | "status";
+//       const filteredUserInvoices = invoices.filter((item) =>
+//         userFilterState.filters.includes(item.status)
+//       );
+//       if (userFilterState.status === "") return filteredUserInvoices;
+//       return filteredUserInvoices.sort((a, b) => {
+//         if (userFilterState.status === "asc" && activatedFilter) {
+//           return sortByStatus({
+//             activatedFilter,
+//             firstElement: a,
+//             secondElement: b,
+//           });
+//         }
+//         return sortByStatus({
+//           activatedFilter,
+//           firstElement: b,
+//           secondElement: a,
+//         });
+//       });
+//     };
+//     // const isDarkMode = settingsState.isDarkMode;
+//     return filteringInvoices;
+//   },
+// });

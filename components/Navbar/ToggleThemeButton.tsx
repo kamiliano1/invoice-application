@@ -1,6 +1,5 @@
 "use client";
 import { settingsAppState } from "@/atoms/settingsAppAtom";
-import { useState } from "react";
 import { IoMdMoon } from "react-icons/io";
 import { IoSunnySharp } from "react-icons/io5";
 import { useRecoilState } from "recoil";

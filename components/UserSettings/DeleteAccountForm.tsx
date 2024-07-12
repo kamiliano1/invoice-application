@@ -1,3 +1,4 @@
+"use client";
 import CollapsibleContentWrapper from "@/components/ui/CollapsibleContentWrapper";
 import {
   Form,
@@ -18,37 +19,34 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { MdEmail } from "react-icons/md";
 import DeleteModalWrapper from "@/components/ui/DeleteModalWrapper";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import { deleteUser } from "@/actions/deleteUser";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-export default function DeleteAccountForm() {
+import { logout } from "@/actions/logout";
+export default function DeleteAccountForm({
+  userId,
+}: {
+  userId: string | undefined;
+}) {
   const form = useForm<z.infer<typeof DeleteUserSchema>>({
     resolver: zodResolver(DeleteUserSchema),
     defaultValues: { currentPassword: "" },
   });
-  const userId = useCurrentUser();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
-  const { update } = useSession();
-  const router = useRouter();
   const deleteAccountModalRef = useRef<HTMLButtonElement>(null);
   const onSubmit = (value: z.infer<typeof DeleteUserSchema>) => {};
-  const deleteUserForever = () => {
+  const deleteUserForever = async () => {
     setError("");
     setSuccess("");
     startTransition(() => {
       if (userId) {
         deleteUser(userId, {
           currentPassword: form.getValues("currentPassword"),
-        }).then((res) => {
+        }).then(async (res) => {
           setError(res?.error);
           if (res.success) {
             setSuccess(res?.success);
-            signOut();
-            update();
-            router.push("/login");
+            await logout();
           }
         });
       }

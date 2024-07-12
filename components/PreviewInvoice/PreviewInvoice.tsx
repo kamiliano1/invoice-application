@@ -1,199 +1,63 @@
-import { darkModeState, settingsAppState } from "@/atoms/settingsAppAtom";
-import { InvoiceSchema } from "@/schemas";
-import { useRecoilState, useRecoilValue } from "recoil";
-import StatusInvoice from "@/components/ui/StatusInvoice";
-import { Button } from "@/components/ui/button";
-import { useRouter, useSearchParams } from "next/navigation";
-import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
-import { dateToString } from "@/lib/utils";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import EditActivatedInvoiceButton from "@/components/PreviewInvoice/EditActivatedInvoiceButton";
+import InvoiceDetails from "@/components/PreviewInvoice/InvoiceDetails";
+import MarkAsPaidButton from "@/components/PreviewInvoice/MarkAsPaidButton";
+import PreviewInvoiceSkeleton from "@/components/PreviewInvoice/PreviewInvoiceSkeleton";
+import UserInvoiceDeleteModal from "@/components/PreviewInvoice/UserInvoiceDeleteModal";
+import PreviewInvoiceStatus from "@/components/PreviewInvoice/PreviewInvoiceStatus";
 import BackButton from "@/components/ui/BackButton";
-import { z } from "zod";
-import DeleteModalWrapper from "@/components/ui/DeleteModalWrapper";
-import { deleteInvoice } from "@/actions/deleteInvoice";
-import { useTransition } from "react";
-import { switchInvoiceToPaid } from "@/actions/switchInvoiceToPaid";
-export default function PreviewInvoice({
-  invoiceData,
-  activeInvoiceId,
+import { SearchParamsType } from "@/types";
+import { getUserActiveInvoiceId } from "@/data/invoices";
+export default async function PreviewInvoice({
+  id,
+  searchParams,
 }: {
-  invoiceData?: z.infer<typeof InvoiceSchema>;
-  activeInvoiceId: string;
+  id: string;
+  searchParams: SearchParamsType;
 }) {
-  const isDarkMode = useRecoilValue(darkModeState);
-  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const isInvoiceEdit = !!searchParams.get("invoiceEdit");
-  const [isPending, startTransition] = useTransition();
-  const {
-    status,
-    description,
-    invoiceId,
-    senderAddress,
-    createdAt,
-    paymentDue,
-    clientName,
-    clientAddress,
-    clientEmail,
-    items,
-    total,
-    id,
-  } = invoiceData || {};
-  const editActivatedInvoice = () => {
-    router.push("?invoiceEdit=true");
-  };
-  const switchToPaid = () => {
-    startTransition(() => {
-      if (id) {
-        const validatedFields = InvoiceSchema.safeParse(invoiceData);
-        if (validatedFields.success) {
-          switchInvoiceToPaid(id).then((res) => {
-            if (res.success)
-              setSettingsState((prev) => ({
-                ...prev,
-                userInvoices: prev.userInvoices.map((item) =>
-                  item.id === id ? { ...item, status: "paid" } : item
-                ),
-              }));
-          });
-        }
-      }
-    });
-  };
-  const deleteUserInvoice = () => {
-    startTransition(() => {
-      if (id) {
-        deleteInvoice(id);
-        setSettingsState((prev) => ({
-          ...prev,
-          userInvoices: prev.userInvoices.filter((item) => item.id !== id),
-        }));
-        router.back();
-      }
-    });
-  };
+  const isInvoiceEdit = !!searchParams.invoiceEdit;
+  const invoiceId = await getUserActiveInvoiceId(id);
   return (
     <div className="max-w-[778px] mx-auto w-full">
       <BackButton
         className="pt-6 px-6"
-        backLink={isInvoiceEdit ? `/${activeInvoiceId}/preview` : "../"}
+        backLink={isInvoiceEdit ? `/${id}/preview` : "../"}
       />
       <div className="p-6 sm:px-10">
         <div className="p-6 flex items-center justify-between sm:justify-normal rounded-lg bg-white dark:bg-03">
           <p className="text-body sm:mr-4 text-[#858BB2] dark:text-05">
             Status
           </p>
-          <StatusInvoice status={status!} />
+          <Suspense
+            fallback={
+              <Skeleton className="w-[104px] h-[40px] my-2 rounded-md" />
+            }
+          >
+            <PreviewInvoiceStatus id={id} />
+          </Suspense>
           <div className="justify-between hidden sm:flex sm:ml-auto gap-3">
-            <Button
-              variant={isDarkMode ? "lightDarkMode" : "light"}
+            <EditActivatedInvoiceButton />
+            <UserInvoiceDeleteModal
+              id={id}
+              invoiceId={invoiceId}
               className="px-6"
-              onClick={editActivatedInvoice}
-            >
-              Edit
-            </Button>
-            <DeleteModalWrapper
-              buttonTriggerLabel="Delete"
-              modalDescription={`Are you sure you want to delete invoice ${invoiceId}? This action cannot be undone.`}
-              modalTitle="Confirm Deletion"
-              deleteModalAction={deleteUserInvoice}
-              className="px-6"
-              loading={isPending}
             />
-            <Button variant="violet" onClick={switchToPaid} className="px-5">
-              Mark as Paid
-            </Button>
+            <MarkAsPaidButton id={id} className="px-5 min-w-[122.84px]" />
           </div>
         </div>
-        <div className="p-6 flex flex-col rounded-lg mt-6 sm:grid sm:grid-cols-[repeat(3,_minmax(0,_1fr)),max-content] ssm:grid-cols-[193px,min-content,_min-content,_max-content] bg-white dark:bg-03">
-          <div className="sm:row-start-1 sm:col-start-1">
-            <p className="text-headingS sm:mb-2 text-08 dark:text-white">
-              <span className="text-07">#</span>
-              {invoiceId}
-            </p>
-            <p className="text-body text-07 dark:text-05">{description}</p>
-          </div>
-          <div className="row-start-1 col-start-4 sm:text-end">
-            <p className="text-body mt-7 sm:mt-0 text-07 dark:text-05">
-              {senderAddress?.street}
-            </p>
-            <p className="text-body text-07 dark:text-05">
-              {senderAddress?.city}
-            </p>
-            <p className="text-body text-07 dark:text-05">
-              {senderAddress?.postCode}
-            </p>
-
-            <p className="text-body mb-7 text-07 dark:text-05">
-              {senderAddress?.country}
-            </p>
-          </div>
-          <div className="flex col-start-1 col-span-2 row-start-2 row-span-2">
-            <div className="w-[100%]">
-              <div>
-                <p className="text-body mb-2 text-07 dark:text-05 ">
-                  Invoice Date
-                </p>
-                <p className="font-bold text-headingS dark:text-white text-08">
-                  {dateToString(createdAt as Date)}
-                </p>
-              </div>
-              <div>
-                <p className="text-body mb-2 mt-6 text-07 dark:text-05">
-                  Payment Due
-                </p>
-                <p className="font-bold text-headingS text-08 dark:text-white">
-                  {paymentDue ? dateToString(paymentDue) : ""}
-                </p>
-              </div>
-            </div>
-            <div className="w-[100%]">
-              <p className="text-body mb-2 text-07 dark:text-05">Bill To</p>
-              <p className="font-bold text-headingS text-08 dark:text-white">
-                {clientName}
-              </p>
-              <p className="text-body mt-2 text-07 dark:text-05">
-                {clientAddress?.street}
-              </p>
-              <p className="text-body text-07 dark:text-05">
-                {clientAddress?.city}
-              </p>
-              <p className="text-body text-07 dark:text-05">
-                {clientAddress?.postCode}
-              </p>
-              <p className="text-body mb-7 text-07 dark:text-05">
-                {clientAddress?.country}
-              </p>
-            </div>
-          </div>
-          <div className="sm:row-start-2 sm:col-start-3 sm:row-span-2">
-            <p className="text-body mb-2 text-07 dark:text-05">Sent to</p>
-            <p className="font-bold text-headingS mb-6 text-08 dark:text-white">
-              {clientEmail}
-            </p>
-          </div>
-          <PreviewSummary items={items ? items : []} total={total!} />
-        </div>
+        <Suspense fallback={<PreviewInvoiceSkeleton />}>
+          <InvoiceDetails id={id} />
+        </Suspense>
       </div>
       <div className="p-6 flex items-center justify-between sm:justify-normal sm:hidden gap-3 bg-white dark:bg-03">
-        <Button
-          variant="light"
-          className="px-7 w-[23%]"
-          onClick={editActivatedInvoice}
-        >
-          Edit
-        </Button>
-        <DeleteModalWrapper
-          buttonTriggerLabel="Delete"
-          modalDescription={`Are you sure you want to delete invoice ${invoiceId}? This action cannot be undone.`}
-          modalTitle="Confirm Deletion"
-          deleteModalAction={deleteUserInvoice}
+        <EditActivatedInvoiceButton />
+        <UserInvoiceDeleteModal
+          id={id}
+          invoiceId={invoiceId}
           className="px-4 w-[51%] sm:w-auto"
-          loading={isPending}
         />
-        <Button variant="violet" className="w-full" onClick={switchToPaid}>
-          Mark as Paid
-        </Button>
+        <MarkAsPaidButton id={id} className="w-full" />
       </div>
     </div>
   );

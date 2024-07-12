@@ -1,3 +1,22 @@
+export type PreviewSummaryItemType = {
+  items: {
+    name: string;
+    quantity: number;
+    price: number;
+    total: number;
+  };
+};
+
+export type PreviewSummaryType = {
+  total: number;
+  items: {
+    name: string;
+    quantity: number;
+    price: number;
+    total: number;
+  }[];
+};
+
 export type SortLabelTypes =
   | ""
   | "Invoice Id"
@@ -10,4 +29,9 @@ export type SortStatusTypes = "" | "asc" | "desc";
 export type SortTypes = {
   label: SortLabelTypes;
   status: SortStatusTypes;
+};
+
+export type SearchParamsType = {
+  userSetting: string | undefined;
+  invoiceEdit: string | undefined;
 };

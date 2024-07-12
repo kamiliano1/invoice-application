@@ -4,6 +4,7 @@ import { getUserById } from "@/data/user";
 import { DeleteUserSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { signOut } from "@/auth";
 
 export async function deleteUser(
   id: string,
