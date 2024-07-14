@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import { LoginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
@@ -25,11 +24,7 @@ import { MdEmail } from "react-icons/md";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { z } from "zod";
 export default function LoginForm() {
-  const { data } = useSession();
-  const userId = useCurrentUser();
   const [isPending, startTransition] = useTransition();
-  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const { isLoaded } = useRecoilValue(userInvoicesState);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const form = useForm<z.infer<typeof LoginSchema>>({
