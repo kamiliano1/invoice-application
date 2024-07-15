@@ -1,5 +1,5 @@
 "use client";
-import { userFilters } from "@/atoms/settingsAppAtom";
+import { userFilters } from "@/atoms/activeFilterAtom";
 import useWindowWith from "@/hooks/useWindowWidth";
 import { MdOutlineClear } from "react-icons/md";
 import { useRecoilState } from "recoil";

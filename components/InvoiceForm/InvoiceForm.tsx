@@ -38,18 +38,18 @@ import {
 import { useRecoilValue } from "recoil";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
-import { darkModeState } from "@/atoms/settingsAppAtom";
 import BackButton from "@/components/ui/BackButton";
 import createInvoice from "@/actions/createInvoice";
-import useCurrentUser from "@/hooks/useCurrentUser";
+import { darkModeState } from "@/atoms/darkModeAtom";
 export default function InvoiceForm({
   invoiceData,
   invoiceId,
+  userId,
 }: {
   invoiceData?: z.infer<typeof InvoiceSchema>;
   invoiceId?: string;
+  userId: string | undefined;
 }) {
-  const userId = useCurrentUser();
   const [isPending, startTransition] = useTransition();
   const isDarkMode = useRecoilValue(darkModeState);
   const [activeInvoiceStatus, setActiveInvoiceStatus] = useState<

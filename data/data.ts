@@ -1,7 +1,7 @@
-import { InvoiceSchema } from "@/schemas";
+import { InvoicesSchema } from "@/schemas";
 import { z } from "zod";
 
-export const invoiceData: z.infer<typeof InvoiceSchema>[] = [
+export const invoiceData: z.infer<typeof InvoicesSchema> = [
   {
     invoiceId: "RT3080",
     createdAt: new Date("2021-08-18"),

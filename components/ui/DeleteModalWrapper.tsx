@@ -1,4 +1,4 @@
-import { darkModeState } from "@/atoms/settingsAppAtom";
+import { darkModeState } from "@/atoms/darkModeAtom";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

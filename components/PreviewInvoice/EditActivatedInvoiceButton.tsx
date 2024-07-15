@@ -1,8 +1,8 @@
 "use client";
-import { darkModeState } from "@/atoms/settingsAppAtom";
 import { useRouter } from "next/navigation";
 import { useRecoilValue } from "recoil";
 import { Button } from "@/components/ui/button";
+import { darkModeState } from "@/atoms/darkModeAtom";
 
 export default function EditActivatedInvoiceButton() {
   const isDarkMode = useRecoilValue(darkModeState);

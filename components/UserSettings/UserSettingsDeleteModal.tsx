@@ -3,7 +3,7 @@ import DeleteModalWrapper from "@/components/ui/DeleteModalWrapper";
 import { clearUserInvoices } from "@/actions/clearUserInvoices";
 import { useTransition } from "react";
 import { useRecoilState } from "recoil";
-import { userSettingsFormStatus } from "@/atoms/settingsAppAtom";
+import { userSettingsFormStatus } from "@/atoms/formStatusAtom";
 export default function UserSettingsDeleteModal({
   userId,
 }: {

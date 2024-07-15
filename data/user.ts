@@ -25,7 +25,7 @@ export const getUserAvatar = async (id: string | undefined) => {
       where: { id },
     });
     revalidatePath("/");
-    // TODO DRUGA STRONA
+    revalidatePath(`/${id}/preview`);
     return avatar?.avatar;
   } catch {
     return null;

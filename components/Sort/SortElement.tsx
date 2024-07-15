@@ -2,8 +2,8 @@
 import { cn } from "@/lib/utils";
 import { SortLabelTypes } from "@/types";
 import SortIcon from "@/components/Sort/SortIcon";
-import { userFilters } from "@/atoms/settingsAppAtom";
 import { useRecoilState } from "recoil";
+import { userFilters } from "@/atoms/activeFilterAtom";
 
 export default function SortElement({
   className,

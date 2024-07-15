@@ -21,6 +21,7 @@ export default async function UserSettings({
   const isUserSettings = searchParams.userSetting;
   const session = await auth();
   const userAvatar = await getUserAvatar(session?.user?.id);
+
   return (
     <>
       <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white px-6 pb-6 sm:p-14 gap-10">
@@ -31,7 +32,7 @@ export default async function UserSettings({
         <h2 className="text-headingM text-08 dark:text-white">User settings</h2>
         <NewEmailForm userEmail={session?.user?.email} />
         <NewPasswordForm userId={session?.user?.id} />
-        <UploadAvatarForm userAvatar={userAvatar} />
+        <UploadAvatarForm userId={session?.user?.id} userAvatar={userAvatar} />
         <DeleteAccountForm userId={session?.user?.id} />
         <div className="flex gap-5">
           <UserSettingsDeleteModal userId={session?.user?.id} />

@@ -5,12 +5,11 @@ import { z } from "zod";
 import UserSettings from "@/components/UserSettings/UserSettings";
 import { SearchParamsType } from "@/types";
 import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
+import { auth } from "@/auth";
 export default async function Sidebar({
-  invoiceId,
   searchParams,
   id,
 }: {
-  invoiceId?: string;
   searchParams: SearchParamsType;
   id?: string;
 }) {
@@ -19,6 +18,7 @@ export default async function Sidebar({
   const activeInvoice = (await getUserActiveInvoiceByInvoiceId(id)) as z.infer<
     typeof InvoiceSchema
   >;
+  const session = await auth();
   return (
     <div
       className={cn(
@@ -29,10 +29,14 @@ export default async function Sidebar({
       )}
     >
       {isInvoiceEdit && (
-        <InvoiceForm invoiceData={activeInvoice} invoiceId={id} />
+        <InvoiceForm
+          invoiceData={activeInvoice}
+          invoiceId={id}
+          userId={session?.user?.id}
+        />
       )}
       {isUserSettings && (
-        <UserSettings invoiceId={invoiceId} searchParams={searchParams} />
+        <UserSettings invoiceId={id} searchParams={searchParams} />
       )}
     </div>
   );

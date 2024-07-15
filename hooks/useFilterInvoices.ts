@@ -1,4 +1,4 @@
-import { userFilters } from "@/atoms/settingsAppAtom";
+import { userFilters } from "@/atoms/activeFilterAtom";
 import { filterOptions, sortByStatus } from "@/lib/utils";
 import { InvoicesSchema } from "@/schemas";
 import { useEffect, useState } from "react";

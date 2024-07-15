@@ -5,22 +5,19 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import navAvatar from "@/public/assets/image-avatar.jpg";
 import { RiImageCircleFill } from "react-icons/ri";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import { useTransition } from "react";
 import FormSuccess from "@/components/Auth/FormSuccess";
 import FormError from "@/components/Auth/FormError";
 import CollapsibleContentWrapper from "@/components/ui/CollapsibleContentWrapper";
 import { Button } from "@/components/ui/button";
-import { settingsAppState } from "@/atoms/settingsAppAtom";
-import { useRecoilState } from "recoil";
 export default function UploadAvatarForm({
   userAvatar,
+  userId,
 }: {
   userAvatar?: string | null | undefined;
+  userId: string | undefined;
 }) {
   const [isPending, startTransition] = useTransition();
-  const [settingsState, setSettingsState] = useRecoilState(settingsAppState);
-  const userId = useCurrentUser();
   const selectedFileRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -53,7 +50,6 @@ export default function UploadAvatarForm({
         uploadAvatar(userId, pictureURL).then((res) => {
           if (res.success) {
             setSuccess(res.success);
-            setSettingsState((prev) => ({ ...prev, avatar: pictureURL }));
           } else {
             setError(res.error);
           }

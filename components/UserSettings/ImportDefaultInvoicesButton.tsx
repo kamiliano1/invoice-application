@@ -1,10 +1,9 @@
 "use client";
-import { userSettingsFormStatus } from "@/atoms/settingsAppAtom";
-import useCurrentUser from "@/hooks/useCurrentUser";
 import { useTransition } from "react";
 import { useRecoilState } from "recoil";
 import { Button } from "@/components/ui/button";
 import { importDefaultInvoices } from "@/actions/importDefaultInvoices";
+import { userSettingsFormStatus } from "@/atoms/formStatusAtom";
 export default function ImportDefaultInvoicesButton({
   userId,
 }: {
@@ -22,22 +21,6 @@ export default function ImportDefaultInvoicesButton({
               success: res.success,
               error: res.error,
             });
-
-            // if (res.success) {
-            //   getUserInvoicesById(userId).then((response) => {
-            //     if (response) {
-            //       const validatedFields = InvoicesSchema.safeParse(
-            //         response.filter((item) => item.status !== "draft")
-            //       );
-            //       if (validatedFields.success) {
-            //         setSettingsState((prev) => ({
-            //           ...prev,
-            //           userInvoices: response as z.infer<typeof InvoicesSchema>,
-            //         }));
-            //       }
-            //     }
-            //   });
-            // }
           })
           .catch(() =>
             setUserSettingsFormStatusState((prev) => ({

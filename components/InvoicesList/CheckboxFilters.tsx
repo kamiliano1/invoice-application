@@ -1,5 +1,5 @@
 "use client";
-import { userFilters } from "@/atoms/settingsAppAtom";
+import { userFilters } from "@/atoms/activeFilterAtom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { InvoiceStatus } from "@prisma/client";
 import { useRecoilState } from "recoil";
