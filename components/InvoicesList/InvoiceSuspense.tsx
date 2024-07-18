@@ -11,7 +11,7 @@ export default async function InvoiceSuspense() {
   >;
   return (
     <>
-      {invoices?.length && <SortSection />}
+      {invoices?.length ? <SortSection /> : null}
       <InvoicesFiltered invoices={invoices} />
     </>
   );
