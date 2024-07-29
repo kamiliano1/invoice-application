@@ -1,7 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
 import * as Popover from "@radix-ui/react-popover";
-import { clsx } from "clsx";
 import { useState } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 export default function PopoverWrapper({
@@ -25,7 +24,7 @@ export default function PopoverWrapper({
             <span className="hidden sm:block ml-1">{buttonTriggerDesktop}</span>
           )}
           <MdKeyboardArrowDown
-            className={clsx("ml-2 mr-5 duration-300 text-01", {
+            className={cn("ml-2 mr-5 duration-300 text-01", {
               "rotate-180": isPopoverOpen,
             })}
           />

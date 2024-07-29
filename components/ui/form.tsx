@@ -9,10 +9,8 @@ import {
   FormProvider,
   useFormContext,
 } from "react-hook-form";
-
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
-import clsx from "clsx";
 
 const Form = FormProvider;
 
@@ -161,7 +159,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={clsx("text-09 text-[.625rem] mr-2", className)}
+      className={cn("text-09 text-[.625rem] mr-2", className)}
       {...props}
     >
       {body}

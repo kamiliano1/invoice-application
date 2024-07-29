@@ -3,6 +3,7 @@ import db from "@/lib/db";
 import { InvoicesSchema } from "@/schemas";
 
 export const getUserInvoicesById = async (id: string | undefined) => {
+  // await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     if (!id) return null;
 
@@ -21,11 +22,15 @@ export const getUserInvoicesById = async (id: string | undefined) => {
   }
 };
 
-export const getUserActiveInvoiceByInvoiceId = async (id?: string) => {
+export const getUserActiveInvoiceByInvoiceId = async (
+  id: string | undefined,
+  invoiceId: string | undefined
+) => {
   try {
     if (!id) return;
+    // await new Promise((resolve) => setTimeout(resolve, 5000));
     const activeUserInvoice = await db.invoice.findFirst({
-      where: { id },
+      where: { id, invoiceDbId: invoiceId },
       include: { clientAddress: true, items: true, senderAddress: true },
     });
     return activeUserInvoice;
@@ -33,11 +38,16 @@ export const getUserActiveInvoiceByInvoiceId = async (id?: string) => {
     return null;
   }
 };
-export const getUserActiveInvoiceId = async (id: string) => {
+export const getUserActiveInvoiceId = async (
+  id: string,
+  invoiceId: string | undefined
+) => {
   try {
     const activeUserInvoiceId = await db.invoice.findFirst({
-      where: { id },
+      where: { id, invoiceDbId: invoiceId },
     });
+    console.log(activeUserInvoiceId);
+
     return activeUserInvoiceId?.invoiceId;
   } catch (error) {
     return null;

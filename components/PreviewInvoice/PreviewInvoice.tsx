@@ -8,16 +8,19 @@ import UserInvoiceDeleteModal from "@/components/PreviewInvoice/UserInvoiceDelet
 import PreviewInvoiceStatus from "@/components/PreviewInvoice/PreviewInvoiceStatus";
 import BackButton from "@/components/ui/BackButton";
 import { SearchParamsType } from "@/types";
-import { getUserActiveInvoiceId } from "@/data/invoices";
+import { InvoiceSchema } from "@/schemas";
+import { z } from "zod";
 export default async function PreviewInvoice({
   id,
   searchParams,
+  activeInvoice,
 }: {
   id: string;
   searchParams: SearchParamsType;
+  activeInvoice: z.infer<typeof InvoiceSchema>;
 }) {
   const isInvoiceEdit = !!searchParams.invoiceEdit;
-  const invoiceId = await getUserActiveInvoiceId(id);
+
   return (
     <div className="max-w-[778px] mx-auto w-full">
       <BackButton
@@ -40,7 +43,7 @@ export default async function PreviewInvoice({
             <EditActivatedInvoiceButton />
             <UserInvoiceDeleteModal
               id={id}
-              invoiceId={invoiceId}
+              invoiceId={activeInvoice.invoiceId}
               className="px-6"
             />
             <MarkAsPaidButton id={id} className="px-5 min-w-[122.84px]" />
@@ -54,7 +57,7 @@ export default async function PreviewInvoice({
         <EditActivatedInvoiceButton />
         <UserInvoiceDeleteModal
           id={id}
-          invoiceId={invoiceId}
+          invoiceId={activeInvoice.invoiceId}
           className="px-4 w-[51%] sm:w-auto"
         />
         <MarkAsPaidButton id={id} className="w-full" />

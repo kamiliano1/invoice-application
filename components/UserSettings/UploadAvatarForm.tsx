@@ -18,6 +18,7 @@ export default function UploadAvatarForm({
   userId: string | undefined;
 }) {
   const [isPending, startTransition] = useTransition();
+  const [isAvatarSent, setIsAvatarSent] = useState(false);
   const selectedFileRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -37,6 +38,7 @@ export default function UploadAvatarForm({
     reader.onload = (readerEvent) => {
       if (readerEvent.target?.result) {
         setPictureURL(readerEvent.target?.result as string);
+        setIsAvatarSent(false);
       }
     };
   };
@@ -45,11 +47,17 @@ export default function UploadAvatarForm({
       setError("Sent avatar first");
       return;
     }
+    if (isAvatarSent) {
+      setSuccess("");
+      setError("Avatar already sent");
+      return;
+    }
     startTransition(() => {
       if (userId) {
         uploadAvatar(userId, pictureURL).then((res) => {
           if (res.success) {
             setSuccess(res.success);
+            setIsAvatarSent(true);
           } else {
             setError(res.error);
           }

@@ -616,7 +616,7 @@ export default function InvoiceForm({
               <Button
                 variant={isDarkMode ? "lightDarkMode" : "light"}
                 type="button"
-                className="sm:mr-auto w-[50%] sm:w-auto"
+                className="sm:mr-auto w-[50%] sm:w-auto px-4"
                 onClick={closeFormInput}
               >
                 Discard

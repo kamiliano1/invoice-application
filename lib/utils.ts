@@ -1,12 +1,27 @@
-import { signIn } from "@/auth";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { InvoiceSchema, LoginSchema } from "@/schemas";
+import { InvoiceSchema } from "@/schemas";
 import { type ClassValue, clsx } from "clsx";
-import { AuthError } from "next-auth";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
 import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
+  const twMerge = extendTailwindMerge({
+    extend: {
+      classGroups: {
+        "font-size": [
+          {
+            text: [
+              "headingL",
+              "headingM",
+              "headingS",
+              "headingSVariant",
+              "body",
+              "bodyVariant",
+            ],
+          },
+        ],
+      },
+    },
+  });
   return twMerge(clsx(inputs));
 }
 
@@ -25,8 +40,8 @@ export const generateUserId = () => {
   let userId = "";
   for (let i = 0; i < 6; i++) {
     i < 2
-      ? (userId = userId + generateIdCharacter(letter))
-      : (userId = userId + generateIdCharacter(numbers));
+      ? (userId += generateIdCharacter(letter))
+      : (userId += generateIdCharacter(numbers));
   }
   return userId;
 };

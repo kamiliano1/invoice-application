@@ -15,10 +15,11 @@ export default async function Sidebar({
 }) {
   const isInvoiceEdit = searchParams.invoiceEdit;
   const isUserSettings = searchParams.userSetting;
-  const activeInvoice = (await getUserActiveInvoiceByInvoiceId(id)) as z.infer<
-    typeof InvoiceSchema
-  >;
   const session = await auth();
+  const activeInvoice = (await getUserActiveInvoiceByInvoiceId(
+    id,
+    session?.user?.id
+  )) as z.infer<typeof InvoiceSchema>;
   return (
     <div
       className={cn(

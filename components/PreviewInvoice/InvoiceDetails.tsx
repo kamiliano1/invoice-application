@@ -1,9 +1,14 @@
 import { dateToString } from "@/lib/utils";
 import PreviewSummary from "@/components/PreviewInvoice/PreviewSummary";
 import { getUserActiveInvoiceByInvoiceId } from "@/data/invoices";
+import { auth } from "@/auth";
 
 export default async function InvoiceDetails({ id }: { id: string }) {
-  const invoiceData = await getUserActiveInvoiceByInvoiceId(id);
+  const session = await auth();
+  const invoiceData = await getUserActiveInvoiceByInvoiceId(
+    id,
+    session?.user?.id
+  );
   const {
     description,
     invoiceId,

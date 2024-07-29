@@ -4,7 +4,6 @@ import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { cn } from "@/lib/utils";
-import clsx from "clsx";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -83,7 +82,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={clsx("text-headingM leading-none tracking-tight", className)}
+    className={cn("text-headingM leading-none tracking-tight", className)}
     {...props}
   />
 ));
