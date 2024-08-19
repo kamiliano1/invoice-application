@@ -8,7 +8,6 @@ export async function uploadAvatar(id: string, avatar: string) {
       data: { avatar },
     });
     revalidatePath("/");
-    // TODO DRUGA STRONA
     return { success: "Avatar successfully updated" };
   } catch (error) {
     console.log(error);

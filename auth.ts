@@ -26,10 +26,6 @@ export const {
       if (session.user) {
         session.user.email = token.email as string;
       }
-      // if (session.user && token.invoices) {
-      //   session.user.invoices = token.invoices;
-      // }
-
       return session;
     },
     async jwt({ token }) {
