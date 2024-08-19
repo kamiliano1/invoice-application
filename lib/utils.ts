@@ -1,4 +1,5 @@
 import { InvoiceSchema } from "@/schemas";
+import { SortFilters } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 import { z } from "zod";
@@ -76,12 +77,7 @@ export const sortByStatus = ({
   firstElement,
   secondElement,
 }: {
-  activatedFilter:
-    | "invoiceId"
-    | "paymentDue"
-    | "clientName"
-    | "total"
-    | "status";
+  activatedFilter: SortFilters;
   firstElement: z.infer<typeof InvoiceSchema>;
   secondElement: z.infer<typeof InvoiceSchema>;
 }) => {

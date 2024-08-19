@@ -35,3 +35,10 @@ export type SearchParamsType = {
   userSetting: string | undefined;
   invoiceEdit: string | undefined;
 };
+
+export type SortFilters =
+  | "invoiceId"
+  | "paymentDue"
+  | "clientName"
+  | "total"
+  | "status";

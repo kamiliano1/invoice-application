@@ -3,11 +3,6 @@
  * @type {string[]}
  */
 export const publicRoutes = ["/"];
-/**
- * This dynamic route is accessible to the public and does not need authentication
- * @type {string[]}
- */
-export const publicPreviewRoute = "/preview";
 
 /**
  * An array of routes that are used for authentication, these routes will redirect to the /settings page

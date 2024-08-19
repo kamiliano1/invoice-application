@@ -3,7 +3,6 @@ import db from "@/lib/db";
 import { InvoicesSchema } from "@/schemas";
 
 export const getUserInvoicesById = async (id: string | undefined) => {
-  // await new Promise((resolve) => setTimeout(resolve, 500));
   try {
     if (!id) return null;
 
@@ -28,7 +27,6 @@ export const getUserActiveInvoiceByInvoiceId = async (
 ) => {
   try {
     if (!id) return;
-    // await new Promise((resolve) => setTimeout(resolve, 5000));
     const activeUserInvoice = await db.invoice.findFirst({
       where: { id, invoiceDbId: invoiceId },
       include: { clientAddress: true, items: true, senderAddress: true },
