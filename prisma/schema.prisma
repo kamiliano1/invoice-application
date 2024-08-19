@@ -36,15 +36,14 @@ model Account {
 }
 
 model User {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  email        String        @unique
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  password     String
-  avatar       String
-  sortInvoices SortInvoices?
-  invoice      Invoice[]
-  Account      Account[]
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  password  String
+  avatar    String
+  invoice   Invoice[]
+  Account   Account[]
 }
 
 model Invoice {
@@ -96,31 +95,4 @@ model Items {
   total    Int
   itemId   String  @db.ObjectId
   invoice  Invoice @relation(fields: [itemId], references: [id], onDelete: Cascade)
-}
-
-model SortInvoices {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  sortLabel     SortLabel     @default(invoiceId)
-  sortDirection SortDirection @default(asc)
-  filterType    FilterType[]  @default([draft, paid, pending])
-  User          User          @relation(fields: [id], references: [id], onDelete: Cascade)
-}
-
-enum SortLabel {
-  invoiceId
-  paymentDue
-  name
-  price
-  status
-}
-
-enum SortDirection {
-  asc
-  desc
-}
-
-enum FilterType {
-  draft
-  paid
-  pending
 }
