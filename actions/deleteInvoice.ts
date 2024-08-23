@@ -1,14 +1,9 @@
 "use server";
 import db from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 export async function deleteInvoice(id: string) {
   if (id) {
-    try {
-      await db.invoice.delete({ where: { id } });
-      revalidatePath("/");
-      return { success: "Deleted" };
-    } catch {
-      return { error: "Something went wrong during delete" };
-    }
+    await db.invoice.delete({ where: { id } });
+    redirect("/");
   }
 }

@@ -18,9 +18,7 @@ export default function UserInvoiceDeleteModal({
   const deleteUserInvoice = () => {
     startTransition(() => {
       if (id) {
-        deleteInvoice(id).then((res) => {
-          if (res?.success) router.back();
-        });
+        deleteInvoice(id);
       }
     });
   };
