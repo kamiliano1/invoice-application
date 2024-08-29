@@ -3,8 +3,8 @@ import { Skeleton } from "../ui/skeleton";
 export default function AvatarSkeleton() {
   return (
     <>
-      <Skeleton className="rounded-full mr-4 lg:hidden size-8 dark:bg-slate-400" />
-      <Skeleton className="hidden rounded-full lg:block mb-6 size-10 dark:bg-slate-400" />
+      <Skeleton className="mr-4 size-8 rounded-full lg:hidden dark:bg-slate-400" />
+      <Skeleton className="mb-6 hidden size-10 rounded-full lg:block dark:bg-slate-400" />
     </>
   );
 }

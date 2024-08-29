@@ -17,22 +17,22 @@ export default function InvoiceItem({
   return (
     <Link
       href={`${id}/preview`}
-      className="w-full p-6 grid grid-rows-[repeat(3,min-content)] grid-cols-[max-content,_max-content] gap-x-[3rem] sm:gap-0 sm:grid-rows-1 sm:grid-cols-[repeat(4,_minmax(0,_1fr))_104px_min-content] items-center rounded-lg justify-between border-[1px] border-transparent hover:border-01 bg-white dark:bg-03"
+      className="grid w-full grid-cols-[max-content,_max-content] grid-rows-[repeat(3,min-content)] items-center justify-between gap-x-[3rem] rounded-lg border-[1px] border-transparent bg-white p-6 hover:border-01 sm:grid-cols-[repeat(4,_minmax(0,_1fr))_104px_min-content] sm:grid-rows-1 sm:gap-0 dark:bg-03"
     >
-      <h2 className="text-07 row-start-1 col-start-1 mb-4 sm:mb-0 text-headingS">
+      <h2 className="col-start-1 row-start-1 mb-4 text-headingS text-07 sm:mb-0">
         #<span className="font-bold text-08 dark:text-white">{invoiceId}</span>
       </h2>
-      <p className="row-start-2 col-start-1 sm:row-start-1 sm:col-start-2 text-body mb-1 sm:mb-0 text-07 dark:text-05">
+      <p className="col-start-1 row-start-2 mb-1 text-body text-07 sm:col-start-2 sm:row-start-1 sm:mb-0 dark:text-05">
         Due {dateToString(paymentDue)}
       </p>
-      <p className="row-start-1 col-start-2 sm:col-start-3 text-body text-end sm:text-start self-start sm:self-auto text-[#858BB2] dark:text-white">
+      <p className="col-start-2 row-start-1 self-start text-end text-body text-[#858BB2] sm:col-start-3 sm:self-auto sm:text-start dark:text-white">
         {clientName}
       </p>
-      <p className="row-start-3 col-start-1 sm:row-start-1 sm:col-start-4 text-headingS text-08 dark:text-white">
+      <p className="col-start-1 row-start-3 text-headingS text-08 sm:col-start-4 sm:row-start-1 dark:text-white">
         £ {total.toFixed(2)}
       </p>
       <InvoiceListStatus status={status} />
-      <MdKeyboardArrowRight className="hidden sm:block text-01 sm:justify-self-end sm:ml-5" />
+      <MdKeyboardArrowRight className="hidden text-01 sm:ml-5 sm:block sm:justify-self-end" />
     </Link>
   );
 }

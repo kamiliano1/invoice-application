@@ -20,12 +20,12 @@ export default function ToggleThemeButton() {
       {darkModeState.isDarkMode ? (
         <IoMdMoon
           onClick={toggleLightMode}
-          className="text-headingM text-07 ml-auto lg:ml-0 cursor-pointer lg:mt-auto"
+          className="ml-auto cursor-pointer text-headingM text-07 lg:ml-0 lg:mt-auto"
         />
       ) : (
         <IoSunnySharp
           onClick={toggleDarkMode}
-          className="text-headingM text-07 ml-auto lg:ml-0 cursor-pointer lg:mt-auto"
+          className="ml-auto cursor-pointer text-headingM text-07 lg:ml-0 lg:mt-auto"
         />
       )}
     </>

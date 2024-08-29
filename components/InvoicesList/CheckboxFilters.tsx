@@ -19,7 +19,7 @@ export function FilterCheckbox({ label }: { label: InvoiceStatus }) {
     }));
   };
   return (
-    <label className="flex items-center cursor-pointer peer" htmlFor={label}>
+    <label className="peer flex cursor-pointer items-center" htmlFor={label}>
       <Checkbox
         id={label}
         onCheckedChange={toggleCheckbox}
@@ -29,7 +29,7 @@ export function FilterCheckbox({ label }: { label: InvoiceStatus }) {
             : false
         }
       />
-      <p className="text-headingS first-letter:uppercase text-08 dark:text-white ml-3">
+      <p className="ml-3 text-headingS text-08 first-letter:uppercase dark:text-white">
         {label}
       </p>
     </label>

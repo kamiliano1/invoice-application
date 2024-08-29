@@ -34,12 +34,12 @@ export default function SortElement({
   return (
     <p
       className={cn(
-        "cursor-pointer select-none hover:text-opacity-70 flex items-center text-08 dark:text-white justify-between w-full sm:justify-start",
+        "flex w-full cursor-pointer select-none items-center justify-between text-08 hover:text-opacity-70 sm:justify-start dark:text-white",
         className,
         {
           "text-01 dark:text-01":
             userFilterState.label === label && userFilterState.status !== "",
-        }
+        },
       )}
       onClick={sortInvoices}
     >

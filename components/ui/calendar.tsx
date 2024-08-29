@@ -21,7 +21,7 @@ function Calendar({
     <DayPicker
       formatters={{ formatCaption }}
       showOutsideDays={showOutsideDays}
-      className={cn("bg-white dark:bg-04 rounded-xl p-3", className)}
+      className={cn("rounded-xl bg-white p-3 dark:bg-04", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",

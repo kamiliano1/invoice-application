@@ -68,12 +68,12 @@ export default function NewEmailForm({
                 <FormControl>
                   <div className="relative overflow-hidden">
                     <Input
-                      className="pl-10 focus:pl-4 peer duration-100 dark:bg-04"
+                      className="peer pl-10 duration-100 focus:pl-4 dark:bg-04"
                       placeholder="Current Email"
                       error={form.formState.errors.currentEmail}
                       {...field}
                     />
-                    <MdEmail className="absolute top-[27%] left-2 size-5 text-06 peer-focus:-translate-x-[140%] duration-100" />
+                    <MdEmail className="absolute left-2 top-[27%] size-5 text-06 duration-100 peer-focus:-translate-x-[140%]" />
                   </div>
                 </FormControl>
               </FormItem>
@@ -91,12 +91,12 @@ export default function NewEmailForm({
                 <FormControl>
                   <div className="relative overflow-hidden">
                     <Input
-                      className="pl-10 focus:pl-4 peer duration-100 dark:bg-04"
+                      className="peer pl-10 duration-100 focus:pl-4 dark:bg-04"
                       placeholder="New Email"
                       error={form.formState.errors.newEmail}
                       {...field}
                     />
-                    <MdEmail className="absolute top-[27%] left-2 size-5 text-06 peer-focus:-translate-x-[140%] duration-100" />
+                    <MdEmail className="absolute left-2 top-[27%] size-5 text-06 duration-100 peer-focus:-translate-x-[140%]" />
                   </div>
                 </FormControl>
               </FormItem>
@@ -106,7 +106,7 @@ export default function NewEmailForm({
             loading={isPending}
             disabled={isPending}
             variant="violet"
-            className="w-[100%] sm:w-auto min-w-[110px]"
+            className="w-[100%] min-w-[110px] sm:w-auto"
           >
             Update
           </Button>

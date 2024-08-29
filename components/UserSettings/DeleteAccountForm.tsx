@@ -69,12 +69,12 @@ export default function DeleteAccountForm({
                   <div className="relative overflow-hidden">
                     <Input
                       type="password"
-                      className="pl-10 focus:pl-4 peer duration-100 dark:bg-04"
+                      className="peer pl-10 duration-100 focus:pl-4 dark:bg-04"
                       placeholder="Current Password"
                       error={form.formState.errors.currentPassword}
                       {...field}
                     />
-                    <MdEmail className="absolute top-[27%] left-2 size-5 text-06 peer-focus:-translate-x-[140%] duration-100" />
+                    <MdEmail className="absolute left-2 top-[27%] size-5 text-06 duration-100 peer-focus:-translate-x-[140%]" />
                   </div>
                 </FormControl>
               </FormItem>
@@ -83,7 +83,7 @@ export default function DeleteAccountForm({
           <Button
             onClick={() => deleteAccountModalRef.current?.click()}
             variant="red"
-            className="w-full my-5"
+            className="my-5 w-full"
             loading={isPending}
           >
             Delete Account
@@ -97,7 +97,7 @@ export default function DeleteAccountForm({
             modalDescription={`Are you sure you want to delete your account? This action cannot be undone.`}
             modalTitle="Confirm User Deletion"
             deleteModalAction={deleteUserForever}
-            className="my-5 w-full hidden"
+            className="my-5 hidden w-full"
             loading={isPending}
           />
           <FormError message={error} />

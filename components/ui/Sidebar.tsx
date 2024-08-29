@@ -18,15 +18,15 @@ export default async function Sidebar({
   const session = await auth();
   const activeInvoice = (await getUserActiveInvoiceByInvoiceId(
     id,
-    session?.user?.id
+    session?.user?.id,
   )) as z.infer<typeof InvoiceSchema>;
   return (
     <div
       className={cn(
-        "top-[72px] duration-500 w-full absolute sm:top-0 -translate-x-full grid grid-cols-[minmax(0,_616px)_auto] lg:grid-cols-[minmax(0,_719px)_auto] overflow-y-scroll z-[5] min-h-[calc(100vh_-72px)] sm:min-h-full",
+        "absolute top-[72px] z-[5] grid min-h-[calc(100vh_-72px)] w-full -translate-x-full grid-cols-[minmax(0,_616px)_auto] overflow-y-scroll duration-500 sm:top-0 sm:min-h-full lg:grid-cols-[minmax(0,_719px)_auto]",
         {
           "translate-x-0": isInvoiceEdit || isUserSettings,
-        }
+        },
       )}
     >
       {isInvoiceEdit && (

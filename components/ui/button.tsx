@@ -28,7 +28,7 @@ const buttonVariants = cva(
       variant: "violet",
       size: "default",
     },
-  }
+  },
 );
 
 export interface ButtonProps
@@ -41,7 +41,7 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     { className, variant, size, loading, children, asChild = false, ...props },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : "button";
     return (
@@ -55,7 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {variant === "violetWithPlusIcon" && (
-              <span className="bg-11 text-01 text-[1.3rem] pt-1 leading-1 flex rounded-full justify-center items-center h-[32px] aspect-square mr-2">
+              <span className="leading-1 mr-2 flex aspect-square h-[32px] items-center justify-center rounded-full bg-11 pt-1 text-[1.3rem] text-01">
                 +
               </span>
             )}
@@ -64,7 +64,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       </Comp>
     );
-  }
+  },
 );
 Button.displayName = "Button";
 

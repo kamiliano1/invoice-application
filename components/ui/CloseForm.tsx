@@ -20,7 +20,7 @@ export default function CloseForm({
   return (
     <div
       onClick={closeActiveForm}
-      className={cn("hidden delay-200 duration-500 sm:block h-full", {
+      className={cn("hidden h-full delay-200 duration-500 sm:block", {
         "bg-black/35": trigger,
       })}
     ></div>

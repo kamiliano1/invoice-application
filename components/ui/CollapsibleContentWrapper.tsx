@@ -13,11 +13,11 @@ export default function CollapsibleContentWrapper({
 }) {
   return (
     <Collapsible className="group">
-      <CollapsibleTrigger className="flex justify-between w-full">
-        <h3 className="text-headingS text-08 dark:text-white mb-4">
+      <CollapsibleTrigger className="flex w-full justify-between">
+        <h3 className="mb-4 text-headingS text-08 dark:text-white">
           {buttonTriggerLabel}
         </h3>
-        <IoIosArrowDown className="text-01 group-data-[state=open]:rotate-180 duration-300" />
+        <IoIosArrowDown className="text-01 duration-300 group-data-[state=open]:rotate-180" />
       </CollapsibleTrigger>
       <CollapsibleContent className="CollapsibleContent">
         {children}

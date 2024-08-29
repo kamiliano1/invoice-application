@@ -26,7 +26,7 @@ export default function UserSettingsDeleteModal({
             setUserSettingsFormStatusState((prev) => ({
               ...prev,
               error: "Something went wrong",
-            }))
+            })),
           );
       }
     });

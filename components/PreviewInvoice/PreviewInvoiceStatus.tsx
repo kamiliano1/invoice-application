@@ -6,7 +6,7 @@ export default async function PreviewInvoiceStatus({ id }: { id: string }) {
   const session = await auth();
   const activeInvoice = await getUserActiveInvoiceByInvoiceId(
     id,
-    session?.user?.id
+    session?.user?.id,
   );
   const status = activeInvoice?.status;
   return <StatusInvoice status={status} />;

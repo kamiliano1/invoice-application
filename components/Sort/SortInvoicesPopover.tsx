@@ -4,9 +4,9 @@ export default function SortInvoicesPopover() {
   return (
     <PopoverWrapper
       buttonTriggerMobile="Sort invoices"
-      className="w-[200px] h-[240px] ml-6"
+      className="ml-6 h-[240px] w-[200px]"
     >
-      <div className="flex flex-col gap-3 w-full divide-y">
+      <div className="flex w-full flex-col gap-3 divide-y">
         <SortElement label="Invoice Id" />
         <SortElement label="Payment Due" className="pt-3" />
         <SortElement label="Name" className="pt-3" />

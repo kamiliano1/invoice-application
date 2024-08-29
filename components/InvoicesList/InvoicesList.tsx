@@ -8,11 +8,11 @@ import InvoiceSuspense from "@/components/InvoicesList/InvoiceSuspense";
 
 export default function InvoicesList() {
   return (
-    <div className="p-6 sm:p-10 w-full flex flex-col gap-y-4 max-w-[778px] mx-auto lg:mt-20 z-[1]">
-      <div className="font-bold flex items-center text-08 dark:text-white my-4 sm:mb-7">
+    <div className="z-[1] mx-auto flex w-full max-w-[778px] flex-col gap-y-4 p-6 sm:p-10 lg:mt-20">
+      <div className="my-4 flex items-center font-bold text-08 sm:mb-7 dark:text-white">
         <div className="mr-auto">
-          <h1 className="text-headingM sm:text-headingL mb-1">Invoices</h1>
-          <Suspense fallback={<Skeleton className="h-[18px] w-30" />}>
+          <h1 className="mb-1 text-headingM sm:text-headingL">Invoices</h1>
+          <Suspense fallback={<Skeleton className="w-30 h-[18px]" />}>
             <InvoicesCount />
           </Suspense>
         </div>

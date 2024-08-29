@@ -26,7 +26,7 @@ export default function ImportDefaultInvoicesButton({
             setUserSettingsFormStatusState((prev) => ({
               ...prev,
               error: "Something went wrong",
-            }))
+            })),
           );
       }
     });

@@ -22,43 +22,43 @@ export default async function PreviewInvoice({
   const isInvoiceEdit = !!searchParams.invoiceEdit;
 
   return (
-    <div className="max-w-[778px] mx-auto w-full">
+    <div className="mx-auto w-full max-w-[778px]">
       <BackButton
-        className="pt-6 px-6"
+        className="px-6 pt-6"
         backLink={isInvoiceEdit ? `/${id}/preview` : "../"}
       />
       <div className="p-6 sm:px-10">
-        <div className="p-6 flex items-center justify-between sm:justify-normal rounded-lg bg-white dark:bg-03">
-          <p className="text-body sm:mr-4 text-[#858BB2] dark:text-05">
+        <div className="flex items-center justify-between rounded-lg bg-white p-6 sm:justify-normal dark:bg-03">
+          <p className="text-body text-[#858BB2] sm:mr-4 dark:text-05">
             Status
           </p>
           <Suspense
             fallback={
-              <Skeleton className="w-[104px] h-[40px] my-2 rounded-md" />
+              <Skeleton className="my-2 h-[40px] w-[104px] rounded-md" />
             }
           >
             <PreviewInvoiceStatus id={id} />
           </Suspense>
-          <div className="justify-between hidden sm:flex sm:ml-auto gap-3">
+          <div className="hidden justify-between gap-3 sm:ml-auto sm:flex">
             <EditActivatedInvoiceButton />
             <UserInvoiceDeleteModal
               id={id}
               invoiceId={activeInvoice.invoiceId}
               className="px-6"
             />
-            <MarkAsPaidButton id={id} className="px-5 min-w-[122.84px]" />
+            <MarkAsPaidButton id={id} className="min-w-[122.84px] px-5" />
           </div>
         </div>
         <Suspense fallback={<PreviewInvoiceSkeleton />}>
           <InvoiceDetails id={id} />
         </Suspense>
       </div>
-      <div className="p-6 flex items-center justify-between sm:justify-normal sm:hidden gap-3 bg-white dark:bg-03">
+      <div className="flex items-center justify-between gap-3 bg-white p-6 sm:hidden sm:justify-normal dark:bg-03">
         <EditActivatedInvoiceButton />
         <UserInvoiceDeleteModal
           id={id}
           invoiceId={activeInvoice.invoiceId}
-          className="px-4 w-[51%] sm:w-auto"
+          className="w-[51%] px-4 sm:w-auto"
         />
         <MarkAsPaidButton id={id} className="w-full" />
       </div>

@@ -16,18 +16,18 @@ const Form = FormProvider;
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   name: TName;
 };
 
 const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue
+  {} as FormFieldContextValue,
 );
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
@@ -66,7 +66,7 @@ type FormItemContextValue = {
 };
 
 const FormItemContext = React.createContext<FormItemContextValue>(
-  {} as FormItemContextValue
+  {} as FormItemContextValue,
 );
 
 const FormItem = React.forwardRef<
@@ -93,9 +93,9 @@ const FormLabel = React.forwardRef<
     <Label
       ref={ref}
       className={cn(
-        " text-07 dark:text-06 text-bodyVariant",
-        error && "text-09 dark:text-09 text-bodyVariant",
-        className
+        "text-bodyVariant text-07 dark:text-06",
+        error && "text-bodyVariant text-09 dark:text-09",
+        className,
       )}
       htmlFor={formItemId}
       {...props}
@@ -159,7 +159,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-09 text-[.625rem] mr-2", className)}
+      className={cn("mr-2 text-[.625rem] text-09", className)}
       {...props}
     >
       {body}

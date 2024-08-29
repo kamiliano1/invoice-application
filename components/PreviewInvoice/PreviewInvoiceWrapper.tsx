@@ -14,7 +14,7 @@ export default function PreviewInvoiceWrapper({
   activeInvoice: z.infer<typeof InvoiceSchema>;
 }) {
   return (
-    <main className="flex flex-col lg:px-0 bg-11 dark:bg-12">
+    <main className="flex flex-col bg-11 lg:px-0 dark:bg-12">
       <PreviewInvoice
         id={id}
         searchParams={searchParams}

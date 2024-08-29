@@ -104,12 +104,12 @@ export default function InvoiceForm({
             ...form.getValues(),
             paymentDue: createInvoicePaymentDue(
               form.getValues("createdAt"),
-              form.getValues("paymentTerms")
+              form.getValues("paymentTerms"),
             ),
             status: "draft",
           },
           userId || "",
-          invoiceId
+          invoiceId,
         ).then((res) => {
           if (res.success) {
             form.reset();
@@ -128,7 +128,7 @@ export default function InvoiceForm({
       invoiceId: invoiceData ? invoiceData.invoiceId : generateUserId(),
       paymentDue: createInvoicePaymentDue(
         values.createdAt,
-        values.paymentTerms
+        values.paymentTerms,
       ),
       ...updateItemsTotalValue(values),
     };
@@ -142,7 +142,7 @@ export default function InvoiceForm({
                 form.reset();
                 router.back();
               }
-            }
+            },
           );
         } catch (error) {
           console.log({ error: "Something went wrong" });
@@ -154,9 +154,9 @@ export default function InvoiceForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white"
+        className="flex max-w-[616px] flex-col rounded-tr-[20px] bg-white sm:min-h-[calc(100vh_-_80px)] sm:w-[616px] lg:ml-[103px] lg:h-fit dark:bg-12"
       >
-        <div className="px-6 sm:p-14 flex flex-col gap-5">
+        <div className="flex flex-col gap-5 px-6 sm:p-14">
           <BackButton
             className="py-6 sm:hidden"
             backLink={
@@ -174,7 +174,7 @@ export default function InvoiceForm({
             )}
           </h2>
 
-          <p className="text-01 text-headingSVariant mb-3">Bill from</p>
+          <p className="mb-3 text-headingSVariant text-01">Bill from</p>
 
           <div className="grid gap-5">
             <FormField
@@ -254,7 +254,7 @@ export default function InvoiceForm({
               )}
             />
           </div>
-          <p className="text-01 text-headingSVariant mt-2">Bill To</p>
+          <p className="mt-2 text-headingSVariant text-01">Bill To</p>
           <FormField
             control={form.control}
             name="clientName"
@@ -376,8 +376,8 @@ export default function InvoiceForm({
               control={form.control}
               name="createdAt"
               render={({ field }) => (
-                <FormItem className="flex flex-col w-full justify-between">
-                  <FormLabel className="text-07 dark:text-05 text-bodyVariant mt-1">
+                <FormItem className="flex w-full flex-col justify-between">
+                  <FormLabel className="mt-1 text-bodyVariant text-07 dark:text-05">
                     Invoice Date
                   </FormLabel>
                   <Popover>
@@ -385,14 +385,14 @@ export default function InvoiceForm({
                       <FormControl>
                         <div
                           className={cn(
-                            "text-headingS py-3 px-3 border-[1px] border-transparent rounded focus:border-01 focus:border-[1px] outline-none caret-01 mb-6 sm:mb-0 flex items-center justify-between peer-hover:border-01 hover:border-01 cursor-pointer text-black bg-05 dark:text-white dark:bg-03"
+                            "mb-6 flex cursor-pointer items-center justify-between rounded border-[1px] border-transparent bg-05 px-3 py-3 text-headingS text-black caret-01 outline-none hover:border-01 focus:border-[1px] focus:border-01 peer-hover:border-01 sm:mb-0 dark:bg-03 dark:text-white",
                           )}
                         >
                           {field.value
                             ? format(field.value, "PPP")
                             : format(new Date(), "PPP")}
 
-                          <CiCalendar className="text-[1.3rem] text-07 left" />
+                          <CiCalendar className="left text-[1.3rem] text-07" />
                         </div>
                       </FormControl>
                     </PopoverTrigger>
@@ -429,7 +429,7 @@ export default function InvoiceForm({
                     <FormControl>
                       <SelectTrigger
                         aria-label="Payment Terms"
-                        className="sm:col-start-2 sm:row-start-2 px-3 border-[1px] rounded focus:border-01 focus:border-[1px] outline-none text-body font-bold w-full hover:border-01 inline-flex items-center h-[48px] justify-between mb-4 z-[25] border-05 bg-05 text-black dark:bg-04 dark:text-white"
+                        className="z-[25] mb-4 inline-flex h-[48px] w-full items-center justify-between rounded border-[1px] border-05 bg-05 px-3 text-body font-bold text-black outline-none hover:border-01 focus:border-[1px] focus:border-01 sm:col-start-2 sm:row-start-2 dark:bg-04 dark:text-white"
                       >
                         <SelectValue />
                       </SelectTrigger>
@@ -472,31 +472,30 @@ export default function InvoiceForm({
           />
           <div>
             <h3 className="text-headingS text-[#777F98] sm:mb-4">Item List</h3>
-            <div className="hidden list-none sm:grid gap-x-4 grid-cols-[minmax(0,_.5fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.3fr)] sm:grid-cols-[minmax(0,_1.6fr)_minmax(0,_.4fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.2fr)] items-center">
-              <p className="text-bodyVariant mb-2 text-07 dark:text-06">
+            <div className="hidden list-none grid-cols-[minmax(0,_.5fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.3fr)] items-center gap-x-4 sm:grid sm:grid-cols-[minmax(0,_1.6fr)_minmax(0,_.4fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.2fr)]">
+              <p className="mb-2 text-bodyVariant text-07 dark:text-06">
                 Item name
               </p>
-              <p className="text-bodyVariant mb-2 text-07 dark:text-06">Qty.</p>
-              <p className="text-bodyVariant mb-2 text-07 dark:text-06">
+              <p className="mb-2 text-bodyVariant text-07 dark:text-06">Qty.</p>
+              <p className="mb-2 text-bodyVariant text-07 dark:text-06">
                 Price
               </p>
-              <p className="text-bodyVariant mb-2 text-07 dark:text-06">
+              <p className="mb-2 text-bodyVariant text-07 dark:text-06">
                 Total
               </p>
             </div>
             {fields.map((item, index) => (
               <li
                 key={item.id}
-                className="list-none grid gap-x-4 grid-cols-[minmax(0,_.5fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.3fr)] sm:grid-cols-[minmax(0,_1.6fr)_minmax(0,_.4fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.2fr)] items-center
-            "
+                className="grid list-none grid-cols-[minmax(0,_.5fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.3fr)] items-center gap-x-4 sm:grid-cols-[minmax(0,_1.6fr)_minmax(0,_.4fr)_minmax(0,_.7fr)_minmax(0,_.7fr)_minmax(0,_.2fr)]"
               >
                 <FormField
                   control={form.control}
                   name={`items.${index}.name`}
                   render={({ field }) => (
-                    <FormItem className="col-span-4 sm:col-span-1 mb-4 sm:mb-0">
+                    <FormItem className="col-span-4 mb-4 sm:col-span-1 sm:mb-0">
                       <div className="flex justify-between">
-                        <FormLabel className="sm:hidden mt-6">
+                        <FormLabel className="mt-6 sm:hidden">
                           Item Name
                         </FormLabel>
                       </div>
@@ -549,10 +548,10 @@ export default function InvoiceForm({
                   )}
                 />
                 <div className="flex flex-col">
-                  <p className="text-bodyVariant text-07 dark:text-06 sm:hidden">
+                  <p className="text-bodyVariant text-07 sm:hidden dark:text-06">
                     Total
                   </p>
-                  <p className="text-headingS py-3 px-3 border-[1px] truncate mt-2 border-transparent rounded focus:border-01 w-full text-06">
+                  <p className="mt-2 w-full truncate rounded border-[1px] border-transparent px-3 py-3 text-headingS text-06 focus:border-01">
                     {(
                       form.watch(`items.${index}.price`) *
                       form.watch(`items.${index}.quantity`)
@@ -562,7 +561,7 @@ export default function InvoiceForm({
 
                 <MdDelete
                   onClick={() => remove(index)}
-                  className="text-[1.5rem] col-start-4 sm:col-start-5 h-[49.33px] cursor-pointer text-06 hover:text-09 self-end"
+                  className="col-start-4 h-[49.33px] cursor-pointer self-end text-[1.5rem] text-06 hover:text-09 sm:col-start-5"
                 />
               </li>
             ))}
@@ -578,18 +577,18 @@ export default function InvoiceForm({
           </Button>
           <div>
             {Object.keys(form.formState.errors).length > 0 && (
-              <p className="text-09 text-[.625rem] mb-2">
+              <p className="mb-2 text-[.625rem] text-09">
                 - All fields must be added
               </p>
             )}
             {form.formState.errors.items?.message && (
-              <p className="text-09 text-[.625rem] mb-2">
+              <p className="mb-2 text-[.625rem] text-09">
                 - An item must be added
               </p>
             )}
           </div>
         </div>
-        <div className="flex justify-between p-4 sm:px-14 sm:pb-8 gap-3 mt-auto rounded-br-[20px] dark:bg-03 dark:sm:bg-12">
+        <div className="mt-auto flex justify-between gap-3 rounded-br-[20px] p-4 sm:px-14 sm:pb-8 dark:bg-03 dark:sm:bg-12">
           {invoiceData ? (
             <>
               {" "}
@@ -616,7 +615,7 @@ export default function InvoiceForm({
               <Button
                 variant={isDarkMode ? "lightDarkMode" : "light"}
                 type="button"
-                className="sm:mr-auto w-[50%] sm:w-auto px-4"
+                className="w-[50%] px-4 sm:mr-auto sm:w-auto"
                 onClick={closeFormInput}
               >
                 Discard
@@ -628,7 +627,7 @@ export default function InvoiceForm({
                 variant={isDarkMode ? "darkDarkMode" : "dark"}
                 onClick={saveInvoiceAsDraft}
                 type="button"
-                className="w-[100%] sm:w-auto min-w-[119px]"
+                className="w-[100%] min-w-[119px] sm:w-auto"
               >
                 Save as Draft
               </Button>
@@ -637,7 +636,7 @@ export default function InvoiceForm({
                 disabled={isPending}
                 variant="violet"
                 onClick={() => setActiveInvoiceStatus("pending")}
-                className="w-[100%] sm:w-auto min-w-[110px]"
+                className="w-[100%] min-w-[110px] sm:w-auto"
               >
                 Save & Send
               </Button>
@@ -647,7 +646,7 @@ export default function InvoiceForm({
       </form>
       <div
         onClick={closeFormInput}
-        className={cn("delay-200 duration-500 h-full", {
+        className={cn("h-full delay-200 duration-500", {
           "bg-black/35": isInvoiceEdit,
         })}
       ></div>

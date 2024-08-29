@@ -11,14 +11,14 @@ export default async function NavLink() {
       <Image
         src={userAvatar || navAvatar}
         alt="user avatar"
-        className="rounded-full mr-4 lg:hidden size-8"
+        className="mr-4 size-8 rounded-full lg:hidden"
         width={32}
         height={32}
       />
       <Image
         src={userAvatar || navAvatar}
         alt="user avatar"
-        className="hidden rounded-full lg:block mb-6 size-10"
+        className="mb-6 hidden size-10 rounded-full lg:block"
         width={40}
         height={40}
       />

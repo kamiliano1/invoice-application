@@ -71,12 +71,12 @@ export default function LoginForm() {
                 <FormControl>
                   <div className="relative overflow-hidden">
                     <Input
-                      className="pl-10 focus:pl-4 peer duration-100 dark:bg-04"
+                      className="peer pl-10 duration-100 focus:pl-4 dark:bg-04"
                       placeholder="E-mail"
                       error={form.formState.errors.email}
                       {...field}
                     />
-                    <MdEmail className="absolute top-[27%] left-2 size-5 text-06 peer-focus:-translate-x-[140%] duration-100" />
+                    <MdEmail className="absolute left-2 top-[27%] size-5 text-06 duration-100 peer-focus:-translate-x-[140%]" />
                   </div>
                 </FormControl>
               </FormItem>
@@ -95,12 +95,12 @@ export default function LoginForm() {
                   <div className="relative overflow-hidden">
                     <Input
                       type="password"
-                      className="pl-10 focus:pl-4 peer duration-100 dark:bg-04"
+                      className="peer pl-10 duration-100 focus:pl-4 dark:bg-04"
                       placeholder="Password"
                       error={form.formState.errors.password}
                       {...field}
                     />
-                    <FaLock className="absolute top-[27%] left-2 size-5 text-06 peer-focus:-translate-x-[140%] duration-100" />
+                    <FaLock className="absolute left-2 top-[27%] size-5 text-06 duration-100 peer-focus:-translate-x-[140%]" />
                   </div>
                 </FormControl>
               </FormItem>

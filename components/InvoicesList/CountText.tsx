@@ -15,14 +15,14 @@ export default function CountText({
   return userCount !== 1 ? (
     <>
       <p className="text-body sm:hidden">{userCount} invoices</p>
-      <p className="text-body hidden sm:block">
+      <p className="hidden text-body sm:block">
         There are {userCount} total invoices
       </p>
     </>
   ) : (
     <>
       <p className="text-body sm:hidden">{userCount} invoice</p>
-      <p className="text-body hidden sm:block">
+      <p className="hidden text-body sm:block">
         There is {userCount} total invoice
       </p>
     </>

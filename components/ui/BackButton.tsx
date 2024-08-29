@@ -12,12 +12,12 @@ export default function BackButton({
   return (
     <Link
       className={cn(
-        "flex items-center text-headingS font-bold text-08 dark:text-white sm:px-10 sm:pt-14",
-        className
+        "flex items-center text-headingS font-bold text-08 sm:px-10 sm:pt-14 dark:text-white",
+        className,
       )}
       href={backLink}
     >
-      <MdKeyboardArrowLeft className="text-headingM text-01 mr-5" /> Go back
+      <MdKeyboardArrowLeft className="mr-5 text-headingM text-01" /> Go back
     </Link>
   );
 }

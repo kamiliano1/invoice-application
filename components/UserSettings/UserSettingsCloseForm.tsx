@@ -12,7 +12,7 @@ export default function UserSettingsCloseForm({
   return (
     <div
       onClick={() => router.back()}
-      className={cn("hidden delay-200 duration-500 sm:block h-full", {
+      className={cn("hidden h-full delay-200 duration-500 sm:block", {
         "bg-black/35": trigger,
       })}
     ></div>

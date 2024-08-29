@@ -24,7 +24,7 @@ export default async function UserSettings({
 
   return (
     <>
-      <div className="max-w-[616px] sm:w-[616px] lg:ml-[103px] sm:min-h-[calc(100vh_-_80px)] lg:h-fit flex flex-col rounded-tr-[20px] dark:bg-12 bg-white px-6 pb-6 sm:p-14 gap-10">
+      <div className="flex max-w-[616px] flex-col gap-10 rounded-tr-[20px] bg-white px-6 pb-6 sm:min-h-[calc(100vh_-_80px)] sm:w-[616px] sm:p-14 lg:ml-[103px] lg:h-fit dark:bg-12">
         <UserSettingsBackButton
           isUserSettings={isUserSettings}
           invoiceId={invoiceId}

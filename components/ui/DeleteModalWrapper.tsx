@@ -51,15 +51,15 @@ export default function DeleteModalWrapper({
         {buttonTriggerLabel}
       </Button>
       <DialogPortal>
-        <DialogOverlay className="bg-12/40 data-[state=open]:animate-overlayShow fixed inset-0 z-[600]" />
-        <DialogContent className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[87vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] rounded-lg p-8 z-[700] border-none gap-5 bg-white dark:bg-03">
+        <DialogOverlay className="fixed inset-0 z-[600] bg-12/40 data-[state=open]:animate-overlayShow" />
+        <DialogContent className="fixed left-[50%] top-[50%] z-[700] max-h-[85vh] w-[87vw] max-w-[480px] translate-x-[-50%] translate-y-[-50%] gap-5 rounded-lg border-none bg-white p-8 data-[state=open]:animate-contentShow dark:bg-03">
           <DialogTitle className="text-08 dark:text-white">
             {modalTitle}
           </DialogTitle>
-          <DialogDescription className="text-06 leading-[22px]">
+          <DialogDescription className="leading-[22px] text-06">
             {modalDescription}
           </DialogDescription>
-          <div className="flex gap-3 justify-end">
+          <div className="flex justify-end gap-3">
             <DialogClose asChild>
               <Button
                 className="px-[1.375rem]"

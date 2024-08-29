@@ -17,10 +17,10 @@ export default function SortClearButton() {
             filters: ["draft", "paid", "pending"],
           }));
         }}
-        className="flex items-center text-headingS cursor-pointer text-08 dark:text-white"
+        className="flex cursor-pointer items-center text-headingS text-08 dark:text-white"
       >
         Clear
-        <MdOutlineClear className="cursor-pointer text-headingSVariant text-01 ml-5" />
+        <MdOutlineClear className="ml-5 cursor-pointer text-headingSVariant text-01" />
       </span>
     );
   return (
@@ -33,7 +33,7 @@ export default function SortClearButton() {
           filters: ["draft", "paid", "pending"],
         }));
       }}
-      className="cursor-pointer hidden text-headingSVariant sm:block text-01 hover:text-0 sm:justify-self-end sm:ml-5"
+      className="hover:text-0 hidden cursor-pointer text-headingSVariant text-01 sm:ml-5 sm:block sm:justify-self-end"
     />
   );
 }
