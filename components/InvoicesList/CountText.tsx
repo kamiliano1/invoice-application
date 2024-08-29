@@ -8,8 +8,9 @@ export default function CountText({
 }: {
   invoices: z.infer<typeof InvoicesSchema>;
 }) {
-  const userCount = useFilterInvoices(invoices)?.length;
-  if (userCount === 0) {
+  const { filteredInvoices } = useFilterInvoices(invoices);
+  const userCount = filteredInvoices?.length;
+  if (userCount === 0 || !userCount) {
     return <p className="text-body">No invoices</p>;
   }
   return userCount !== 1 ? (

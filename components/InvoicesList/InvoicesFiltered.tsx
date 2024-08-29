@@ -4,12 +4,14 @@ import InvoiceItem from "@/components/InvoicesList/InvoiceItem";
 import { InvoicesSchema } from "@/schemas";
 import EmptyInvoice from "@/components/InvoicesList/EmptyInvoice";
 import { useFilterInvoices } from "@/hooks/useFilterInvoices";
+import InvoiceItemSkeleton from "@/components/InvoicesList/InvoiceItemSkeleton";
 export default function InvoicesFiltered({
   invoices,
 }: {
   invoices: z.infer<typeof InvoicesSchema>;
 }) {
-  const filteredInvoices = useFilterInvoices(invoices);
+  const { filteredInvoices, isLoading } = useFilterInvoices(invoices);
+  if (!isLoading) return <InvoiceItemSkeleton />;
   return (
     <>
       {filteredInvoices?.length ? (

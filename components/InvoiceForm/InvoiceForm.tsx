@@ -154,9 +154,9 @@ export default function InvoiceForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex max-w-[616px] flex-col rounded-tr-[20px] bg-white sm:min-h-[calc(100vh_-_80px)] sm:w-[616px] lg:ml-[103px] lg:h-fit dark:bg-12"
+        className="flex max-h-screen max-w-[616px] flex-col overflow-y-scroll rounded-tr-[20px] bg-white sm:min-h-[calc(100vh_-_80px)] sm:w-[616px] lg:ml-[103px] lg:h-fit dark:bg-12"
       >
-        <div className="flex flex-col gap-5 px-6 sm:p-14">
+        <div className="flex flex-col gap-5 px-6 sm:p-14 lg:p-10">
           <BackButton
             className="py-6 sm:hidden"
             backLink={

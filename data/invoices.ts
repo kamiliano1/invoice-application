@@ -5,13 +5,12 @@ import { InvoicesSchema } from "@/schemas";
 export const getUserInvoicesById = async (id: string | undefined) => {
   try {
     if (!id) return null;
-
     const invoices = await db.invoice.findMany({
       where: { invoiceDbId: id },
       include: { clientAddress: true, senderAddress: true, items: true },
     });
     const validatedFields = InvoicesSchema.safeParse(
-      invoices.filter((item) => item.status !== "draft")
+      invoices.filter((item) => item.status !== "draft"),
     );
     if (validatedFields.success) return invoices;
 
@@ -23,7 +22,7 @@ export const getUserInvoicesById = async (id: string | undefined) => {
 
 export const getUserActiveInvoiceByInvoiceId = async (
   id: string | undefined,
-  invoiceId: string | undefined
+  invoiceId: string | undefined,
 ) => {
   try {
     if (!id) return;
@@ -38,7 +37,7 @@ export const getUserActiveInvoiceByInvoiceId = async (
 };
 export const getUserActiveInvoiceId = async (
   id: string,
-  invoiceId: string | undefined
+  invoiceId: string | undefined,
 ) => {
   try {
     const activeUserInvoiceId = await db.invoice.findFirst({

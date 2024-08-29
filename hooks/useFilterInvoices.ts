@@ -10,6 +10,7 @@ export const useFilterInvoices = (invoices: z.infer<typeof InvoicesSchema>) => {
   const userFilterState = useRecoilValue(userFilters);
   const [filteredInvoices, setFilteredInvoices] =
     useState<z.infer<typeof InvoicesSchema>>();
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const filterFunction = () => {
       if (!invoices.length) return;
@@ -17,7 +18,7 @@ export const useFilterInvoices = (invoices: z.infer<typeof InvoicesSchema>) => {
         Object.values(filterOptions).indexOf(userFilterState.label)
       ] as SortFilters;
       const filteredUserInvoices = invoices.filter((item) =>
-        userFilterState.filters.includes(item.status)
+        userFilterState.filters.includes(item.status),
       );
       if (userFilterState.status === "") return filteredUserInvoices;
       return filteredUserInvoices.sort((a, b) => {
@@ -36,6 +37,7 @@ export const useFilterInvoices = (invoices: z.infer<typeof InvoicesSchema>) => {
       });
     };
     setFilteredInvoices(filterFunction());
+    setIsLoading(true);
   }, [
     invoices,
     userFilterState.filters,
@@ -43,5 +45,5 @@ export const useFilterInvoices = (invoices: z.infer<typeof InvoicesSchema>) => {
     userFilterState.status,
   ]);
 
-  return filteredInvoices;
+  return { filteredInvoices, isLoading };
 };
