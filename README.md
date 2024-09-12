@@ -44,7 +44,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: [https://github.com/kamiliano1/invoice-application](https://github.com/kamiliano1/invoice-application)
-- Live Site URL: [invoice-application-eight.vercel.app](invoice-application-eight.vercel.app)
+- Live Site URL: [https://invoice-application-eight.vercel.app](https://invoice-application-eight.vercel.app)
 
 ## My process
 
@@ -71,10 +71,10 @@ Users should be able to:
 
 The application integrates the login, registration, main, and preview pages into a unified interface. Both the main and preview pages utilize the Suspense component to enhance user experience by managing loading states while connecting to the database.
 
-````js
+```js
  <Suspense fallback={<Skeleton className="h-[18px] w-30" />}>
 
-````
+```
 
 Use client is only using on the part that are required user interactions like form buttons
 
