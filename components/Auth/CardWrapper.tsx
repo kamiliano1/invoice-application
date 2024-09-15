@@ -26,13 +26,8 @@ export default function CardWrapper({
   redirectLink,
 }: CardWrapperType) {
   return (
-    <div className="flex h-full items-center justify-center">
-      <Card
-        className={cn(
-          "w-[70vw] max-w-[450px] rounded-xl bg-white text-black dark:bg-03",
-          {},
-        )}
-      >
+    <div className="flex h-full items-center justify-center px-4">
+      <Card className="w-full max-w-[450px] rounded-xl bg-white text-black dark:bg-03">
         <CardContent className="flex flex-col space-y-4">
           <CardTitle className={cn("text-headingM text-08 dark:text-white")}>
             {headerLabel}
