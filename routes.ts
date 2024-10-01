@@ -5,7 +5,7 @@
 export const publicRoutes = ["/"];
 
 /**
- * An array of routes that are used for authentication, these routes will redirect to the /settings page
+ * An array of routes that are used for authentication, these routes will redirect to the / page
  * @type {string[]}
  */
 export const authRoutes = ["/login", "/register"];
@@ -21,4 +21,3 @@ export const apiAuthPrefix = "/api/auth";
  * @type {string}
  */
 export const DEFAULT_LOGIN_REDIRECT = "/";
-// export const DEFAULT_LOGIN_REDIRECT = "/?userSetting=true";

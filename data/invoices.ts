@@ -43,7 +43,6 @@ export const getUserActiveInvoiceId = async (
     const activeUserInvoiceId = await db.invoice.findFirst({
       where: { id, invoiceDbId: invoiceId },
     });
-    console.log(activeUserInvoiceId);
 
     return activeUserInvoiceId?.invoiceId;
   } catch (error) {

@@ -158,7 +158,7 @@ export default function InvoiceForm({
       >
         <div className="flex flex-col gap-5 px-6 sm:p-14 lg:p-10">
           <BackButton
-            className="py-6 sm:hidden"
+            className="py-4 sm:hidden"
             backLink={
               isInvoiceEdit && invoiceData ? `/${invoiceId}/preview` : "../"
             }

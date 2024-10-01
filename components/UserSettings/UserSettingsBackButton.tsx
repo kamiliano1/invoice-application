@@ -12,7 +12,7 @@ export default function UserSettingsBackButton({
   const pathname = usePathname();
   return (
     <BackButton
-      className="py-6 sm:hidden"
+      className="py-4 sm:hidden"
       backLink={
         isUserSettings && pathname.length > 1 ? `/${invoiceId}/preview` : "/"
       }
