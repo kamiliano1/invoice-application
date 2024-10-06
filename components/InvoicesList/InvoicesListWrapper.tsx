@@ -12,8 +12,7 @@ export default function InvoicesListWrapper({
   return (
     <main
       className={cn("flex flex-col items-start bg-11 dark:bg-12", {
-        "max-sm:h-[654px] max-sm:overflow-hidden":
-          isInvoiceEdit || isUserSettings,
+        "overflow-hidden max-sm:h-[526px]": isInvoiceEdit || isUserSettings,
       })}
     >
       <InvoicesList />
