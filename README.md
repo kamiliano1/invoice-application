@@ -136,7 +136,7 @@ Working with the Next Auth I've used [Next Auth V5 - Advanced Guide (2024)](http
 
 ## Author
 
-- Website - [Kamil Szymon](https://github.com/kamiliano1)
+- Website - [Kamil Szymon](www.kamilszymon.com)
 - Frontend Mentor - [@kamiliano1](https://www.frontendmentor.io/profile/kamiliano1)
 - Twitter - [@k_p_szymon](https://twitter.com/k_p_szymon)
 - Code Wars - [kamiliano1](https://www.codewars.com/users/kamiliano1)
